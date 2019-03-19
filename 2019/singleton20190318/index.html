@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noodp"/>
+  <meta name="author" content="ruichunjie">
+  
+  
+  
+  <link rel="prev" href="https://ruichunjie.github.io/2019/mybatis20190317/" />
+  <link rel="next" href="https://ruichunjie.github.io/2019/prototype20190319/" />
+  <link rel="canonical" href="https://ruichunjie.github.io/2019/singleton20190318/" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <title>
+       
+       
+           单例模式 | 空谷芝兰
+       
+  </title>
+  <meta name="title" content="单例模式 | 空谷芝兰">
+    
+  
+  <link rel="stylesheet" href="/font/iconfont.css">
+  <link rel="stylesheet" href="/css/main.min.css">
+
+
+  
+  
+ 
+
+<script type="application/ld+json">
+ "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "mainEntityOfPage": {
+         "@type": "WebPage",
+         "@id": "https://ruichunjie.github.io/"
+    },
+    "articleSection" : "posts",
+    "name" : "单例模式",
+    "headline" : "单例模式",
+    "description" : "1.什么是单例模式
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 单例模式(Singleton Pattern)是指确保一个类在任何情况下都绝对只有一个实例，并提供一个全局访问点。单例模式是创建型模式。 ServletContext,ServletContextConfig,ApplicationContext,数据库的连接池都是单例形式
+2.单例的实现
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1)饿汉式单例
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 在类加载时就立刻初始化，并且创建单例对象，绝对线程安全。优点是没有加任何锁，执行效率高，在用户体验上，比饿汉式要好，缺点是类加载时就初始化，不管用与不用都占着空间，浪费了内存。适用单例对象较少的情况。
+public class HungryStaticSingleton{ private static final HungrySingleton hungrysingleton = new HungrySingleton(); private HungrySingleton(){} public static HungrySingleton getInstance(){return hungrysingleton;} }  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2)懒汉式单例 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;被外部类调用的时候内部类才会加载。 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; synchronized 静态方法
+public class LazySimpleSingleton{ private LazySimpleSingleton(){} private static LazySimpleSingleton lazy = null; public synchronized static LazySimpleSingleton getInstance(){ if(null == lazy){ lazy = new LazySimpleSingleton(); } return lazy; } }  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 双重检查锁
+public class LazyDoubleCheckSingleton{ private volatile static LazyDoubleCheckSingleton lazy = null; private LazyDoubleCheckSingleton(){} public static LazyDoubleCheckSingleton getInstance(){ if(null == lazy){ synchronized(LazyDoubleCheckSingleton.",
+    "inLanguage" : "en-us",
+    "author" : "ruichunjie",
+    "creator" : "ruichunjie",
+    "publisher": "ruichunjie",
+    "accountablePerson" : "ruichunjie",
+    "copyrightHolder" : "ruichunjie",
+    "copyrightYear" : "2019",
+    "datePublished": "2019-03-18 22:32:49 &#43;0800 CST",
+    "dateModified" : "2019-03-18 22:32:49 &#43;0800 CST",
+    "url" : "https://ruichunjie.github.io/2019/singleton20190318/",
+    "wordCount" : "362",
+    "keywords" : [ "设计模式", "空谷芝兰"]
+}
+</script>
+
+</head>
+
+  
+
+
+  <body class="">
+    <div class="wrapper">
+        <nav class="navbar">
+    <div class="container">
+        <div class="navbar-header header-logo">
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://ruichunjie.github.io/">空谷芝兰</a>
+        </div>
+        <div class="menu navbar-right">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+     <div class="container">
+        <div class="navbar-header">
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://ruichunjie.github.io/">空谷芝兰</a></div>
+            <div class="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+     
+          <div class="menu" id="mobile-menu">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+    	 <main class="main">
+          <div class="container">
+      		
+<article class="post-warp" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">单例模式</h1>
+        <div class="post-meta">
+                Written by <a itemprop="name" href="https://ruichunjie.github.io/" rel="author">ruichunjie</a> with ♥ 
+                <span class="post-time">
+                on <time datetime=2019-03-18 itemprop="datePublished">March 18, 2019</time>
+                </span>
+                in
+                <i class="iconfont icon-folder"></i>
+                <span class="post-category">
+                        <a href="https://ruichunjie.github.io/categories/%E7%BC%96%E7%A8%8B-%E6%8A%80%E6%9C%AF/"> 编程 · 技术 </a>
+                        
+                </span>
+        </div>
+    </header>
+    <div class="post-content">
+        
+
+        
+
+        
+        
+     
+          
+          
+          
+
+          
+          
+          
+
+          <p>1.什么是单例模式<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 单例模式(Singleton Pattern)是指确保一个类在任何情况下都绝对只有一个实例，并提供一个全局访问点。单例模式是创建型模式。 ServletContext,ServletContextConfig,ApplicationContext,数据库的连接池都是单例形式<br />
+2.单例的实现<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1)饿汉式单例<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 在类加载时就立刻初始化，并且创建单例对象，绝对线程安全。优点是没有加任何锁，执行效率高，在用户体验上，比饿汉式要好，缺点是类加载时就初始化，不管用与不用都占着空间，浪费了内存。适用单例对象较少的情况。</p>
+
+<pre><code class="language-java">	public class HungryStaticSingleton{
+		private static final HungrySingleton hungrysingleton = new HungrySingleton();
+		private HungrySingleton(){}
+		public static HungrySingleton getInstance(){return hungrysingleton;}
+	}
+</code></pre>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2)懒汉式单例
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;被外部类调用的时候内部类才会加载。
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; synchronized 静态方法</p>
+
+<pre><code class="language-java">    public class LazySimpleSingleton{
+        private LazySimpleSingleton(){}
+        private static LazySimpleSingleton lazy = null;
+        public synchronized static LazySimpleSingleton getInstance(){
+            if(null == lazy){
+                lazy = new LazySimpleSingleton();
+            }
+            return lazy;
+        }
+    }
+</code></pre>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 双重检查锁</p>
+
+<pre><code class="language-java">   public class LazyDoubleCheckSingleton{
+       private volatile static LazyDoubleCheckSingleton lazy = null;
+       private LazyDoubleCheckSingleton(){}
+       public static LazyDoubleCheckSingleton getInstance(){
+           if(null == lazy){
+               synchronized(LazyDoubleCheckSingleton.class){
+                   if(null ==lazy){
+                       lazy = new LazyDoubleChekSingleton();
+                       //1.分配内存空间
+                       //2.初始化对象
+                       //3.设置lazy指向刚分配的内存地址
+                   }
+               }
+           }
+       }
+   }
+</code></pre>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 3)静态内部类</p>
+
+<pre><code class="language-java">   //兼顾饿汉式内存浪费 也兼顾synchronized的性能问题 完美的屏蔽了这两个缺点
+   public class LazyInnerClassSingleton{
+       private LazyInnerClassSingleton(){
+           if(LazyHolder.LaZY != null){
+               throw new RuntimeException(&quot;不允许创建多个实例&quot;);
+           }
+       }
+       //默认使用内部类时加载 不使用不加载
+       //static 单例空间共享 final 保证不会被重写
+       public static final LazyInnerClassSingleton getInstance(){
+           return LazyHolder.LAZY;
+       }
+       
+       private static class LazyHolder{
+           private static final LazyInnerClassSingleton LAZY = new LazyInnerClassSingleton();
+       }
+   }
+</code></pre>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 4)注册式单例
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注册式单例就是将每一个实例都登记到某一个地方，使用唯一的标识获取实例。注册式单例有两种写法:一种为容器缓存，一种为枚举登记。</p>
+
+<pre><code class="language-java">    //枚举
+    public enum EnumSingleton{
+        INSTANCE;
+        private Object data;
+        public Object getData(){
+            return data;
+        }
+        public void setData(Object data){
+            this.data = data;
+        }
+        public static EnumSingleton getInstance(){
+            return INSTANCE;
+        }
+    }
+    
+    //容器缓存式 非线程安全
+    public class ContainerSingleton{
+        private ContainerSingleton(){}
+        private static Map&lt;String,Object&gt; ioc = new ConcurrentHashMap&lt;&gt;();
+        private static Object getBean(String className){
+            synchronized(ioc){
+                if(!ioc.containskey(className)){
+                    Object obj = null;
+                    try{
+                        obj = Class.forName(className).newInstance();
+                        ioc.put(className,obj);
+                    }catch(Exception e){
+                        e.printStackTrace();
+                    }
+                    return obj;
+                }else{
+                    return ioc.get(className);
+                }
+            }
+        }
+    }
+</code></pre>
+
+<p>3.破坏单例
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1&gt;反射破坏</p>
+
+<pre><code class="language-java">    public class LazyInnerClassSingletonTest{
+        public static void main(String[] args){
+             try{
+                 Class&lt;?&gt; cla zz = LazyInnerClassSingleton.class;
+                 Constructor c = clazz.getDeclaredConstructor(null);
+                 c.setAccessible(true);
+                 Object o1 = c.newInstance(); 
+                 Object o1 = c.newInstance(); 
+             }
+        }
+    }
+</code></pre>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 5)ThreadLocal线程单例
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ThreadLocal线程单例不能保证创建的对象是全局唯一，但是能保证单个线程中是唯一的。</p>
+
+<pre><code class="language-java">   public class ThreadLocalSingleton{
+      private static final ThreadLocal&lt;ThreadLocalSingleton&gt; threadLocalInstance = new ThreadLocal&lt;threadLocalSingleton&gt;(){
+	@Override
+	protected ThreadLocalSingleton initialValue(){
+        return new ThreadLocalSingleton();
+	}
+}
+   }
+</code></pre>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2&gt;序列化破坏单例</p>
+
+<pre><code class="language-java">   public class SeriableSingleton implements Serializable{
+       private final static SeriableSingleton INSTANCE = new SeriableSingleton();
+       private SeriableSingleton(){}
+       public static SeriableSingleton getInstance(){
+           return INSTANCE;
+       }
+       
+       public Object readResolve(){
+           return INSTANCE;
+       }
+   }
+   
+   public class SeriableSingletonTest{
+       public static void main(String[] args){
+           SeriableSingleton s1 = null;
+           SeriableSingleton s2 = SeriableSingleton.getInstance();
+           FileOutputStream fos = null;
+           try{
+               fos = new FileOutputStream(&quot;SeriableSingleton.obj&quot;);
+               ObjectOutputStream  oos = new ObjectOutputStream(fos);
+               oos.writeObject(s2);
+               oos.flush();
+               oos.close();
+               
+               FileInputStream fis = new FileInputStream(&quot;SeriableSingleton.obj&quot;);
+               ObjectInputStream ois = new ObjectInputStream(fis);
+               s1=(SeriableSingleton)ois.readObject();
+               ois.close();
+               
+               System.out.println(s1==s2);
+           }catch(Exception e)[
+               e.printStanckTrace();
+           ]
+       }
+   }
+</code></pre>
+
+    </div>
+
+    <div class="post-copyright">
+             
+            <p class="copyright-item">
+                <span>Author:</span>
+                <span>ruichunjie </span>
+                </p>
+            
+           
+             
+            <p class="copyright-item">
+                    <span>Link:</span>
+                    <a href=https://ruichunjie.github.io/2019/singleton20190318/>https://ruichunjie.github.io/2019/singleton20190318/</span>
+            </p>
+            
+             
+            <p class="copyright-item lincese">
+                本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可
+            </p>
+            
+    </div>
+
+  
+    <div class="post-tags">
+        
+            <section>
+            <i class="iconfont icon-tag"></i>Tag(s): 
+            
+            <span class="tag"><a href="https://ruichunjie.github.io/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">
+                    #设计模式</a></span>
+            
+            </section>
+        
+        <section>
+                <a href="javascript:window.history.back();">back</a></span> · 
+                <span><a href="https://ruichunjie.github.io/">home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+        <a href="https://ruichunjie.github.io/2019/mybatis20190317/" class="prev" rel="prev" title="mybatis基础"><i class="iconfont icon-left"></i>&nbsp;mybatis基础</a>
+         
+        
+        <a href="https://ruichunjie.github.io/2019/prototype20190319/" class="next" rel="next" title="原型模式">原型模式&nbsp;<i class="iconfont icon-right"></i></a>
+        
+    </div>
+
+    <div class="post-comment">
+          
+                 
+          
+    </div>
+</article>
+          </div>
+		   </main>
+      <footer class="footer">
+    <div class="copyright">
+        &copy;
+        
+        <span itemprop="copyrightYear">2019 - 2019</span>
+        
+        <span class="with-love">
+    	 <i class="iconfont icon-love"></i> 
+         </span>
+         
+            <span class="author" itemprop="copyrightHolder"><a href="https://ruichunjie.github.io/">ruichunjie</a> | </span> 
+         
+
+         
+		  <span>Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow">Hugo</a> & <a href="https://github.com/liuzc/leaveit" target="_blank" rel="external nofollow">LeaveIt</a></span> 
+    </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+    <script src="/js/vendor_no_gallery.min.js" async=""></script>
+    
+  
+
+
+
+     </div>
+  </body>
+</html>

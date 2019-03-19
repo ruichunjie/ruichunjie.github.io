@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noodp"/>
+  <meta name="author" content="ruichunjie">
+  
+  
+  
+  <link rel="prev" href="https://ruichunjie.github.io/2019/factorydesignprinciple20190316/" />
+  <link rel="next" href="https://ruichunjie.github.io/2019/singleton20190318/" />
+  <link rel="canonical" href="https://ruichunjie.github.io/2019/mybatis20190317/" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <title>
+       
+       
+           mybatis基础 | 空谷芝兰
+       
+  </title>
+  <meta name="title" content="mybatis基础 | 空谷芝兰">
+    
+  
+  <link rel="stylesheet" href="/font/iconfont.css">
+  <link rel="stylesheet" href="/css/main.min.css">
+
+
+  
+  
+ 
+
+<script type="application/ld+json">
+ "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "mainEntityOfPage": {
+         "@type": "WebPage",
+         "@id": "https://ruichunjie.github.io/"
+    },
+    "articleSection" : "posts",
+    "name" : "mybatis基础",
+    "headline" : "mybatis基础",
+    "description" : "1.什么是mybatis
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MyBatis 是一款优秀的持久层框架，它支持定制化SQL、存储过程以及高级映射。MyBatis 避免了几乎所有的 JDBC 代码和手动设置参数以及获取结果集。MyBatis 可以使用简单的 XML 或注解来配置和映射原生信息，将接口和 Java 的POJOs(Plain Old Java Objects,普通的 Java对象)映射成数据库中的记录。
+2.使用mybatis
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1) 编程式
+String resource = &quot;org/mybatis/example/mybatis-config.xml&quot;; InputStream inputStream = Resources.getResourceAsStream(resource); SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);  &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt; &lt;!DOCTYPE configuration PUBLIC &quot;-//mybatis.org//DTD Config 3.0//EN&quot; &quot;http://mybatis.org/dtd/mybatis-3-config.dtd&quot;&gt; &lt;configuration&gt; &lt;environments default=&quot;development&quot;&gt; &lt;environment id=&quot;development&quot;&gt; &lt;transactionManager type=&quot;JDBC&quot;/&gt; &lt;dataSource type=&quot;POOLED&quot;&gt; &lt;property name=&quot;driver&quot; value=&quot;${driver}&quot;/&gt; &lt;property name=&quot;url&quot; value=&quot;${url}&quot;/&gt; &lt;property name=&quot;username&quot; value=&quot;${username}&quot;/&gt; &lt;property name=&quot;password&quot; value=&quot;${password}&quot;/&gt; &lt;/dataSource&gt; &lt;/environment&gt; &lt;/environments&gt; &lt;mappers&gt; &lt;mapper resource=&quot;org/mybatis/example/BlogMapper.xml&quot;/&gt; &lt;/mappers&gt; &lt;/configuration&gt;  DataSource dataSource = BlogDataSourceFactory.",
+    "inLanguage" : "en-us",
+    "author" : "ruichunjie",
+    "creator" : "ruichunjie",
+    "publisher": "ruichunjie",
+    "accountablePerson" : "ruichunjie",
+    "copyrightHolder" : "ruichunjie",
+    "copyrightYear" : "2019",
+    "datePublished": "2019-03-17 22:32:49 &#43;0800 CST",
+    "dateModified" : "2019-03-17 22:32:49 &#43;0800 CST",
+    "url" : "https://ruichunjie.github.io/2019/mybatis20190317/",
+    "wordCount" : "297",
+    "keywords" : [ "mybatis", "空谷芝兰"]
+}
+</script>
+
+</head>
+
+  
+
+
+  <body class="">
+    <div class="wrapper">
+        <nav class="navbar">
+    <div class="container">
+        <div class="navbar-header header-logo">
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://ruichunjie.github.io/">空谷芝兰</a>
+        </div>
+        <div class="menu navbar-right">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+     <div class="container">
+        <div class="navbar-header">
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://ruichunjie.github.io/">空谷芝兰</a></div>
+            <div class="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+     
+          <div class="menu" id="mobile-menu">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+    	 <main class="main">
+          <div class="container">
+      		
+<article class="post-warp" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">mybatis基础</h1>
+        <div class="post-meta">
+                Written by <a itemprop="name" href="https://ruichunjie.github.io/" rel="author">ruichunjie</a> with ♥ 
+                <span class="post-time">
+                on <time datetime=2019-03-17 itemprop="datePublished">March 17, 2019</time>
+                </span>
+                in
+                <i class="iconfont icon-folder"></i>
+                <span class="post-category">
+                        <a href="https://ruichunjie.github.io/categories/%E7%BC%96%E7%A8%8B-%E6%8A%80%E6%9C%AF/"> 编程 · 技术 </a>
+                        
+                </span>
+        </div>
+    </header>
+    <div class="post-content">
+        
+
+        
+
+        
+        
+     
+          
+          
+          
+
+          
+          
+          
+
+          <p>1.什么是mybatis<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MyBatis 是一款优秀的持久层框架，它支持定制化SQL、存储过程以及高级映射。MyBatis 避免了几乎所有的 JDBC 代码和手动设置参数以及获取结果集。MyBatis 可以使用简单的 XML 或注解来配置和映射原生信息，将接口和 Java 的POJOs(Plain Old Java Objects,普通的 Java对象)映射成数据库中的记录。</p>
+
+<p>2.使用mybatis<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1) 编程式</p>
+
+<pre><code class="language-java">	String resource = &quot;org/mybatis/example/mybatis-config.xml&quot;;
+	InputStream inputStream = Resources.getResourceAsStream(resource);
+	SqlSessionFactory sqlSessionFactory = new 						SqlSessionFactoryBuilder().build(inputStream);
+</code></pre>
+
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;
+&lt;!DOCTYPE configuration
+  PUBLIC &quot;-//mybatis.org//DTD Config 3.0//EN&quot;
+  &quot;http://mybatis.org/dtd/mybatis-3-config.dtd&quot;&gt;
+&lt;configuration&gt;
+  &lt;environments default=&quot;development&quot;&gt;
+    &lt;environment id=&quot;development&quot;&gt;
+      &lt;transactionManager type=&quot;JDBC&quot;/&gt;
+      &lt;dataSource type=&quot;POOLED&quot;&gt;
+        &lt;property name=&quot;driver&quot; value=&quot;${driver}&quot;/&gt;
+        &lt;property name=&quot;url&quot; value=&quot;${url}&quot;/&gt;
+        &lt;property name=&quot;username&quot; value=&quot;${username}&quot;/&gt;
+        &lt;property name=&quot;password&quot; value=&quot;${password}&quot;/&gt;
+      &lt;/dataSource&gt;
+    &lt;/environment&gt;
+  &lt;/environments&gt;
+  &lt;mappers&gt;
+    &lt;mapper resource=&quot;org/mybatis/example/BlogMapper.xml&quot;/&gt;
+  &lt;/mappers&gt;
+&lt;/configuration&gt;
+</code></pre>
+
+<pre><code class="language-java">
+	DataSource dataSource = BlogDataSourceFactory.getBlogDataSource();
+    TransactionFactory transactionFactory = new JdbcTransactionFactory();
+    Environment environment = new Environment(&quot;development&quot;, transactionFactory, dataSource);
+    Configuration configuration = new Configuration(environment);
+    configuration.addMapper(BlogMapper.class);
+    SqlSessionFactory sqlSessionFactory = new 	SqlSessionFactoryBuilder().build(configuration);
+    
+    SqlSession session = sqlSessionFactory.openSession();
+    try {
+      BlogMapper mapper = session.getMapper(BlogMapper.class);
+      Blog blog = mapper.selectBlog(101);
+    } finally {
+      session.close();
+    }
+</code></pre>
+
+<pre><code class="language-xml">	&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;
+	&lt;!DOCTYPE mapper
+    PUBLIC &quot;-//mybatis.org//DTD Mapper 3.0//EN&quot;
+    &quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot;&gt;
+    &lt;mapper namespace=&quot;org.mybatis.example.BlogMapper&quot;&gt;
+    &lt;select id=&quot;selectBlog&quot; resultType=&quot;Blog&quot;&gt;
+    select * from Blog where id = #{id}
+    &lt;/select&gt;
+    &lt;/mapper&gt;
+</code></pre>
+
+<pre><code class="language-java">	package org.mybatis.example;
+    public interface BlogMapper {
+    @Select(&quot;SELECT * FROM blog WHERE id = #{id}&quot;)
+    Blog selectBlog(int id);
+    }
+    package org.mybatis.example;
+    public interface BlogMapper {
+    @Select(&quot;SELECT * FROM blog WHERE id = #{id}&quot;)
+    Blog selectBlog(int id);
+    }
+</code></pre>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2)集成式<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3)scope<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SqlSessionFactoryBuilder-&gt;method<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SqlSessionFactory-&gt;application<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SqlSession-&gt;request/method<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Mapper-&gt;method<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mapper 在Spring 中是单例，scope是application级别的<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3).Mapper的xml 和注解 单个不兼容是互补的<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4).MyBatis 的配置文件包含了会深深影响 MyBatis 行为的设置（settings）和属性（properties）信息。文档的顶层结构如下：configuration 配置;properties 属性;settings 设置;typeAliases 类型别名;;typeHandlers 类型处理器;objectFactory 对象工厂;plugins 插件;environments 环境;environment 环境变量;transactionManager 事务管理器;dataSource 数据源;databaseIdProvider 数据库厂商标识;mappers 映射器</p>
+
+<pre><code class="language-xml">	&lt;properties resource=&quot;org/mybatis/example/config.properties&quot;&gt;
+      &lt;property name=&quot;username&quot; value=&quot;dev_user&quot;/&gt;
+      &lt;property name=&quot;password&quot; value=&quot;F2Fa3!33TYyg&quot;/&gt;
+    &lt;/properties&gt;
+    
+    &lt;dataSource type=&quot;POOLED&quot;&gt;
+      &lt;property name=&quot;driver&quot; value=&quot;${driver}&quot;/&gt;
+      &lt;property name=&quot;url&quot; value=&quot;${url}&quot;/&gt;
+      &lt;property name=&quot;username&quot; value=&quot;${username}&quot;/&gt;
+      &lt;property name=&quot;password&quot; value=&quot;${password}&quot;/&gt;
+    &lt;/dataSource&gt;
+</code></pre>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;如果属性在不只一个地方进行了配置，那么 MyBatis 将按照下面的顺序来加载：在 properties 元素体内指定的属性首先被读取。然后根据 properties 元素中的 resource 属性读取类路径下属性文件或根据 url 属性指定的路径读取属性文件，并覆盖已读取的同名属性。最后读取作为方法参数传递的属性，并覆盖已读取的同名属性。
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;从MyBatis 3.4.2开始，你可以为占位符指定一个默认值。例如：</p>
+
+<pre><code class="language-xml">	&lt;dataSource type=&quot;POOLED&quot;&gt;
+  		&lt;!-- 默认值是ut_user  --&gt;
+  		&lt;property name=&quot;username&quot; value=&quot;${username:ut_user}&quot;/&gt; 
+	&lt;/dataSource&gt;
+	&lt;!--这个特性默认是关闭的，必须添加一个指定的属性来开启这个特性--&gt;
+	&lt;properties resource=&quot;org/mybatis/example/config.properties&quot;&gt;
+  		&lt;property name=&quot;org.apache.ibatis.parsing.PropertyParser.enable-default-value&quot; value=&quot;true&quot;/&gt; 
+	&lt;/properties&gt;
+</code></pre>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;你可以使用 &ldquo;:&rdquo; 作为属性键(e.g. db:username) 或者你也可以在sql定义中使用 OGNL 表达式的三元运算符(e.g. ${tableName != null ? tableName : &lsquo;global_constants&rsquo;})， 你应该通过增加一个指定的属性来改变分隔键和默认值的字符。例如：</p>
+
+<pre><code class="language-xml">	&lt;properties resource=&quot;org/mybatis/example/config.properties&quot;&gt;
+      &lt;property name=&quot;org.apache.ibatis.parsing.PropertyParser.default-value-separator&quot; value=&quot;?:&quot;/&gt; &lt;!-- Change default value of separator --&gt;
+    &lt;/properties&gt;
+    &lt;dataSource type=&quot;POOLED&quot;&gt;
+      &lt;property name=&quot;username&quot; value=&quot;${db:username?:ut_user}&quot;/&gt;
+    &lt;/dataSource&gt;
+</code></pre>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5)TypeHandler
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;6)plugins</p>
+
+    </div>
+
+    <div class="post-copyright">
+             
+            <p class="copyright-item">
+                <span>Author:</span>
+                <span>ruichunjie </span>
+                </p>
+            
+           
+             
+            <p class="copyright-item">
+                    <span>Link:</span>
+                    <a href=https://ruichunjie.github.io/2019/mybatis20190317/>https://ruichunjie.github.io/2019/mybatis20190317/</span>
+            </p>
+            
+             
+            <p class="copyright-item lincese">
+                本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可
+            </p>
+            
+    </div>
+
+  
+    <div class="post-tags">
+        
+            <section>
+            <i class="iconfont icon-tag"></i>Tag(s): 
+            
+            <span class="tag"><a href="https://ruichunjie.github.io/tags/mybatis/">
+                    #mybatis</a></span>
+            
+            </section>
+        
+        <section>
+                <a href="javascript:window.history.back();">back</a></span> · 
+                <span><a href="https://ruichunjie.github.io/">home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+        <a href="https://ruichunjie.github.io/2019/factorydesignprinciple20190316/" class="prev" rel="prev" title="工厂模式"><i class="iconfont icon-left"></i>&nbsp;工厂模式</a>
+         
+        
+        <a href="https://ruichunjie.github.io/2019/singleton20190318/" class="next" rel="next" title="单例模式">单例模式&nbsp;<i class="iconfont icon-right"></i></a>
+        
+    </div>
+
+    <div class="post-comment">
+          
+                 
+          
+    </div>
+</article>
+          </div>
+		   </main>
+      <footer class="footer">
+    <div class="copyright">
+        &copy;
+        
+        <span itemprop="copyrightYear">2019 - 2019</span>
+        
+        <span class="with-love">
+    	 <i class="iconfont icon-love"></i> 
+         </span>
+         
+            <span class="author" itemprop="copyrightHolder"><a href="https://ruichunjie.github.io/">ruichunjie</a> | </span> 
+         
+
+         
+		  <span>Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow">Hugo</a> & <a href="https://github.com/liuzc/leaveit" target="_blank" rel="external nofollow">LeaveIt</a></span> 
+    </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+    <script src="/js/vendor_no_gallery.min.js" async=""></script>
+    
+  
+
+
+
+     </div>
+  </body>
+</html>

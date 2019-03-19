@@ -1,0 +1,974 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>空谷芝兰 on 空谷芝兰</title>
+    <link>https://ruichunjie.github.io/</link>
+    <description>Recent content in 空谷芝兰 on 空谷芝兰</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 19 Mar 2019 12:55:52 +0800</lastBuildDate>
+    <atom:link href="/" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>代理模式</title>
+      <link>https://ruichunjie.github.io/2019/proxy20190319/</link>
+      <pubDate>Tue, 19 Mar 2019 12:55:52 +0800</pubDate>
+      
+      <guid>https://ruichunjie.github.io/2019/proxy20190319/</guid>
+      <description>&lt;p&gt;1.代理模式&lt;br /&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;代理模式(Proxy Pattern)是指为其他对象提供一种代理，以控制对这个对象的访问。代理对象在客服端和目标对象之间起到中介作用，代理模式属于结构型设计模式。使用 代理模式主要有两个目的:一保护目标对象，二增强目标对象。有静态代理和动态代理。&lt;br /&gt;
+2.静态代理&lt;br /&gt;
+3.动态代理&lt;br /&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;jdk动态代理&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;   public class JDKproxy implements InvocationHandler{
+       privte Person target;
+       public Object getInstance(Person target) throws Exception{
+           this.target = target;
+           Class&amp;lt;?&amp;gt; clazz = target.getClass();
+           return Proxy.newProxyInstance(clazz.getClassLoader(),clazz.getInterfaces(),this);
+       }
+       
+      public Object invoke(Object proxy, Method method,Object[] args)throws Exception{
+          before();
+          Object obj = method.invoke(this.target,args);
+          after();
+          return obj;
+      }
+      
+      public void before(){}
+      public void after(){}
+   }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;JDK Proxy 生成对象的步骤&lt;br /&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;1)拿到被代理对象的引用并获取所有的接口，反射获取&lt;br /&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;2)JDK Proxy类重新生成新的类，同时新的类要实现被代理类所实现的所有的接口&lt;br /&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;3)动态生成Java代码，把新加的业务逻辑方法由一定的逻辑代码去调用(在代码中体现)&lt;br /&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;4)编译新生成的Java代码.class&lt;br /&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;5)重新加载到JVM中运行&lt;br /&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;自定义生成动态反射&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;    /**
+     * @Author:ChunJieRen
+     * @Date:2019/3/13 16:56
+     * @Description: 1.创建Handler接口
+     */
+    public interface MyInvocationHandler {
+        public Object invoke(Object proxy, Method method, Object[] args)
+                throws Throwable;
+    }
+	/**
+     * @Author:ChunJieRen
+     * @Date:2019/3/13 17:12
+     * @Description: 2.生成Proxy类
+     */
+    public class MyProxy {
+
+        public static final String ln = &amp;quot;\r\n&amp;quot;;
+
+        public static Object newProxyInstance(MyClassLoader classLoader,Class&amp;lt;?&amp;gt; [] interfaces, MyInvocationHandler h){
+            try{
+                //1.动态生成源代码.java文件
+                String src = generateSrc(interfaces);
+                System.out.println(src);
+                //2 java文件输出磁盘
+                String filePath = MyProxy.class.getResource(&amp;quot;&amp;quot;).getPath();
+                System.out.println(filePath);
+                File f = new File(filePath+&amp;quot;$Proxy0.java&amp;quot;);
+                FileWriter fw = new FileWriter(f);
+                fw.write(src);
+                fw.flush();
+                fw.close();
+                //3、把生成的.java文件编译成.class文件
+                JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
+                StandardJavaFileManager manage = compiler.getStandardFileManager(null,null,null);
+                Iterable iterable = manage.getJavaFileObjects(f);
+                JavaCompiler.CompilationTask task = compiler.getTask(null,manage,null,null,null,iterable);
+                task.call();
+                manage.close();
+                //4、编译生成的.class文件加载到JVM中来
+                Class proxyClass =  classLoader.findClass(&amp;quot;$Proxy0&amp;quot;);
+                Constructor c = proxyClass.getConstructor(MyInvocationHandler.class);
+                f.delete();
+                //5、返回字节码重组以后的新的代理对象
+                return c.newInstance(h);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        public static String generateSrc(Class&amp;lt;?&amp;gt;[] interfaces){
+            StringBuffer sb = new StringBuffer();
+            sb.append(&amp;quot;package com.gupao.proxy.dynamicproxy.myproxy;&amp;quot;+ln);
+            sb.append(&amp;quot;import com.gupao.proxy.HelloWorld;&amp;quot;+ln);
+            sb.append(&amp;quot;import java.lang.reflect.*;&amp;quot;);
+            sb.append(&amp;quot;public class $Proxy0 implements &amp;quot; + interfaces[0].getName()+&amp;quot;{&amp;quot;+ln);
+                    sb.append(&amp;quot;MyInvocationHandler h;&amp;quot;+ln);
+                    sb.append(&amp;quot;public $Proxy0(MyInvocationHandler h){&amp;quot;+ln);
+                        sb.append(&amp;quot;this.h = h;&amp;quot;);
+                    sb.append(&amp;quot;}&amp;quot;+ln);
+            for(Method m : interfaces[0].getMethods()) {
+                Class&amp;lt;?&amp;gt;[] params = m.getParameterTypes();
+                StringBuffer paramNames = new StringBuffer();
+                StringBuffer paramValues = new StringBuffer();
+                StringBuffer paramClasses = new StringBuffer();
+
+                for (int i = 0; i &amp;lt; params.length; i++) {
+                    Class clazz = params[i];
+                    String type = clazz.getName();
+                    String paramName = toLowerFirst(clazz.getSimpleName());
+                    paramNames.append(type + &amp;quot; &amp;quot; + paramName);
+                    paramValues.append(paramName);
+                    paramClasses.append(clazz.getName() + &amp;quot;.class&amp;quot;);
+                    if (i &amp;gt; 0 &amp;amp;&amp;amp; i &amp;lt; params.length - 1) {
+                        paramNames.append(&amp;quot;,&amp;quot;);
+                        paramClasses.append(&amp;quot;,&amp;quot;);
+                        paramValues.append(&amp;quot;,&amp;quot;);
+                    }
+                }
+
+                sb.append(&amp;quot;public &amp;quot; + m.getReturnType().getName() + &amp;quot; &amp;quot; + m.getName() + &amp;quot;(&amp;quot; + paramNames.toString() + &amp;quot; ){&amp;quot; + ln);
+                sb.append(&amp;quot;try{&amp;quot; + ln);
+                sb.append(&amp;quot;Method m = &amp;quot; + interfaces[0].getName() + &amp;quot;.class.getMethod(\&amp;quot;&amp;quot; + m.getName() + &amp;quot;\&amp;quot;,new Class[]{&amp;quot; +
+                        paramClasses.toString() + &amp;quot;});&amp;quot; + ln);
+                sb.append(hasReturn(m.getReturnType())? &amp;quot;&amp;quot;: &amp;quot;return &amp;quot;).append(getCaseCode(&amp;quot;this.h.invoke(this,m,new Object[]{&amp;quot; + paramValues + &amp;quot;})&amp;quot;, m.getReturnType()) + &amp;quot;;&amp;quot; + ln);
+                sb.append(&amp;quot;}catch(Error _ex) { }&amp;quot;);
+                sb.append(&amp;quot;catch(Throwable e){&amp;quot; + ln);
+                sb.append(&amp;quot;throw new UndeclaredThrowableException(e);&amp;quot; + ln);
+                sb.append(&amp;quot;}&amp;quot;);
+                sb.append(getReturnEmptyCode(m.getReturnType()));
+                sb.append(&amp;quot;}&amp;quot;);
+            }
+
+            sb.append(&amp;quot;}&amp;quot; + ln);
+            return sb.toString();
+        }
+
+        private static String toLowerFirst(String src){
+            char [] chars = src.toCharArray();
+            chars[0] += 32;
+            return String.valueOf(chars);
+        }
+
+        private static boolean hasReturn(Class&amp;lt;?&amp;gt; clazz){
+            return clazz != Void.class;
+        }
+        private static Map&amp;lt;Class,Class&amp;gt; mappings = new HashMap&amp;lt;Class, Class&amp;gt;();
+        static {
+            mappings.put(int.class,Integer.class);
+        }
+
+        private static String getCaseCode(String code,Class&amp;lt;?&amp;gt; returnClass){
+            if(mappings.containsKey(returnClass)){
+                return &amp;quot;((&amp;quot; + mappings.get(returnClass).getName() +  &amp;quot;)&amp;quot; + code + &amp;quot;).&amp;quot; + returnClass.getSimpleName() + &amp;quot;Value()&amp;quot;;
+            }
+            return code;
+        }
+
+        private static String getReturnEmptyCode(Class&amp;lt;?&amp;gt; returnClass){
+            if(mappings.containsKey(returnClass)){
+                return &amp;quot;return 0;&amp;quot;;
+            }else if(returnClass.getName().equalsIgnoreCase(Void.class.getSimpleName())){
+                return &amp;quot;&amp;quot;;
+            }else {
+                return &amp;quot;return null;&amp;quot;;
+            }
+        }
+    }
+    
+    /**
+     * @Author:ChunJieRen
+     * @Date:2019/3/13 16:55
+     * @Description: 3.创建classloader类
+     */
+    public class MyClassLoader extends ClassLoader{
+
+        private File classPathFile;
+
+        public MyClassLoader(){
+            String classPath = MyClassLoader.class.getResource(&amp;quot;&amp;quot;).getPath();
+            this.classPathFile = new File(classPath);
+        }
+
+        @Override
+        protected Class&amp;lt;?&amp;gt; findClass(String name) throws ClassNotFoundException{
+            String className = MyClassLoader.class.getPackage().getName()+&amp;quot;.&amp;quot;+name;
+            if(!Objects.isNull(classPathFile)){
+                File classFile = new File(classPathFile,name.replaceAll(&amp;quot;\\.&amp;quot;,&amp;quot;/&amp;quot;) + &amp;quot;.class&amp;quot;);
+                if(classFile.exists()){
+                    FileInputStream in = null;
+                    ByteArrayOutputStream out = null;
+                    try{
+                        in = new FileInputStream(classFile);
+                        out = new ByteArrayOutputStream();
+                        byte [] buff = new byte[1024];
+                        int len;
+                        while ((len = in.read(buff)) != -1){
+                            out.write(buff,0,len);
+                        }
+                        return defineClass(className,out.toByteArray(),0,out.size());
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                }
+            }
+            return null;
+        }
+
+    }
+
+    /**
+     * @Author:ChunJieRen
+     * @Date:2019/3/13 17:59
+     * @Description: 4.反射
+     */
+    public class MyProxym implements MyInvocationHandler {
+
+        private Object target;
+        public Object getInstance(Object person) throws Exception{
+            this.target = person;
+            Class&amp;lt;?&amp;gt; clazz = target.getClass();
+            return MyProxy.newProxyInstance(new MyClassLoader(),clazz.getInterfaces(),this);
+        }
+
+        @Override
+        public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+            before();
+            Object obj = method.invoke(this.target,args);
+            after();
+            return obj;
+        }
+
+        public void before(){
+            System.out.println(&amp;quot;打招呼前&amp;quot;);
+        }
+
+        public void after(){
+            System.out.println(&amp;quot;打招呼后&amp;quot;);
+        }
+    }
+
+    /**
+     * @Author:ChunJieRen
+     * @Date:2019/3/13 18:01
+     * @Description: 5测试
+     */
+    public class MyTest {
+
+        public static void main(String[] args) {
+
+            try{
+                HelloWorld helloWorld = (HelloWorld)new MyProxym().getInstance(new HelloWorldImpl());
+                System.out.println(helloWorld.getClass());
+                helloWorld.sayHelloWorld();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }	
+    }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;cglib动态代理&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;public class CglibMeipo implements MethodInterceptor{
+    public Object getInstance(Class&amp;lt;?&amp;gt; clazz) throws Exception{
+        Enhancer enhancer = new Enhancer(); 
+        //要把哪个设置为即将生成的新类父类 		
+        enhancer.setSuperclass(clazz); 
+        enhancer.setCallback(this);
+        return enhancer.create(); 
+    }
+    public Object intercept(Object o, Method method, Object[] objects, MethodProxy methodProxy) throws Throwable {
+        //业务的增强
+        before();
+        Object obj = methodProxy.invokeSuper(o,objects); after();
+        return obj;
+    }
+    private void before(){}
+    private void after(){}
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;原理:代理对象调用 this.findLove()方法-&amp;gt;调用拦截器 -&amp;gt;methodProxy.invokeSuper-&amp;gt;CGLIB$findLove$0-&amp;gt;被代理对象 findLove()方法。CGLib 动态代理执行代理方法效率之所以比 JDK 的高是因为 Cglib 采用了 FastClass 机 制，它的原理简单来说就是:为代理类和被代理类各生成一个 Class，这个 Class 会为代理类或被代理类的方法分配一个 index(int 类型)。这个 index 当做一个入参，FastClass 就可以直接定位要调用的方法直接进行调用，这样省去了反射调用，所以调用效率比 JDK 动态代理通过反射调用高。FastClass 并不是跟代理类一块生成的，而是在第一次执行 MethodProxy  nvoke/invokeSuper 时生成的并放在了缓存中。&lt;br /&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;CGLib 和 JDK 动态代理对比&lt;br /&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;1.JDK 动态代理是实现了被代理对象的接口，CGLib 是继承了被代理对象。&lt;br /&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;2.JDK 和 CGLib 都是在运行期生成字节码，JDK 是直接写 Class 字节码，CGLib 使用 ASM 框架写 Class 字节码，Cglib 代理实现更复杂，生成代理类比 JDK 效率低。&lt;br /&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;3.JDK 调用代理方法，是通过反射机制调用，CGLib 是通过 FastClass 机制直接调用方法，CGLib 执行效率更高。
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;代理模式在 Spring 源码中的应用&lt;br /&gt;
+ProxyFactoryBean#getObject&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;    public Object getObject() throws BeansException { initializeAdvisorChain();
+        if (isSingleton()) {
+            return getSingletonInstance(); 
+        }
+        else {
+            if (this.targetName == null) {
+            logger.warn(&amp;quot;Using non-singleton proxies with singleton targets is often undesirable. &amp;quot; + &amp;quot;Enable prototype proxies by setting the &#39;targetName&#39; property.&amp;quot;);
+            }
+		return newPrototypeInstance(); 
+		}
+	}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;Spring 利用动态代理实现 AOP 有两个非常重要的类，一个是 JdkDynamicAopProxy 类 和 CglibAopProxy 类&lt;br /&gt;
+4.Spring 中的代理选择原则&lt;br /&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;1、当 Bean 有实现接口时，Spring 就会用 JDK 的动态代理&lt;br /&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;2、当 Bean 没有实现接口时，Spring 选择 CGLib。&lt;br /&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;3、Spring 可以通过配置强制使用 CGLib，只需在 Spring 的配置文件中加入如下代码:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-xml&#34;&gt;	&amp;lt;aop:aspectj-autoproxy proxy-target-class=&amp;quot;true&amp;quot;/&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;5.静态代理和动态的本质区别&lt;br /&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;1、静态代理只能通过手动完成代理操作，如果被代理类增加新的方法，代理类需要同步新增，违背开闭原则。&lt;br /&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;2、动态代理采用在运行时动态生成代码的方式，取消了对被代理类的扩展限制，遵循开闭原则。&lt;br /&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;3、若动态代理要对目标类的增强逻辑扩展，结合策略模式，只需要新增策略类便可完成， 无需修改代理类的代码。&lt;br /&gt;
+6.代理模式的优缺点&lt;br /&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;优点：&lt;br /&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;1、代理模式能将代理对象与真实被调用的目标对象分离。&lt;br /&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;2、一定程度上降低了系统的耦合度，扩展性好。&lt;br /&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;3、可以起到保护目标对象的作用。&lt;br /&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;4、可以对目标对象的功能增强。&lt;br /&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;缺点：&lt;br /&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;1、代理模式会造成系统设计中类的数量增加。&lt;br /&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;2、在客户端和目标对象增加一个代理对象，会造成请求处理速度变慢。&lt;br /&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;3、增加了系统的复杂度。&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>原型模式</title>
+      <link>https://ruichunjie.github.io/2019/prototype20190319/</link>
+      <pubDate>Tue, 19 Mar 2019 12:33:42 +0800</pubDate>
+      
+      <guid>https://ruichunjie.github.io/2019/prototype20190319/</guid>
+      <description>&lt;p&gt;1.原型模式&lt;br /&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;原型模式(Prototype Pattern)是指原型实例指定创建对象的种类，并且通过拷贝这些原型创建新的对象。&lt;br /&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;原型模式主要适用于以下场景:&lt;br /&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;1、类初始化消耗资源较多。&lt;br /&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;2、new 产生的一个对象需要非常繁琐的过程(数据准备、访问权限等)&lt;br /&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;3、构造函数比较复杂。&lt;br /&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;4、循环体中生产大量对象时。&lt;br /&gt;
+2.原型模式的实现&lt;br /&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;1)简单克隆&lt;br /&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;复制的不是值，而是引用的地址。浅克隆。只是完整 复制了值类型数据，没有赋值引用对象。换言之，所有的引用对象仍然指向原来的对象&lt;br /&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;2)深度克隆&lt;br /&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;克隆破坏单例模式&lt;br /&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; ArrayList 就实现了 Cloneable 接口&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;       public Object clone() {
+        try {
+            ArrayList&amp;lt;?&amp;gt; v = (ArrayList&amp;lt;?&amp;gt;) super.clone();
+            v.elementData = Arrays.copyOf(elementData, size);
+            v.modCount = 0;
+            return v;
+        } catch (CloneNotSupportedException e) {
+            // this shouldn&#39;t happen, since we are Cloneable
+            throw new InternalError(e);
+        }
+    }
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>单例模式</title>
+      <link>https://ruichunjie.github.io/2019/singleton20190318/</link>
+      <pubDate>Mon, 18 Mar 2019 22:32:49 +0800</pubDate>
+      
+      <guid>https://ruichunjie.github.io/2019/singleton20190318/</guid>
+      <description>&lt;p&gt;1.什么是单例模式&lt;br /&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; 单例模式(Singleton Pattern)是指确保一个类在任何情况下都绝对只有一个实例，并提供一个全局访问点。单例模式是创建型模式。 ServletContext,ServletContextConfig,ApplicationContext,数据库的连接池都是单例形式&lt;br /&gt;
+2.单例的实现&lt;br /&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; 1)饿汉式单例&lt;br /&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; 在类加载时就立刻初始化，并且创建单例对象，绝对线程安全。优点是没有加任何锁，执行效率高，在用户体验上，比饿汉式要好，缺点是类加载时就初始化，不管用与不用都占着空间，浪费了内存。适用单例对象较少的情况。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;	public class HungryStaticSingleton{
+		private static final HungrySingleton hungrysingleton = new HungrySingleton();
+		private HungrySingleton(){}
+		public static HungrySingleton getInstance(){return hungrysingleton;}
+	}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; 2)懒汉式单例
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;被外部类调用的时候内部类才会加载。
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; synchronized 静态方法&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;    public class LazySimpleSingleton{
+        private LazySimpleSingleton(){}
+        private static LazySimpleSingleton lazy = null;
+        public synchronized static LazySimpleSingleton getInstance(){
+            if(null == lazy){
+                lazy = new LazySimpleSingleton();
+            }
+            return lazy;
+        }
+    }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; 双重检查锁&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;   public class LazyDoubleCheckSingleton{
+       private volatile static LazyDoubleCheckSingleton lazy = null;
+       private LazyDoubleCheckSingleton(){}
+       public static LazyDoubleCheckSingleton getInstance(){
+           if(null == lazy){
+               synchronized(LazyDoubleCheckSingleton.class){
+                   if(null ==lazy){
+                       lazy = new LazyDoubleChekSingleton();
+                       //1.分配内存空间
+                       //2.初始化对象
+                       //3.设置lazy指向刚分配的内存地址
+                   }
+               }
+           }
+       }
+   }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; 3)静态内部类&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;   //兼顾饿汉式内存浪费 也兼顾synchronized的性能问题 完美的屏蔽了这两个缺点
+   public class LazyInnerClassSingleton{
+       private LazyInnerClassSingleton(){
+           if(LazyHolder.LaZY != null){
+               throw new RuntimeException(&amp;quot;不允许创建多个实例&amp;quot;);
+           }
+       }
+       //默认使用内部类时加载 不使用不加载
+       //static 单例空间共享 final 保证不会被重写
+       public static final LazyInnerClassSingleton getInstance(){
+           return LazyHolder.LAZY;
+       }
+       
+       private static class LazyHolder{
+           private static final LazyInnerClassSingleton LAZY = new LazyInnerClassSingleton();
+       }
+   }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; 4)注册式单例
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;注册式单例就是将每一个实例都登记到某一个地方，使用唯一的标识获取实例。注册式单例有两种写法:一种为容器缓存，一种为枚举登记。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;    //枚举
+    public enum EnumSingleton{
+        INSTANCE;
+        private Object data;
+        public Object getData(){
+            return data;
+        }
+        public void setData(Object data){
+            this.data = data;
+        }
+        public static EnumSingleton getInstance(){
+            return INSTANCE;
+        }
+    }
+    
+    //容器缓存式 非线程安全
+    public class ContainerSingleton{
+        private ContainerSingleton(){}
+        private static Map&amp;lt;String,Object&amp;gt; ioc = new ConcurrentHashMap&amp;lt;&amp;gt;();
+        private static Object getBean(String className){
+            synchronized(ioc){
+                if(!ioc.containskey(className)){
+                    Object obj = null;
+                    try{
+                        obj = Class.forName(className).newInstance();
+                        ioc.put(className,obj);
+                    }catch(Exception e){
+                        e.printStackTrace();
+                    }
+                    return obj;
+                }else{
+                    return ioc.get(className);
+                }
+            }
+        }
+    }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;3.破坏单例
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; 1&amp;gt;反射破坏&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;    public class LazyInnerClassSingletonTest{
+        public static void main(String[] args){
+             try{
+                 Class&amp;lt;?&amp;gt; cla zz = LazyInnerClassSingleton.class;
+                 Constructor c = clazz.getDeclaredConstructor(null);
+                 c.setAccessible(true);
+                 Object o1 = c.newInstance(); 
+                 Object o1 = c.newInstance(); 
+             }
+        }
+    }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; 5)ThreadLocal线程单例
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; ThreadLocal线程单例不能保证创建的对象是全局唯一，但是能保证单个线程中是唯一的。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;   public class ThreadLocalSingleton{
+      private static final ThreadLocal&amp;lt;ThreadLocalSingleton&amp;gt; threadLocalInstance = new ThreadLocal&amp;lt;threadLocalSingleton&amp;gt;(){
+	@Override
+	protected ThreadLocalSingleton initialValue(){
+        return new ThreadLocalSingleton();
+	}
+}
+   }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; 2&amp;gt;序列化破坏单例&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;   public class SeriableSingleton implements Serializable{
+       private final static SeriableSingleton INSTANCE = new SeriableSingleton();
+       private SeriableSingleton(){}
+       public static SeriableSingleton getInstance(){
+           return INSTANCE;
+       }
+       
+       public Object readResolve(){
+           return INSTANCE;
+       }
+   }
+   
+   public class SeriableSingletonTest{
+       public static void main(String[] args){
+           SeriableSingleton s1 = null;
+           SeriableSingleton s2 = SeriableSingleton.getInstance();
+           FileOutputStream fos = null;
+           try{
+               fos = new FileOutputStream(&amp;quot;SeriableSingleton.obj&amp;quot;);
+               ObjectOutputStream  oos = new ObjectOutputStream(fos);
+               oos.writeObject(s2);
+               oos.flush();
+               oos.close();
+               
+               FileInputStream fis = new FileInputStream(&amp;quot;SeriableSingleton.obj&amp;quot;);
+               ObjectInputStream ois = new ObjectInputStream(fis);
+               s1=(SeriableSingleton)ois.readObject();
+               ois.close();
+               
+               System.out.println(s1==s2);
+           }catch(Exception e)[
+               e.printStanckTrace();
+           ]
+       }
+   }
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>mybatis基础</title>
+      <link>https://ruichunjie.github.io/2019/mybatis20190317/</link>
+      <pubDate>Sun, 17 Mar 2019 22:32:49 +0800</pubDate>
+      
+      <guid>https://ruichunjie.github.io/2019/mybatis20190317/</guid>
+      <description>&lt;p&gt;1.什么是mybatis&lt;br /&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;MyBatis 是一款优秀的持久层框架，它支持定制化SQL、存储过程以及高级映射。MyBatis 避免了几乎所有的 JDBC 代码和手动设置参数以及获取结果集。MyBatis 可以使用简单的 XML 或注解来配置和映射原生信息，将接口和 Java 的POJOs(Plain Old Java Objects,普通的 Java对象)映射成数据库中的记录。&lt;/p&gt;
+
+&lt;p&gt;2.使用mybatis&lt;br /&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;1) 编程式&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;	String resource = &amp;quot;org/mybatis/example/mybatis-config.xml&amp;quot;;
+	InputStream inputStream = Resources.getResourceAsStream(resource);
+	SqlSessionFactory sqlSessionFactory = new 						SqlSessionFactoryBuilder().build(inputStream);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-xml&#34;&gt;&amp;lt;?xml version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;UTF-8&amp;quot; ?&amp;gt;
+&amp;lt;!DOCTYPE configuration
+  PUBLIC &amp;quot;-//mybatis.org//DTD Config 3.0//EN&amp;quot;
+  &amp;quot;http://mybatis.org/dtd/mybatis-3-config.dtd&amp;quot;&amp;gt;
+&amp;lt;configuration&amp;gt;
+  &amp;lt;environments default=&amp;quot;development&amp;quot;&amp;gt;
+    &amp;lt;environment id=&amp;quot;development&amp;quot;&amp;gt;
+      &amp;lt;transactionManager type=&amp;quot;JDBC&amp;quot;/&amp;gt;
+      &amp;lt;dataSource type=&amp;quot;POOLED&amp;quot;&amp;gt;
+        &amp;lt;property name=&amp;quot;driver&amp;quot; value=&amp;quot;${driver}&amp;quot;/&amp;gt;
+        &amp;lt;property name=&amp;quot;url&amp;quot; value=&amp;quot;${url}&amp;quot;/&amp;gt;
+        &amp;lt;property name=&amp;quot;username&amp;quot; value=&amp;quot;${username}&amp;quot;/&amp;gt;
+        &amp;lt;property name=&amp;quot;password&amp;quot; value=&amp;quot;${password}&amp;quot;/&amp;gt;
+      &amp;lt;/dataSource&amp;gt;
+    &amp;lt;/environment&amp;gt;
+  &amp;lt;/environments&amp;gt;
+  &amp;lt;mappers&amp;gt;
+    &amp;lt;mapper resource=&amp;quot;org/mybatis/example/BlogMapper.xml&amp;quot;/&amp;gt;
+  &amp;lt;/mappers&amp;gt;
+&amp;lt;/configuration&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;
+	DataSource dataSource = BlogDataSourceFactory.getBlogDataSource();
+    TransactionFactory transactionFactory = new JdbcTransactionFactory();
+    Environment environment = new Environment(&amp;quot;development&amp;quot;, transactionFactory, dataSource);
+    Configuration configuration = new Configuration(environment);
+    configuration.addMapper(BlogMapper.class);
+    SqlSessionFactory sqlSessionFactory = new 	SqlSessionFactoryBuilder().build(configuration);
+    
+    SqlSession session = sqlSessionFactory.openSession();
+    try {
+      BlogMapper mapper = session.getMapper(BlogMapper.class);
+      Blog blog = mapper.selectBlog(101);
+    } finally {
+      session.close();
+    }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-xml&#34;&gt;	&amp;lt;?xml version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;UTF-8&amp;quot; ?&amp;gt;
+	&amp;lt;!DOCTYPE mapper
+    PUBLIC &amp;quot;-//mybatis.org//DTD Mapper 3.0//EN&amp;quot;
+    &amp;quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&amp;quot;&amp;gt;
+    &amp;lt;mapper namespace=&amp;quot;org.mybatis.example.BlogMapper&amp;quot;&amp;gt;
+    &amp;lt;select id=&amp;quot;selectBlog&amp;quot; resultType=&amp;quot;Blog&amp;quot;&amp;gt;
+    select * from Blog where id = #{id}
+    &amp;lt;/select&amp;gt;
+    &amp;lt;/mapper&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;	package org.mybatis.example;
+    public interface BlogMapper {
+    @Select(&amp;quot;SELECT * FROM blog WHERE id = #{id}&amp;quot;)
+    Blog selectBlog(int id);
+    }
+    package org.mybatis.example;
+    public interface BlogMapper {
+    @Select(&amp;quot;SELECT * FROM blog WHERE id = #{id}&amp;quot;)
+    Blog selectBlog(int id);
+    }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;2)集成式&lt;br /&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;3)scope&lt;br /&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;SqlSessionFactoryBuilder-&amp;gt;method&lt;br /&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;SqlSessionFactory-&amp;gt;application&lt;br /&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;SqlSession-&amp;gt;request/method&lt;br /&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;Mapper-&amp;gt;method&lt;br /&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;mapper 在Spring 中是单例，scope是application级别的&lt;br /&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;3).Mapper的xml 和注解 单个不兼容是互补的&lt;br /&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;4).MyBatis 的配置文件包含了会深深影响 MyBatis 行为的设置（settings）和属性（properties）信息。文档的顶层结构如下：configuration 配置;properties 属性;settings 设置;typeAliases 类型别名;;typeHandlers 类型处理器;objectFactory 对象工厂;plugins 插件;environments 环境;environment 环境变量;transactionManager 事务管理器;dataSource 数据源;databaseIdProvider 数据库厂商标识;mappers 映射器&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-xml&#34;&gt;	&amp;lt;properties resource=&amp;quot;org/mybatis/example/config.properties&amp;quot;&amp;gt;
+      &amp;lt;property name=&amp;quot;username&amp;quot; value=&amp;quot;dev_user&amp;quot;/&amp;gt;
+      &amp;lt;property name=&amp;quot;password&amp;quot; value=&amp;quot;F2Fa3!33TYyg&amp;quot;/&amp;gt;
+    &amp;lt;/properties&amp;gt;
+    
+    &amp;lt;dataSource type=&amp;quot;POOLED&amp;quot;&amp;gt;
+      &amp;lt;property name=&amp;quot;driver&amp;quot; value=&amp;quot;${driver}&amp;quot;/&amp;gt;
+      &amp;lt;property name=&amp;quot;url&amp;quot; value=&amp;quot;${url}&amp;quot;/&amp;gt;
+      &amp;lt;property name=&amp;quot;username&amp;quot; value=&amp;quot;${username}&amp;quot;/&amp;gt;
+      &amp;lt;property name=&amp;quot;password&amp;quot; value=&amp;quot;${password}&amp;quot;/&amp;gt;
+    &amp;lt;/dataSource&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;如果属性在不只一个地方进行了配置，那么 MyBatis 将按照下面的顺序来加载：在 properties 元素体内指定的属性首先被读取。然后根据 properties 元素中的 resource 属性读取类路径下属性文件或根据 url 属性指定的路径读取属性文件，并覆盖已读取的同名属性。最后读取作为方法参数传递的属性，并覆盖已读取的同名属性。
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;从MyBatis 3.4.2开始，你可以为占位符指定一个默认值。例如：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-xml&#34;&gt;	&amp;lt;dataSource type=&amp;quot;POOLED&amp;quot;&amp;gt;
+  		&amp;lt;!-- 默认值是ut_user  --&amp;gt;
+  		&amp;lt;property name=&amp;quot;username&amp;quot; value=&amp;quot;${username:ut_user}&amp;quot;/&amp;gt; 
+	&amp;lt;/dataSource&amp;gt;
+	&amp;lt;!--这个特性默认是关闭的，必须添加一个指定的属性来开启这个特性--&amp;gt;
+	&amp;lt;properties resource=&amp;quot;org/mybatis/example/config.properties&amp;quot;&amp;gt;
+  		&amp;lt;property name=&amp;quot;org.apache.ibatis.parsing.PropertyParser.enable-default-value&amp;quot; value=&amp;quot;true&amp;quot;/&amp;gt; 
+	&amp;lt;/properties&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;你可以使用 &amp;ldquo;:&amp;rdquo; 作为属性键(e.g. db:username) 或者你也可以在sql定义中使用 OGNL 表达式的三元运算符(e.g. ${tableName != null ? tableName : &amp;lsquo;global_constants&amp;rsquo;})， 你应该通过增加一个指定的属性来改变分隔键和默认值的字符。例如：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-xml&#34;&gt;	&amp;lt;properties resource=&amp;quot;org/mybatis/example/config.properties&amp;quot;&amp;gt;
+      &amp;lt;property name=&amp;quot;org.apache.ibatis.parsing.PropertyParser.default-value-separator&amp;quot; value=&amp;quot;?:&amp;quot;/&amp;gt; &amp;lt;!-- Change default value of separator --&amp;gt;
+    &amp;lt;/properties&amp;gt;
+    &amp;lt;dataSource type=&amp;quot;POOLED&amp;quot;&amp;gt;
+      &amp;lt;property name=&amp;quot;username&amp;quot; value=&amp;quot;${db:username?:ut_user}&amp;quot;/&amp;gt;
+    &amp;lt;/dataSource&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;5)TypeHandler
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;6)plugins&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>工厂模式</title>
+      <link>https://ruichunjie.github.io/2019/factorydesignprinciple20190316/</link>
+      <pubDate>Sat, 16 Mar 2019 22:32:49 +0800</pubDate>
+      
+      <guid>https://ruichunjie.github.io/2019/factorydesignprinciple20190316/</guid>
+      <description>&lt;p&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;Spring中用到了很多设计模式，如工厂模式，装饰者模式，代理模式，单例模式，委派模式，策略模式，适配器模式，模板方式模式，观察者模式。设计思路，Spring IOC 工厂，单例，装饰器 。Spring AOP 代理， 观察者。 Spring MVC 委派，适配器，Spring JDBC模板方法。&lt;br /&gt;
+1.简单工厂模式&lt;br /&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;简单工厂模式(Simple Factory Pattern)是指由一个工厂对象 决定创建出哪一种产品类的实例。属于创建型模式，但它不属于GOF，23种设计模式。&lt;br /&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;工厂类负责创建的对象较少。客户端只需要传入工厂类的参数，对于如何创建对象的逻辑不需要关心。但是工厂类的职责相对过重，增加新的产品时需要修改工厂类的判断逻辑，违背开闭原则。不易于扩展过于复杂的产品结构。&lt;br /&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;代码过于简单，不演示了，在JDK中存在Calendar.getInstance()方法&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;	public static Calendar getInstance()
+    {
+        return createCalendar(TimeZone.getDefault(),		    Locale.getDefault(Locale.Category.FORMAT));
+    }
+    
+    private static Calendar createCalendar(TimeZone zone,
+                                           Locale aLocale)
+    {
+        CalendarProvider provider =
+            LocaleProviderAdapter.getAdapter(CalendarProvider.class, aLocale)
+                                 .getCalendarProvider();
+        if (provider != null) {
+            try {
+                return provider.getInstance(zone, aLocale);
+            } catch (IllegalArgumentException iae) {
+                // fall back to the default instantiation
+            }
+        }
+
+        Calendar cal = null;
+
+        if (aLocale.hasExtensions()) {
+            String caltype = aLocale.getUnicodeLocaleType(&amp;quot;ca&amp;quot;);
+            if (caltype != null) {
+                switch (caltype) {
+                case &amp;quot;buddhist&amp;quot;:
+                cal = new BuddhistCalendar(zone, aLocale);
+                    break;
+                case &amp;quot;japanese&amp;quot;:
+                    cal = new JapaneseImperialCalendar(zone, aLocale);
+                    break;
+                case &amp;quot;gregory&amp;quot;:
+                    cal = new GregorianCalendar(zone, aLocale);
+                    break;
+                }
+            }
+        }
+        if (cal == null) {
+            // If no known calendar type is explicitly specified,
+            // perform the traditional way to create a Calendar:
+            // create a BuddhistCalendar for th_TH locale,
+            // a JapaneseImperialCalendar for ja_JP_JP locale, or
+            // a GregorianCalendar for any other locales.
+            // NOTE: The language, country and variant strings are interned.
+            if (aLocale.getLanguage() == &amp;quot;th&amp;quot; &amp;amp;&amp;amp; aLocale.getCountry() == &amp;quot;TH&amp;quot;) {
+                cal = new BuddhistCalendar(zone, aLocale);
+            } else if (aLocale.getVariant() == &amp;quot;JP&amp;quot; &amp;amp;&amp;amp; aLocale.getLanguage() == &amp;quot;ja&amp;quot;
+                       &amp;amp;&amp;amp; aLocale.getCountry() == &amp;quot;JP&amp;quot;) {
+                cal = new JapaneseImperialCalendar(zone, aLocale);
+            } else {
+                cal = new GregorianCalendar(zone, aLocale);
+            }
+        }
+        return cal;
+    }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;又比如logback 中的LoggerFactory#getLogger()， 都是简单工厂的应用&lt;br /&gt;
+2.工厂方法模式&lt;br /&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;工厂方法模式(Fatory Method Pattern)是指定义一个创建对象的接口，但让实现这个接口的类来决定实例化哪个类，工厂方法让类的实例化推迟到子类中进行。用户只需关心所需产品对应的工厂，无须关心创建细节。加入新产品符合开闭原则，提高了系统的可扩展性。类的个数容易过多，增加了代码结构的复杂度。增加了系统的抽象性和理解难度。&lt;br /&gt;
+3.抽象工厂模式&lt;br /&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;抽象工厂模式(Abastract Factory Pattern)是指提供一个创建一系列相关或相互依赖对象的接口，无须指定他们具体的类。&lt;br /&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;客户端(应用层)不依赖于产品类实例如何被创建、实现等细节。强调一系列相关的产品对象(属于同一产品族)一起使用创建对象需要大量重复的代码。提供一个产品类的库，所有的产品以同样的接口出现，从而使客户端不依赖于具体实现。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;	public interface IVideo{
+        void record();
+    }
+    
+    public interface INote{
+        void edit();
+    }
+    
+    public interface CourseFactory{
+        IVideo createVideo();
+        INote createNote();
+    }
+    
+    public class JavaVideo implements IVideo{
+        public void record(){
+			System.out.println(&amp;quot;录制Java视频&amp;quot;);
+		}
+    }
+    
+    public class JavaNote implements INote{
+        public void edit(){
+            System.out.println(&amp;quot;编写Java笔记&amp;quot;);
+        }
+    }
+    
+    public class JavaCourseFactory implements CourseFactory{
+        public INote createNote(){
+            return new JavaNote();
+        }
+        
+        public IVideo createVideo(){
+            return new JavaVideo();
+        }
+    }
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>软件架构七大原则</title>
+      <link>https://ruichunjie.github.io/2019/sevendesignprinciple20190311/</link>
+      <pubDate>Mon, 11 Mar 2019 22:32:49 +0800</pubDate>
+      
+      <guid>https://ruichunjie.github.io/2019/sevendesignprinciple20190311/</guid>
+      <description>&lt;p&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;虽然总是说设计模式，然而感觉在开发中却很少用到。想抽点时间深入学习下设计模式。而在学习设计模式前，先来了解下软件架构七大原则。&lt;/p&gt;
+
+&lt;p&gt;1.开闭原则&lt;br /&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;开闭原则(Open-Closed Principle, OCP)是指一个软件实体如类、模块和函数应该对 扩展开放，对修改关闭。所谓的开闭，也正是对扩展和修改两个行为的一个原则。强调 的是用抽象构建框架，用实现扩展细节。实现开闭原则的核心思想就是面向抽象编程。如下示例:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;	/**
+	 * 课程接口 
+	 */
+	public interface ICourse{
+        Integer getId();
+        String getName();
+        Double getPrice();
+	}
+	
+	/**
+	 * java课程 如果此时java课程做活动怎么写呢？
+	 */
+	public class JavaCourse implements ICourse{
+        private Integer Id;
+        private String name;
+        private Double price;
+        public JavaCourse(Integer id, String name, Double price){
+            this.Id = id;
+            this.name = name;
+            this.price = price;
+        }
+        public Integer getId(){
+            return Id;
+        }
+        public String getName(){
+            return name;
+        }
+        public String getPrice(){
+            return price;
+        }
+	}
+	
+	/**
+	 * java折扣类
+	 */
+	public class JavaDiscountCourse extends JavaCourse{
+        public JavaDiscountCourse(Integer id, String name, Double price){
+            super(id,name,price);
+        }
+        
+        public Double getOriginPrice(){
+            return super.getPrice();
+        }
+        
+        public Double getPrice(){
+            return super.getPrice()*0.61;
+        }
+	}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;2.依赖倒置原则&lt;br /&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;依赖倒置原则(Dependence Inversion Principle,DIP)是指设计代码结构时，高层模块不应该依赖底层模块，二者都应该依赖其抽象。抽象不应该依赖细节;细节应该依赖抽象。通过依赖倒置，可以减少类与类之间的耦合性，提高系统的稳定性，提高代码的可读性和可维护性，并能够降低修改程序所造成的风险。如下示例:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;	/**
+	 * 课程抽象ICourse接口
+	 */
+	 public interface ICourse{
+         void study();
+	 }
+	 
+	 /**
+	  * java课程类
+	  */
+	  public Class JavaCourse implements ICourse{
+          public void study(){
+			System.out.println(&amp;quot;正在学习java&amp;quot;);
+		  }
+	  }
+	  
+	  /**
+	   * 学习者类 依赖注入 构造器注入
+	   */
+	   public class Learner{
+	   	   private ICourse course;
+	   	   public Learner(ICourse course){
+	   	     this.course = course;
+	   	   }
+	   	   public void study(){
+                     course.study();
+	   	   }
+	   }
+	   
+	   /**
+	    * setter方法注入
+	    */
+	    public class Learn{
+            public ICourse course;
+            public void setCourse(ICourse course){
+                this.course = course;
+            }
+            public void study(){
+               course.study();
+	       }
+	    }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;3.单一职责原则&lt;br /&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;单一职责(Simple Responsibility Pinciple，SRP)是指不要存在多于一个导致类变更的原因。如下示例:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;	/**
+	 * 直播
+	 * /
+	public class LiveCourse{
+        public void study(String courseName){
+            System.out.ptintln(courseName+&amp;quot;不能快进&amp;quot;);
+        }
+	}
+	
+	/**
+	 * 录播
+	 * /
+	public class ReplayCourse{
+        public void study(String courseName){
+            System.out.println(courseName+&amp;quot;不能快进&amp;quot;);
+        }
+	}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;4.接口隔离原则&lt;br /&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;接口隔离原则(Interface Segregation Principle, ISP)是指用多个专门的接口，而不使 用单一的总接口，客户端不应该依赖它不需要的接口。应当注意一下几点:&lt;br /&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;1、一个类对一类的依赖应该建立在最小的接口之上。&lt;br /&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;2、建立单一接口，不要建立庞大臃肿的接口。&lt;br /&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;3、尽量细化接口，接口中的方法尽量少(不是越少越好，一定要适度)。&lt;br /&gt;
+5.迪米特法则&lt;br /&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;迪米特原则(Law of Demeter LoD)是指一个对象应该对其他对象保持最少的了解，又 叫最少知道原则(Least Knowledge Principle,LKP)，尽量降低类与类之间的耦合。迪米特原则主要强调只和朋友交流，不和陌生人说话。出现在成员变量、方法的输入、输 出参数中的类都可以称之为成员朋友类，而出现在方法体内部的类不属于朋友类。&lt;br /&gt;
+6.里氏替换原则&lt;br /&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;一个软件实体如果适用一个 父类的话，那一定是适用于其子类，所有引用父类的地方必须能透明地使用其子类的对 象，子类对象能够替换父类对象，而程序逻辑不变&lt;br /&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;1、子类可以实现父类的抽象方法，但不能覆盖父类的非抽象方法。&lt;br /&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;2、子类中可以增加自己特有的方法。&lt;br /&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;3、当子类的方法重载父类的方法时，方法的前置条件(即方法的输入/入参)要比父类 方法的输入参数更宽松。&lt;br /&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;4、当子类的方法实现父类的方法时(重写/重载或实现抽象方法)，方法的后置条件(即 方法的输出/返回值)要比父类更严格或相等。&lt;br /&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;优点：&lt;br /&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;1、约束继承泛滥，开闭原则的一种体现。&lt;br /&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;2、加强程序的健壮性，同时变更时也可以做到非常好的兼容性，提高程序的维护性、扩 展性。降低需求变更时引入的风险。&lt;br /&gt;
+7.合成复用原则&lt;br /&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;合成复用原则(Composite/Aggregate Reuse Principle,CARP)是指尽量使用对象组 合(has-a)/聚合(contanis-a)，而不是继承关系达到软件复用的目的。可以使系统更加灵 活，降低类与类之间的耦合度，一个类的变化对其他类造成的影响相对较少。&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>- About -</title>
+      <link>https://ruichunjie.github.io/about/</link>
+      <pubDate>Mon, 11 Mar 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://ruichunjie.github.io/about/</guid>
+      <description>
+
+&lt;h3 id=&#34;关于本站&#34;&gt;关于本站&lt;/h3&gt;
+
+&lt;p&gt;很早就想写博客了，以前在博客园上写过零零散散的一些文章，后来没能坚持下来，前几天看到搭建独立博客的教程，一时手痒试着搭建了空谷芝兰。&lt;/p&gt;
+
+&lt;p&gt;这个博客目前计划用于每日总结，生活趣事，技术学习这些用途。目前用的是Hugo技术和LeaveIt主题。&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

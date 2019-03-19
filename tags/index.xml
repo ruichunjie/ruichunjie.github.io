@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tags on 空谷芝兰</title>
+    <link>https://ruichunjie.github.io/tags/</link>
+    <description>Recent content in Tags on 空谷芝兰</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    
+	<atom:link href="https://ruichunjie.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>mybatis</title>
+      <link>https://ruichunjie.github.io/tags/mybatis/</link>
+      <pubDate>Sun, 17 Mar 2019 22:32:49 +0800</pubDate>
+      
+      <guid>https://ruichunjie.github.io/tags/mybatis/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>设计模式</title>
+      <link>https://ruichunjie.github.io/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/</link>
+      <pubDate>Tue, 19 Mar 2019 12:55:52 +0800</pubDate>
+      
+      <guid>https://ruichunjie.github.io/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

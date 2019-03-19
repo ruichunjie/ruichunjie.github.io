@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noodp"/>
+  <meta name="author" content="ruichunjie">
+  
+  
+  
+  <link rel="prev" href="https://ruichunjie.github.io/2019/prototype20190319/" />
+  
+  <link rel="canonical" href="https://ruichunjie.github.io/2019/proxy20190319/" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <title>
+       
+       
+           代理模式 | 空谷芝兰
+       
+  </title>
+  <meta name="title" content="代理模式 | 空谷芝兰">
+    
+  
+  <link rel="stylesheet" href="/font/iconfont.css">
+  <link rel="stylesheet" href="/css/main.min.css">
+
+
+  
+  
+ 
+
+<script type="application/ld+json">
+ "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "mainEntityOfPage": {
+         "@type": "WebPage",
+         "@id": "https://ruichunjie.github.io/"
+    },
+    "articleSection" : "posts",
+    "name" : "代理模式",
+    "headline" : "代理模式",
+    "description" : "1.代理模式
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;代理模式(Proxy Pattern)是指为其他对象提供一种代理，以控制对这个对象的访问。代理对象在客服端和目标对象之间起到中介作用，代理模式属于结构型设计模式。使用 代理模式主要有两个目的:一保护目标对象，二增强目标对象。有静态代理和动态代理。
+2.静态代理
+3.动态代理
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;jdk动态代理
+public class JDKproxy implements InvocationHandler{ privte Person target; public Object getInstance(Person target) throws Exception{ this.target = target; Class&lt;?&gt; clazz = target.getClass(); return Proxy.newProxyInstance(clazz.getClassLoader(),clazz.getInterfaces(),this); } public Object invoke(Object proxy, Method method,Object[] args)throws Exception{ before(); Object obj = method.invoke(this.target,args); after(); return obj; } public void before(){} public void after(){} }  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;JDK Proxy 生成对象的步骤
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1)拿到被代理对象的引用并获取所有的接口，反射获取
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2)JDK Proxy类重新生成新的类，同时新的类要实现被代理类所实现的所有的接口
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3)动态生成Java代码，把新加的业务逻辑方法由一定的逻辑代码去调用(在代码中体现)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4)编译新生成的Java代码.class
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5)重新加载到JVM中运行
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;自定义生成动态反射
+/** * @Author:ChunJieRen * @Date:2019/3/13 16:56 * @Description: 1.",
+    "inLanguage" : "en-us",
+    "author" : "ruichunjie",
+    "creator" : "ruichunjie",
+    "publisher": "ruichunjie",
+    "accountablePerson" : "ruichunjie",
+    "copyrightHolder" : "ruichunjie",
+    "copyrightYear" : "2019",
+    "datePublished": "2019-03-19 12:55:52 &#43;0800 CST",
+    "dateModified" : "2019-03-19 12:55:52 &#43;0800 CST",
+    "url" : "https://ruichunjie.github.io/2019/proxy20190319/",
+    "wordCount" : "854",
+    "keywords" : [ "设计模式", "空谷芝兰"]
+}
+</script>
+
+</head>
+
+  
+
+
+  <body class="">
+    <div class="wrapper">
+        <nav class="navbar">
+    <div class="container">
+        <div class="navbar-header header-logo">
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://ruichunjie.github.io/">空谷芝兰</a>
+        </div>
+        <div class="menu navbar-right">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+     <div class="container">
+        <div class="navbar-header">
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://ruichunjie.github.io/">空谷芝兰</a></div>
+            <div class="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+     
+          <div class="menu" id="mobile-menu">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+    	 <main class="main">
+          <div class="container">
+      		
+<article class="post-warp" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">代理模式</h1>
+        <div class="post-meta">
+                Written by <a itemprop="name" href="https://ruichunjie.github.io/" rel="author">ruichunjie</a> with ♥ 
+                <span class="post-time">
+                on <time datetime=2019-03-19 itemprop="datePublished">March 19, 2019</time>
+                </span>
+                in
+                <i class="iconfont icon-folder"></i>
+                <span class="post-category">
+                        <a href="https://ruichunjie.github.io/categories/%E7%BC%96%E7%A8%8B-%E6%8A%80%E6%9C%AF/"> 编程 · 技术 </a>
+                        
+                </span>
+        </div>
+    </header>
+    <div class="post-content">
+        
+
+        
+
+        
+        
+     
+          
+          
+          
+
+          
+          
+          
+
+          <p>1.代理模式<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;代理模式(Proxy Pattern)是指为其他对象提供一种代理，以控制对这个对象的访问。代理对象在客服端和目标对象之间起到中介作用，代理模式属于结构型设计模式。使用 代理模式主要有两个目的:一保护目标对象，二增强目标对象。有静态代理和动态代理。<br />
+2.静态代理<br />
+3.动态代理<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;jdk动态代理</p>
+
+<pre><code class="language-java">   public class JDKproxy implements InvocationHandler{
+       privte Person target;
+       public Object getInstance(Person target) throws Exception{
+           this.target = target;
+           Class&lt;?&gt; clazz = target.getClass();
+           return Proxy.newProxyInstance(clazz.getClassLoader(),clazz.getInterfaces(),this);
+       }
+       
+      public Object invoke(Object proxy, Method method,Object[] args)throws Exception{
+          before();
+          Object obj = method.invoke(this.target,args);
+          after();
+          return obj;
+      }
+      
+      public void before(){}
+      public void after(){}
+   }
+</code></pre>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;JDK Proxy 生成对象的步骤<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1)拿到被代理对象的引用并获取所有的接口，反射获取<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2)JDK Proxy类重新生成新的类，同时新的类要实现被代理类所实现的所有的接口<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3)动态生成Java代码，把新加的业务逻辑方法由一定的逻辑代码去调用(在代码中体现)<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4)编译新生成的Java代码.class<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5)重新加载到JVM中运行<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;自定义生成动态反射</p>
+
+<pre><code class="language-java">    /**
+     * @Author:ChunJieRen
+     * @Date:2019/3/13 16:56
+     * @Description: 1.创建Handler接口
+     */
+    public interface MyInvocationHandler {
+        public Object invoke(Object proxy, Method method, Object[] args)
+                throws Throwable;
+    }
+	/**
+     * @Author:ChunJieRen
+     * @Date:2019/3/13 17:12
+     * @Description: 2.生成Proxy类
+     */
+    public class MyProxy {
+
+        public static final String ln = &quot;\r\n&quot;;
+
+        public static Object newProxyInstance(MyClassLoader classLoader,Class&lt;?&gt; [] interfaces, MyInvocationHandler h){
+            try{
+                //1.动态生成源代码.java文件
+                String src = generateSrc(interfaces);
+                System.out.println(src);
+                //2 java文件输出磁盘
+                String filePath = MyProxy.class.getResource(&quot;&quot;).getPath();
+                System.out.println(filePath);
+                File f = new File(filePath+&quot;$Proxy0.java&quot;);
+                FileWriter fw = new FileWriter(f);
+                fw.write(src);
+                fw.flush();
+                fw.close();
+                //3、把生成的.java文件编译成.class文件
+                JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
+                StandardJavaFileManager manage = compiler.getStandardFileManager(null,null,null);
+                Iterable iterable = manage.getJavaFileObjects(f);
+                JavaCompiler.CompilationTask task = compiler.getTask(null,manage,null,null,null,iterable);
+                task.call();
+                manage.close();
+                //4、编译生成的.class文件加载到JVM中来
+                Class proxyClass =  classLoader.findClass(&quot;$Proxy0&quot;);
+                Constructor c = proxyClass.getConstructor(MyInvocationHandler.class);
+                f.delete();
+                //5、返回字节码重组以后的新的代理对象
+                return c.newInstance(h);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        public static String generateSrc(Class&lt;?&gt;[] interfaces){
+            StringBuffer sb = new StringBuffer();
+            sb.append(&quot;package com.gupao.proxy.dynamicproxy.myproxy;&quot;+ln);
+            sb.append(&quot;import com.gupao.proxy.HelloWorld;&quot;+ln);
+            sb.append(&quot;import java.lang.reflect.*;&quot;);
+            sb.append(&quot;public class $Proxy0 implements &quot; + interfaces[0].getName()+&quot;{&quot;+ln);
+                    sb.append(&quot;MyInvocationHandler h;&quot;+ln);
+                    sb.append(&quot;public $Proxy0(MyInvocationHandler h){&quot;+ln);
+                        sb.append(&quot;this.h = h;&quot;);
+                    sb.append(&quot;}&quot;+ln);
+            for(Method m : interfaces[0].getMethods()) {
+                Class&lt;?&gt;[] params = m.getParameterTypes();
+                StringBuffer paramNames = new StringBuffer();
+                StringBuffer paramValues = new StringBuffer();
+                StringBuffer paramClasses = new StringBuffer();
+
+                for (int i = 0; i &lt; params.length; i++) {
+                    Class clazz = params[i];
+                    String type = clazz.getName();
+                    String paramName = toLowerFirst(clazz.getSimpleName());
+                    paramNames.append(type + &quot; &quot; + paramName);
+                    paramValues.append(paramName);
+                    paramClasses.append(clazz.getName() + &quot;.class&quot;);
+                    if (i &gt; 0 &amp;&amp; i &lt; params.length - 1) {
+                        paramNames.append(&quot;,&quot;);
+                        paramClasses.append(&quot;,&quot;);
+                        paramValues.append(&quot;,&quot;);
+                    }
+                }
+
+                sb.append(&quot;public &quot; + m.getReturnType().getName() + &quot; &quot; + m.getName() + &quot;(&quot; + paramNames.toString() + &quot; ){&quot; + ln);
+                sb.append(&quot;try{&quot; + ln);
+                sb.append(&quot;Method m = &quot; + interfaces[0].getName() + &quot;.class.getMethod(\&quot;&quot; + m.getName() + &quot;\&quot;,new Class[]{&quot; +
+                        paramClasses.toString() + &quot;});&quot; + ln);
+                sb.append(hasReturn(m.getReturnType())? &quot;&quot;: &quot;return &quot;).append(getCaseCode(&quot;this.h.invoke(this,m,new Object[]{&quot; + paramValues + &quot;})&quot;, m.getReturnType()) + &quot;;&quot; + ln);
+                sb.append(&quot;}catch(Error _ex) { }&quot;);
+                sb.append(&quot;catch(Throwable e){&quot; + ln);
+                sb.append(&quot;throw new UndeclaredThrowableException(e);&quot; + ln);
+                sb.append(&quot;}&quot;);
+                sb.append(getReturnEmptyCode(m.getReturnType()));
+                sb.append(&quot;}&quot;);
+            }
+
+            sb.append(&quot;}&quot; + ln);
+            return sb.toString();
+        }
+
+        private static String toLowerFirst(String src){
+            char [] chars = src.toCharArray();
+            chars[0] += 32;
+            return String.valueOf(chars);
+        }
+
+        private static boolean hasReturn(Class&lt;?&gt; clazz){
+            return clazz != Void.class;
+        }
+        private static Map&lt;Class,Class&gt; mappings = new HashMap&lt;Class, Class&gt;();
+        static {
+            mappings.put(int.class,Integer.class);
+        }
+
+        private static String getCaseCode(String code,Class&lt;?&gt; returnClass){
+            if(mappings.containsKey(returnClass)){
+                return &quot;((&quot; + mappings.get(returnClass).getName() +  &quot;)&quot; + code + &quot;).&quot; + returnClass.getSimpleName() + &quot;Value()&quot;;
+            }
+            return code;
+        }
+
+        private static String getReturnEmptyCode(Class&lt;?&gt; returnClass){
+            if(mappings.containsKey(returnClass)){
+                return &quot;return 0;&quot;;
+            }else if(returnClass.getName().equalsIgnoreCase(Void.class.getSimpleName())){
+                return &quot;&quot;;
+            }else {
+                return &quot;return null;&quot;;
+            }
+        }
+    }
+    
+    /**
+     * @Author:ChunJieRen
+     * @Date:2019/3/13 16:55
+     * @Description: 3.创建classloader类
+     */
+    public class MyClassLoader extends ClassLoader{
+
+        private File classPathFile;
+
+        public MyClassLoader(){
+            String classPath = MyClassLoader.class.getResource(&quot;&quot;).getPath();
+            this.classPathFile = new File(classPath);
+        }
+
+        @Override
+        protected Class&lt;?&gt; findClass(String name) throws ClassNotFoundException{
+            String className = MyClassLoader.class.getPackage().getName()+&quot;.&quot;+name;
+            if(!Objects.isNull(classPathFile)){
+                File classFile = new File(classPathFile,name.replaceAll(&quot;\\.&quot;,&quot;/&quot;) + &quot;.class&quot;);
+                if(classFile.exists()){
+                    FileInputStream in = null;
+                    ByteArrayOutputStream out = null;
+                    try{
+                        in = new FileInputStream(classFile);
+                        out = new ByteArrayOutputStream();
+                        byte [] buff = new byte[1024];
+                        int len;
+                        while ((len = in.read(buff)) != -1){
+                            out.write(buff,0,len);
+                        }
+                        return defineClass(className,out.toByteArray(),0,out.size());
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                }
+            }
+            return null;
+        }
+
+    }
+
+    /**
+     * @Author:ChunJieRen
+     * @Date:2019/3/13 17:59
+     * @Description: 4.反射
+     */
+    public class MyProxym implements MyInvocationHandler {
+
+        private Object target;
+        public Object getInstance(Object person) throws Exception{
+            this.target = person;
+            Class&lt;?&gt; clazz = target.getClass();
+            return MyProxy.newProxyInstance(new MyClassLoader(),clazz.getInterfaces(),this);
+        }
+
+        @Override
+        public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+            before();
+            Object obj = method.invoke(this.target,args);
+            after();
+            return obj;
+        }
+
+        public void before(){
+            System.out.println(&quot;打招呼前&quot;);
+        }
+
+        public void after(){
+            System.out.println(&quot;打招呼后&quot;);
+        }
+    }
+
+    /**
+     * @Author:ChunJieRen
+     * @Date:2019/3/13 18:01
+     * @Description: 5测试
+     */
+    public class MyTest {
+
+        public static void main(String[] args) {
+
+            try{
+                HelloWorld helloWorld = (HelloWorld)new MyProxym().getInstance(new HelloWorldImpl());
+                System.out.println(helloWorld.getClass());
+                helloWorld.sayHelloWorld();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }	
+    }
+</code></pre>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cglib动态代理</p>
+
+<pre><code class="language-java">public class CglibMeipo implements MethodInterceptor{
+    public Object getInstance(Class&lt;?&gt; clazz) throws Exception{
+        Enhancer enhancer = new Enhancer(); 
+        //要把哪个设置为即将生成的新类父类 		
+        enhancer.setSuperclass(clazz); 
+        enhancer.setCallback(this);
+        return enhancer.create(); 
+    }
+    public Object intercept(Object o, Method method, Object[] objects, MethodProxy methodProxy) throws Throwable {
+        //业务的增强
+        before();
+        Object obj = methodProxy.invokeSuper(o,objects); after();
+        return obj;
+    }
+    private void before(){}
+    private void after(){}
+}
+</code></pre>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;原理:代理对象调用 this.findLove()方法-&gt;调用拦截器 -&gt;methodProxy.invokeSuper-&gt;CGLIB$findLove$0-&gt;被代理对象 findLove()方法。CGLib 动态代理执行代理方法效率之所以比 JDK 的高是因为 Cglib 采用了 FastClass 机 制，它的原理简单来说就是:为代理类和被代理类各生成一个 Class，这个 Class 会为代理类或被代理类的方法分配一个 index(int 类型)。这个 index 当做一个入参，FastClass 就可以直接定位要调用的方法直接进行调用，这样省去了反射调用，所以调用效率比 JDK 动态代理通过反射调用高。FastClass 并不是跟代理类一块生成的，而是在第一次执行 MethodProxy  nvoke/invokeSuper 时生成的并放在了缓存中。<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CGLib 和 JDK 动态代理对比<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.JDK 动态代理是实现了被代理对象的接口，CGLib 是继承了被代理对象。<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.JDK 和 CGLib 都是在运行期生成字节码，JDK 是直接写 Class 字节码，CGLib 使用 ASM 框架写 Class 字节码，Cglib 代理实现更复杂，生成代理类比 JDK 效率低。<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.JDK 调用代理方法，是通过反射机制调用，CGLib 是通过 FastClass 机制直接调用方法，CGLib 执行效率更高。
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;代理模式在 Spring 源码中的应用<br />
+ProxyFactoryBean#getObject</p>
+
+<pre><code class="language-java">    public Object getObject() throws BeansException { initializeAdvisorChain();
+        if (isSingleton()) {
+            return getSingletonInstance(); 
+        }
+        else {
+            if (this.targetName == null) {
+            logger.warn(&quot;Using non-singleton proxies with singleton targets is often undesirable. &quot; + &quot;Enable prototype proxies by setting the 'targetName' property.&quot;);
+            }
+		return newPrototypeInstance(); 
+		}
+	}
+</code></pre>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Spring 利用动态代理实现 AOP 有两个非常重要的类，一个是 JdkDynamicAopProxy 类 和 CglibAopProxy 类<br />
+4.Spring 中的代理选择原则<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1、当 Bean 有实现接口时，Spring 就会用 JDK 的动态代理<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2、当 Bean 没有实现接口时，Spring 选择 CGLib。<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3、Spring 可以通过配置强制使用 CGLib，只需在 Spring 的配置文件中加入如下代码:</p>
+
+<pre><code class="language-xml">	&lt;aop:aspectj-autoproxy proxy-target-class=&quot;true&quot;/&gt;
+</code></pre>
+
+<p>5.静态代理和动态的本质区别<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1、静态代理只能通过手动完成代理操作，如果被代理类增加新的方法，代理类需要同步新增，违背开闭原则。<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2、动态代理采用在运行时动态生成代码的方式，取消了对被代理类的扩展限制，遵循开闭原则。<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3、若动态代理要对目标类的增强逻辑扩展，结合策略模式，只需要新增策略类便可完成， 无需修改代理类的代码。<br />
+6.代理模式的优缺点<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;优点：<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1、代理模式能将代理对象与真实被调用的目标对象分离。<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2、一定程度上降低了系统的耦合度，扩展性好。<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3、可以起到保护目标对象的作用。<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4、可以对目标对象的功能增强。<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;缺点：<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1、代理模式会造成系统设计中类的数量增加。<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2、在客户端和目标对象增加一个代理对象，会造成请求处理速度变慢。<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3、增加了系统的复杂度。</p>
+
+    </div>
+
+    <div class="post-copyright">
+             
+            <p class="copyright-item">
+                <span>Author:</span>
+                <span>ruichunjie </span>
+                </p>
+            
+           
+             
+            <p class="copyright-item">
+                    <span>Link:</span>
+                    <a href=https://ruichunjie.github.io/2019/proxy20190319/>https://ruichunjie.github.io/2019/proxy20190319/</span>
+            </p>
+            
+             
+            <p class="copyright-item lincese">
+                本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可
+            </p>
+            
+    </div>
+
+  
+    <div class="post-tags">
+        
+            <section>
+            <i class="iconfont icon-tag"></i>Tag(s): 
+            
+            <span class="tag"><a href="https://ruichunjie.github.io/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">
+                    #设计模式</a></span>
+            
+            </section>
+        
+        <section>
+                <a href="javascript:window.history.back();">back</a></span> · 
+                <span><a href="https://ruichunjie.github.io/">home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+        <a href="https://ruichunjie.github.io/2019/prototype20190319/" class="prev" rel="prev" title="原型模式"><i class="iconfont icon-left"></i>&nbsp;原型模式</a>
+         
+        
+    </div>
+
+    <div class="post-comment">
+          
+                 
+          
+    </div>
+</article>
+          </div>
+		   </main>
+      <footer class="footer">
+    <div class="copyright">
+        &copy;
+        
+        <span itemprop="copyrightYear">2019 - 2019</span>
+        
+        <span class="with-love">
+    	 <i class="iconfont icon-love"></i> 
+         </span>
+         
+            <span class="author" itemprop="copyrightHolder"><a href="https://ruichunjie.github.io/">ruichunjie</a> | </span> 
+         
+
+         
+		  <span>Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow">Hugo</a> & <a href="https://github.com/liuzc/leaveit" target="_blank" rel="external nofollow">LeaveIt</a></span> 
+    </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+    <script src="/js/vendor_no_gallery.min.js" async=""></script>
+    
+  
+
+
+
+     </div>
+  </body>
+</html>
