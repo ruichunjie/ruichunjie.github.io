@@ -6,10 +6,23 @@
     <description>Recent content in 编程 · 技术 on 空谷芝兰</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 20 Mar 2019 05:10:19 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 20 Mar 2019 12:39:09 +0800</lastBuildDate>
     
 	<atom:link href="https://ruichunjie.github.io/categories/%E7%BC%96%E7%A8%8B-%E6%8A%80%E6%9C%AF/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Templateandadapter</title>
+      <link>https://ruichunjie.github.io/2019/templateandadapter/</link>
+      <pubDate>Wed, 20 Mar 2019 12:39:09 +0800</pubDate>
+      
+      <guid>https://ruichunjie.github.io/2019/templateandadapter/</guid>
+      <description>1.模版模式
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;模板模式通常又叫模板方法模式(Template Method Pattern)是指定义一个算法的骨 架，并允许子类为一个或者多个步骤提供实现。模板方法使得子类可以在不改变算法结 构的情况下，重新定义算法的某些步骤，属于行为性设计模式。模板方法适用于以下应 用场景:
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;1)一次性实现一个算法的不变的部分，并将可变的行为留给子类来实现。
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;2)各子类中公共的行为被提取出来并集中到一个公共的父类中，从而避免代码重复。
+public interface RowMapper&amp;lt;T&amp;gt;{ T mapRow(ResultSet rs, int rowNum) throws Exception; } public abstract class JdbcTemplate{ private DataSource dataSource; public JdbcTemplate(DataSource dataSource){ this.dataSource = dataSource; } public List&amp;lt;?&amp;gt; executeQuery(String sql, RowMapper&amp;lt;?&amp;gt; rowMapper, Object[] values){ try{ //1.获得连接 Connection conn = this.getConnection(); //2.创建语句集 PreparedStatement pstm = this.createPrepareStatement(conn,sql); //3.执行语句集 ResultSet rs = this.executeQuery(pstm,values); //4.处理结果集 List&amp;lt;?&amp;gt; result=this.paresResultSet(rs,rowMapper); //5.关闭结果集 this.closeResultSet(rs); //6.关闭语句集 this.closeStatement(pstm); //7.关闭连接 this.closeConnection(conn); return result; }catch(Exception e){ e.</description>
+    </item>
     
     <item>
       <title>委派模式和策略模式</title>

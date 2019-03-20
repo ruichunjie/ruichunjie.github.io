@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noodp"/>
+  <meta name="author" content="ruichunjie">
+  
+  
+  
+  <link rel="prev" href="https://ruichunjie.github.io/2019/delegateandstrategy20190320/" />
+  
+  <link rel="canonical" href="https://ruichunjie.github.io/2019/templateandadapter/" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <title>
+       
+       
+           Templateandadapter | 空谷芝兰
+       
+  </title>
+  <meta name="title" content="Templateandadapter | 空谷芝兰">
+    
+  
+  <link rel="stylesheet" href="/font/iconfont.css">
+  <link rel="stylesheet" href="/css/main.min.css">
+
+
+  
+  
+ 
+
+<script type="application/ld+json">
+ "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "mainEntityOfPage": {
+         "@type": "WebPage",
+         "@id": "https://ruichunjie.github.io"
+    },
+    "articleSection" : "posts",
+    "name" : "Templateandadapter",
+    "headline" : "Templateandadapter",
+    "description" : "1.模版模式
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;模板模式通常又叫模板方法模式(Template Method Pattern)是指定义一个算法的骨 架，并允许子类为一个或者多个步骤提供实现。模板方法使得子类可以在不改变算法结 构的情况下，重新定义算法的某些步骤，属于行为性设计模式。模板方法适用于以下应 用场景:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1)一次性实现一个算法的不变的部分，并将可变的行为留给子类来实现。
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2)各子类中公共的行为被提取出来并集中到一个公共的父类中，从而避免代码重复。
+public interface RowMapper&lt;T&gt;{ T mapRow(ResultSet rs, int rowNum) throws Exception; } public abstract class JdbcTemplate{ private DataSource dataSource; public JdbcTemplate(DataSource dataSource){ this.dataSource = dataSource; } public List&lt;?&gt; executeQuery(String sql, RowMapper&lt;?&gt; rowMapper, Object[] values){ try{ //1.获得连接 Connection conn = this.getConnection(); //2.创建语句集 PreparedStatement pstm = this.createPrepareStatement(conn,sql); //3.执行语句集 ResultSet rs = this.executeQuery(pstm,values); //4.处理结果集 List&lt;?&gt; result=this.paresResultSet(rs,rowMapper); //5.关闭结果集 this.closeResultSet(rs); //6.关闭语句集 this.closeStatement(pstm); //7.关闭连接 this.closeConnection(conn); return result; }catch(Exception e){ e.",
+    "inLanguage" : "en-us",
+    "author" : "ruichunjie",
+    "creator" : "ruichunjie",
+    "publisher": "ruichunjie",
+    "accountablePerson" : "ruichunjie",
+    "copyrightHolder" : "ruichunjie",
+    "copyrightYear" : "2019",
+    "datePublished": "2019-03-20 12:39:09 &#43;0800 CST",
+    "dateModified" : "2019-03-20 12:39:09 &#43;0800 CST",
+    "url" : "https://ruichunjie.github.io/2019/templateandadapter/",
+    "wordCount" : "648",
+    "keywords" : [ "设计模式", "空谷芝兰"]
+}
+</script>
+
+</head>
+
+  
+
+
+  <body class="">
+    <div class="wrapper">
+        <nav class="navbar">
+    <div class="container">
+        <div class="navbar-header header-logo">
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://ruichunjie.github.io">空谷芝兰</a>
+        </div>
+        <div class="menu navbar-right">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+     <div class="container">
+        <div class="navbar-header">
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://ruichunjie.github.io">空谷芝兰</a></div>
+            <div class="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+     
+          <div class="menu" id="mobile-menu">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+    	 <main class="main">
+          <div class="container">
+      		
+<article class="post-warp" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">Templateandadapter</h1>
+        <div class="post-meta">
+                Written by <a itemprop="name" href="https://ruichunjie.github.io" rel="author">ruichunjie</a> with ♥ 
+                <span class="post-time">
+                on <time datetime=2019-03-20 itemprop="datePublished">March 20, 2019</time>
+                </span>
+                in
+                <i class="iconfont icon-folder"></i>
+                <span class="post-category">
+                        <a href="https://ruichunjie.github.io/categories/%E7%BC%96%E7%A8%8B-%E6%8A%80%E6%9C%AF/"> 编程 · 技术 </a>
+                        
+                </span>
+        </div>
+    </header>
+    <div class="post-content">
+        
+
+        
+
+        
+        
+     
+          
+          
+          
+
+          
+          
+          
+
+          <p>1.模版模式<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;模板模式通常又叫模板方法模式(Template Method Pattern)是指定义一个算法的骨 架，并允许子类为一个或者多个步骤提供实现。模板方法使得子类可以在不改变算法结 构的情况下，重新定义算法的某些步骤，属于行为性设计模式。模板方法适用于以下应 用场景:<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1)一次性实现一个算法的不变的部分，并将可变的行为留给子类来实现。<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2)各子类中公共的行为被提取出来并集中到一个公共的父类中，从而避免代码重复。</p>
+
+<pre><code class="language-java">   public interface RowMapper&lt;T&gt;{
+       T mapRow(ResultSet rs, int rowNum) throws Exception;
+   }
+   
+   public abstract class JdbcTemplate{
+       private DataSource dataSource;
+       
+       public JdbcTemplate(DataSource dataSource){
+           this.dataSource = dataSource;
+       }
+       
+       public List&lt;?&gt; executeQuery(String sql, RowMapper&lt;?&gt; rowMapper, Object[] values){
+           try{
+               //1.获得连接
+               Connection conn = this.getConnection();
+               //2.创建语句集
+               PreparedStatement pstm = this.createPrepareStatement(conn,sql);
+               //3.执行语句集
+               ResultSet rs = this.executeQuery(pstm,values);
+               //4.处理结果集
+               List&lt;?&gt; result=this.paresResultSet(rs,rowMapper);
+               //5.关闭结果集
+               this.closeResultSet(rs);
+               //6.关闭语句集
+               this.closeStatement(pstm);
+               //7.关闭连接
+               this.closeConnection(conn);
+               return result;
+           }catch(Exception e){
+               e.printStackTrace();
+           }
+           return null;
+       }
+       
+       protected void closeConnection(Connection conn)throws Exception{
+           conn.close();
+       }
+       
+       protected void closeStatement(PreparedStatement pstm)throws Exception{
+           pstm.close();
+       }
+       
+       protected void closeResultSet(ResultSet rs)throws Exception{
+           rs.close();
+       }
+       
+       protected List&lt;?&gt; paresResultSet(ResultSet rs, RowMapper&lt;?&gt; rowMapper) throws Exception {
+           List&lt;Object&gt; result = new ArrayList&lt;Object&gt;();
+           int rowNum = 1;
+           while (rs.next()){
+                  result.add(rowMapper.mapRow(rs,rowNum ++)); 
+           }
+           return result;
+      }
+      
+      protected ResultSet executeQuery(PreparedStatement pstm, Object[] values) throws Exception {
+          for (int i = 0; i &lt; values.length; i++) {
+              pstm.setObject(i,values[i]); 
+          }
+          return pstm.executeQuery(); 
+      }
+      protected PreparedStatement createPrepareStatement(Connection conn, String sql) throws Exception {
+          return conn.prepareStatement(sql); 
+      }
+      public Connection getConnection() throws Exception { 
+          return  this.dataSource.getConnection();
+      }
+   }
+   @Data
+   public class Member{
+       private String username;
+       private String password;
+       private String nickName;
+       private int age;
+       private String addr;
+   }
+   
+   private class MemberDao extends JdbcTemplate{
+       public MemberDao(DataSource dataSource){
+           super(dataSource);
+       }
+       public List&lt;?&gt; selectAll(){
+           return super.executeQuery(sql,new RowMapper&lt;Member&gt;(){
+               Member member = new Member();
+               member.setUsername(rs.getString(&quot;username&quot;));             
+               member.setPassword(rs.getString(&quot;password&quot;));        
+               member.setAge(rs.getInt(&quot;age&quot;)); 
+               member.setAddr(rs.getString(&quot;addr&quot;));
+               return member;
+           },null);
+       }
+   }
+</code></pre>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;模板模式在源码中的体现</p>
+
+<pre><code class="language-java">   //jdk中AbstractList 还有HttpServlet，有三个方法 service()和 doGet()、doPost()方法
+   public abstract class AbstractList&lt;E&gt; extends AbstractCollection&lt;E&gt; implements List&lt;E&gt; { ...
+    abstract public E get(int index); ...
+    }
+    
+    //MyBatis中的BaseExecutor
+    public abstract class BaseExecutor implements Executor { ...
+    protected abstract int doUpdate(MappedStatement var1, Object var2) throws SQLException;
+    protected abstract List&lt;BatchResult&gt; doFlushStatements(boolean var1) throws SQLException;
+    protected abstract &lt;E&gt; List&lt;E&gt; doQuery(MappedStatement var1, Object var2, RowBounds var3, ResultHandler var4, BoundSql var5) throws SQLException;
+    protected abstract &lt;E&gt; Cursor&lt;E&gt; doQueryCursor(MappedStatement var1, Object var2, RowBounds var3, BoundSql var4) throws SQLException;
+... }
+</code></pre>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;模板模式优点<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1)利用模板方法将相同处理逻辑的代码放到抽象父类中，可以提高代码的复用性。<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2)将不同的代码在不同的子类中，通过对子类的扩展增加新的行为，提高代码的扩展性。<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3)把不变的行为写在父类上，去除子类的重复代码，提供了一个很好的代码复用平台， 符合开闭原则。<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;模板模式缺点<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1)类数目的增加，每一个抽象类都需要一个子类来实现，这样导致类的个数增加。<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2)类数量的增加，间接地增加了系统实现的复杂度。<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3)继承关系自身缺点，如果父类添加新的抽象方法，所有子类都要改一遍。<br />
+2.适配器模式<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;适配器模式(Adapter Pattern)是指将一个类的接口转换成客户期望的另一个接口，使 原本的接口不兼容的类可以一起工作，属于结构型设计模式。<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;应用场景：<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1)已经存在的类，它的方法和需求不匹配(方法结果相同或相似)的情况。<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2)适配器模式不是软件设计阶段考虑的设计模式，是随着软件维护，由于不同产品、不 同厂家造成功能类似而接口不相同情况下的解决方案。有点亡羊补牢的感觉。</p>
+
+<pre><code class="language-java">   /**
+    * 返回结果类
+    */
+   @Data
+   public class ResultMsg{
+       private int code;
+       private String msg;
+       private Object data;
+       public ResultMsg(int code, String msg, Object data){
+           this.code = code;
+           this.msg = msg;
+           this.data = data;
+       }
+   }
+   /**
+    *Member类
+    */
+    @Data
+    public class Member{
+        private String username;
+        private String password;
+        private String mid;
+        private String info;
+    }
+   
+   /**
+    * 原系统的登陆逻辑
+    */
+    public class SiginService{
+        /**
+         *注册方法
+         */
+         public ResultMsg regist(String username, String password){
+             return new ResultMsg(200,&quot;注册成功&quot;,new Member());
+         }
+         /**
+          *登陆方法
+          */
+          public ResultMsg login(String username, String password){
+              return null;
+          }
+    }
+    /**
+     *原方法不动 直接继承
+     */
+     public class SigninForThirdService extends SiginService{
+         public Result loginForQQ(String openId){
+             return loginForRegist(openId,null);
+         }
+     }
+</code></pre>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;更加优雅的登陆</p>
+
+<pre><code class="language-java">   public interface LoginAdapter{
+       boolean support(Object adapter);
+       ResultMsg login(String id,Object adapter);
+   }
+   public class LoginForQQAdapter implements LoginAdapter{
+       public boolean support(Object adapter){
+           return adapter instanceof LoginForQQAdapter;
+       }
+       public ResultMsg login(String id, Object adapter){
+           return null;
+       }
+   }
+   public interface IPassportForThird{
+       public ResultMsg loginForQQ(String id);
+       public ResultMsg loginForRegist(String username, String passport);
+   }
+   public class PassportForThirdAdapter extends SiginService implements IPassportForThird{
+       public ResultMsg loginForQQ(String id){
+           return processLogin(id,LoginForQQAdapter.class);
+       }
+       private ResultMsg processLogin(String key,Class&lt;? extends LoginAdapter&gt; clazz){
+           try{
+               LoginAdapter adapter = clazz.new Instance();
+               if(adapter.support(adapter)){
+                   return adapter.login(key,adapter);
+               }else{
+                   return null;
+               }
+           }catch(Exception e){
+               e.printStackTrace();
+           }
+           return null;
+       }
+   }
+</code></pre>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;适配器模式在源码中的体现:<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SpringAOP 中的 AdvisorAdapter 类， 它有三个实现类 MethodBeforeAdviceAdapter、AfterReturningAdviceAdapter 和 ThrowsAdviceAdapter</p>
+
+<pre><code class="language-java">   public interface AdvisorAdapter {
+    boolean supportsAdvice(Advice var1); 
+    MethodInterceptor getInterceptor(Advisor var1);
+   }
+   class MethodBeforeAdviceAdapter implements AdvisorAdapter, Serializable { 
+        MethodBeforeAdviceAdapter() {}
+        public boolean supportsAdvice(Advice advice) { 
+            return advice instanceof MethodBeforeAdvice;
+        }
+        public MethodInterceptor getInterceptor(Advisor advisor) {
+           MethodBeforeAdvice advice = (MethodBeforeAdvice)advisor.getAdvice();
+        return new MethodBeforeAdviceInterceptor(advice); 
+        }
+   }
+</code></pre>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;此外，还有Spring MVC 中HandlerAdapter类，其适配调用的关键代码还是在 DispatcherServlet 的 doDispatch()方法,在 doDispatch()方法中调用了 getHandlerAdapter()方法,在 getHandlerAdapter()方法中循环调用了 supports()方法判断是否兼容，循环迭代集 合中的 Adapter 又是在初始化时早已赋值。</p>
+
+<pre><code class="language-java">   protected HandlerAdapter getHandlerAdapter(Object handler) throws ServletException { 
+   if(this.handlerAdapters != null) {
+       Iterator var2 = this.handlerAdapters.iterator();
+       while(var2.hasNext()) {
+           HandlerAdapter ha = (HandlerAdapter)var2.next();
+           if(this.logger.isTraceEnabled()) {
+this.logger.trace(&quot;Testing handler adapter [&quot; + ha + &quot;]&quot;); }
+           if(ha.supports(handler)) {
+               return ha;
+           } 
+       }
+    }
+    throw new ServletException(&quot;No adapter for handler [&quot; + handler + &quot;]: The DispatcherServlet configuration needs to include a HandlerAdapter that supports this handler&quot;);
+  }
+</code></pre>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;优点:<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1)能提高类的透明性和复用，现有的类复用但不需要改变。<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2)目标类和适配器类解耦，提高程序的扩展性。<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3)在很多业务场景中符合开闭原则。<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;缺点:<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1)适配器编写过程需要全面考虑，可能会增加系统的复杂性。<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2)增加代码阅读难度，降低代码可读性，过多使用适配器会使系统代码变得凌乱。</p>
+
+    </div>
+
+    <div class="post-copyright">
+             
+            <p class="copyright-item">
+                <span>Author:</span>
+                <span>ruichunjie </span>
+                </p>
+            
+           
+             
+            <p class="copyright-item">
+                    <span>Link:</span>
+                    <a href=https://ruichunjie.github.io/2019/templateandadapter/>https://ruichunjie.github.io/2019/templateandadapter/</span>
+            </p>
+            
+             
+            <p class="copyright-item lincese">
+                本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可
+            </p>
+            
+    </div>
+
+  
+    <div class="post-tags">
+        
+            <section>
+            <i class="iconfont icon-tag"></i>Tag(s): 
+            
+            <span class="tag"><a href="https://ruichunjie.github.io/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">
+                    #设计模式</a></span>
+            
+            </section>
+        
+        <section>
+                <a href="javascript:window.history.back();">back</a></span> · 
+                <span><a href="https://ruichunjie.github.io">home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+        <a href="https://ruichunjie.github.io/2019/delegateandstrategy20190320/" class="prev" rel="prev" title="委派模式和策略模式"><i class="iconfont icon-left"></i>&nbsp;委派模式和策略模式</a>
+         
+        
+    </div>
+
+    <div class="post-comment">
+          
+                 
+          
+    </div>
+</article>
+          </div>
+		   </main>
+      <footer class="footer">
+    <div class="copyright">
+        &copy;
+        
+        <span itemprop="copyrightYear">2019 - 2019</span>
+        
+        <span class="with-love">
+    	 <i class="iconfont icon-love"></i> 
+         </span>
+         
+            <span class="author" itemprop="copyrightHolder"><a href="https://ruichunjie.github.io">ruichunjie</a> | </span> 
+         
+
+         
+		  <span>Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow">Hugo</a> & <a href="https://github.com/liuzc/leaveit" target="_blank" rel="external nofollow">LeaveIt</a></span> 
+    </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+    <script src="/js/vendor_no_gallery.min.js" async=""></script>
+    
+  
+
+
+
+     </div>
+  </body>
+</html>
