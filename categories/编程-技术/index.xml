@@ -6,10 +6,21 @@
     <description>Recent content in 编程 · 技术 on 空谷芝兰</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 19 Mar 2019 12:55:52 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 20 Mar 2019 05:10:19 +0800</lastBuildDate>
     
 	<atom:link href="https://ruichunjie.github.io/categories/%E7%BC%96%E7%A8%8B-%E6%8A%80%E6%9C%AF/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>委派模式和策略模式</title>
+      <link>https://ruichunjie.github.io/2019/delegateandstrategy20190320/</link>
+      <pubDate>Wed, 20 Mar 2019 05:10:19 +0800</pubDate>
+      
+      <guid>https://ruichunjie.github.io/2019/delegateandstrategy20190320/</guid>
+      <description>1.委派模式
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;委派模式(Delegate Pattern)的基本作用就是负责任务的调度和分配任务，跟代理模式很像，可以看做是一种特殊情况下的静态代理的全权代理，但是代理模式注重过程，而委派模式注重结果。不属于GOF23种设计模式之一，行为型模式，Delegate，Dispatch 结尾的一般都是代理模式。如BeanDefinitionParserDelegate
+/** * 模拟SpringMVC 的 DispatcherServlet */ public class SystemController{ public void logout(){} } public class DispatcherServlet extends HttpServlet{ private void doDispatch(HttpServletRequest request, HttpServletResponse response ) throws Exception{ String uri = request.getRequestURI(); String mid = request.getParameter(&amp;quot;mid&amp;quot;); if(&amp;quot;logout&amp;quot;.equals(mid)){ new SystemController().logout(); }else{ response.getWriter().write(&amp;quot;404&amp;quot;); } } protected void service(HttpServletRequest request,HttpServletResponse response)throw ServletException,IOException{ try{ doDispatch(req,resp); }catch(Exception e){ e.printStackTrace(); } } }  &amp;lt;?xml version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;UTF-8&amp;quot;?&amp;gt; &amp;lt;web-app xmlns:xsi=&amp;quot;http://www.w3.org/2001/XMLSchema-instance&amp;quot; xmlns=&amp;quot;http://java.sun.com/xml/ns/j2ee&amp;quot; xmlns:javaee=&amp;quot;http://java.sun.com/xml/ns/javaee&amp;quot; xmlns:web=&amp;quot;http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd&amp;quot; xsi:schemaLocation=&amp;quot;http://java.sun.com/xml/ns/j2ee http://java.</description>
+    </item>
     
     <item>
       <title>代理模式</title>

@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noodp"/>
+  <meta name="author" content="ruichunjie">
+  
+  
+  
+  <link rel="prev" href="https://ruichunjie.github.io/2019/proxy20190319/" />
+  
+  <link rel="canonical" href="https://ruichunjie.github.io/2019/delegateandstrategy20190320/" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <title>
+       
+       
+           委派模式和策略模式 | 空谷芝兰
+       
+  </title>
+  <meta name="title" content="委派模式和策略模式 | 空谷芝兰">
+    
+  
+  <link rel="stylesheet" href="/font/iconfont.css">
+  <link rel="stylesheet" href="/css/main.min.css">
+
+
+  
+  
+ 
+
+<script type="application/ld+json">
+ "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "mainEntityOfPage": {
+         "@type": "WebPage",
+         "@id": "https://ruichunjie.github.io/"
+    },
+    "articleSection" : "posts",
+    "name" : "委派模式和策略模式",
+    "headline" : "委派模式和策略模式",
+    "description" : "1.委派模式
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;委派模式(Delegate Pattern)的基本作用就是负责任务的调度和分配任务，跟代理模式很像，可以看做是一种特殊情况下的静态代理的全权代理，但是代理模式注重过程，而委派模式注重结果。不属于GOF23种设计模式之一，行为型模式，Delegate，Dispatch 结尾的一般都是代理模式。如BeanDefinitionParserDelegate
+/** * 模拟SpringMVC 的 DispatcherServlet */ public class SystemController{ public void logout(){} } public class DispatcherServlet extends HttpServlet{ private void doDispatch(HttpServletRequest request, HttpServletResponse response ) throws Exception{ String uri = request.getRequestURI(); String mid = request.getParameter(&quot;mid&quot;); if(&quot;logout&quot;.equals(mid)){ new SystemController().logout(); }else{ response.getWriter().write(&quot;404&quot;); } } protected void service(HttpServletRequest request,HttpServletResponse response)throw ServletException,IOException{ try{ doDispatch(req,resp); }catch(Exception e){ e.printStackTrace(); } } }  &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt; &lt;web-app xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xmlns=&quot;http://java.sun.com/xml/ns/j2ee&quot; xmlns:javaee=&quot;http://java.sun.com/xml/ns/javaee&quot; xmlns:web=&quot;http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd&quot; xsi:schemaLocation=&quot;http://java.sun.com/xml/ns/j2ee http://java.",
+    "inLanguage" : "en-us",
+    "author" : "ruichunjie",
+    "creator" : "ruichunjie",
+    "publisher": "ruichunjie",
+    "accountablePerson" : "ruichunjie",
+    "copyrightHolder" : "ruichunjie",
+    "copyrightYear" : "2019",
+    "datePublished": "2019-03-20 05:10:19 &#43;0800 CST",
+    "dateModified" : "2019-03-20 05:10:19 &#43;0800 CST",
+    "url" : "https://ruichunjie.github.io/2019/delegateandstrategy20190320/",
+    "wordCount" : "621",
+    "keywords" : [ "设计模式", "空谷芝兰"]
+}
+</script>
+
+</head>
+
+  
+
+
+  <body class="">
+    <div class="wrapper">
+        <nav class="navbar">
+    <div class="container">
+        <div class="navbar-header header-logo">
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://ruichunjie.github.io/">空谷芝兰</a>
+        </div>
+        <div class="menu navbar-right">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+     <div class="container">
+        <div class="navbar-header">
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://ruichunjie.github.io/">空谷芝兰</a></div>
+            <div class="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+     
+          <div class="menu" id="mobile-menu">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+    	 <main class="main">
+          <div class="container">
+      		
+<article class="post-warp" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">委派模式和策略模式</h1>
+        <div class="post-meta">
+                Written by <a itemprop="name" href="https://ruichunjie.github.io/" rel="author">ruichunjie</a> with ♥ 
+                <span class="post-time">
+                on <time datetime=2019-03-20 itemprop="datePublished">March 20, 2019</time>
+                </span>
+                in
+                <i class="iconfont icon-folder"></i>
+                <span class="post-category">
+                        <a href="https://ruichunjie.github.io/categories/%E7%BC%96%E7%A8%8B-%E6%8A%80%E6%9C%AF/"> 编程 · 技术 </a>
+                        
+                </span>
+        </div>
+    </header>
+    <div class="post-content">
+        
+
+        
+
+        
+        
+     
+          
+          
+          
+
+          
+          
+          
+
+          <p>1.委派模式<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;委派模式(Delegate Pattern)的基本作用就是负责任务的调度和分配任务，跟代理模式很像，可以看做是一种特殊情况下的静态代理的全权代理，但是代理模式注重过程，而委派模式注重结果。不属于GOF23种设计模式之一，行为型模式，Delegate，Dispatch 结尾的一般都是代理模式。如BeanDefinitionParserDelegate</p>
+
+<pre><code class="language-java">   /**
+    * 模拟SpringMVC 的 DispatcherServlet 
+    */
+    public class SystemController{
+        public void logout(){}
+    }
+    
+    public class DispatcherServlet extends HttpServlet{
+        private void doDispatch(HttpServletRequest request, HttpServletResponse response ) throws Exception{
+        
+            String uri = request.getRequestURI();
+            String mid = request.getParameter(&quot;mid&quot;);
+            
+            if(&quot;logout&quot;.equals(mid)){
+                new SystemController().logout();
+            }else{
+                response.getWriter().write(&quot;404&quot;);
+            }
+        }
+        
+        protected void service(HttpServletRequest request,HttpServletResponse response)throw ServletException,IOException{
+            try{
+                doDispatch(req,resp);
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+        }
+    }
+</code></pre>
+
+<pre><code class="language-xml">    &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+    &lt;web-app xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+    xmlns=&quot;http://java.sun.com/xml/ns/j2ee&quot;
+    xmlns:javaee=&quot;http://java.sun.com/xml/ns/javaee&quot;
+    xmlns:web=&quot;http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd&quot;
+    xsi:schemaLocation=&quot;http://java.sun.com/xml/ns/j2ee
+    http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd&quot; version=&quot;2.4&quot;&gt;
+        &lt;display-name&gt;ServletDispatcher&lt;/display-name&gt;
+        &lt;servlet&gt;
+        &lt;servlet-name&gt;delegateServlet&lt;/servlet-name&gt; 
+       &lt;!--此处是上面servelt类的路径--&gt;
+       &lt;servlet-class&gt;...DispatcherServlet&lt;/servlet-class&gt; 
+        &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+        &lt;/servlet&gt;
+        &lt;servlet-mapping&gt; 
+        	&lt;servlet-name&gt;delegateServlet&lt;/servlet-name&gt; 
+        	&lt;url-pattern&gt;/*&lt;/url-pattern&gt;
+        &lt;/servlet-mapping&gt;
+    &lt;/web-app&gt;
+</code></pre>
+
+<p>2.策略模式<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;策略模式(Strategy Pattern)是指定义了算法家族，分别封装起来，让他们之间可以相互替换，此模式让算法的变化不会影响到使用算法的用户。可以避免使用多重分支的if&hellip;else..和switch语句。<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;策略模式适用场景：<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1)系统中有很多类，而他们的区别仅在于行为的不同。<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2)一个系统需要动态的在几种算法中选择一种。<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;优点:<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1) 策略模式符合开闭原则<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2)避免使用多重条件转移语句，如if..else&hellip;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3)使用策略模式可以提高算法保密性<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;缺点:<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1)客户端必须知道所有的策略，并且自行决定使用哪一个策略类。<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2)代码中会产生非常多的策略类，增加维护难度。</p>
+
+<pre><code class="language-java">   public abstract class Payment{
+       //支付类型
+       public abstract String getName();
+       //查询余额
+       protected abstract double queryBalance(String uid);
+       //扣款支付
+       public PayState pay(String uid, double amount){
+           if(queryBalance(uid)&lt;amount){
+               return new PayState(500,&quot;支付失败&quot;,&quot;余额不足&quot;);
+           }
+           return new PayState(200,&quot;支付成功&quot;,&quot;支付金额:&quot;+amount);
+       }
+   }
+   
+   public class AliPay extends Payment {
+       public String getName(){
+           return &quot;支付宝&quot;;
+       }
+       protected double queryBalance(String uid){
+           return 900;
+       }
+   }
+   
+   public class PayState{
+       private int code;
+       private Object data;
+       private String msg;
+       public PayState(int code, String msg, Object data){
+           this.code = code;
+           this.data = data;
+           this.msg = msg;
+       }
+       
+       public String toString(){
+           return &quot;支付状态[&quot;+code+&quot;],&quot;+msg+&quot;,交易详情:&quot;+data;
+       }
+   }
+   
+   public class PayStrategy{
+       //为了简单 就只写了AliPay
+       public static final String ALI_PAY = &quot;AliPay&quot;;
+       public static final String DEFAULT_PAY = &quot;AliPay&quot;;
+       
+       private static Map&lt;String, Payment&gt; payStrategy = new HashMap&lt;&gt;();
+       static{
+           payStrategy.put(ALI_PAY, new AliPay());
+       }
+       
+       public static Payment get(String payKey){
+           if(!payStrategy.containsKey(payKey)){
+               return payStrategy.get(DEFAULT_PAY);
+           }else{
+               return payStrategy.get(payKey);
+           }
+       }
+   }
+   
+   public class Order{
+       private String uid;
+       private String orderId;
+       private double amount;
+       
+       public Order(String uid, String orderId, double amount){
+           this.uid = uid;
+           this.orderId = orderId;
+           this.amount =amount;
+       }
+       
+       public PayState pay(){
+           return pay(PayStrategy.DEFAULT_PAY);
+       }
+       
+       public PayState pay(String payKey){
+           Payment payment = PayStrategy.get(payKey);
+           System.out.println(&quot;欢迎使用&quot;+payment.getName());
+           System.out.println(&quot;本次交易金额为:&quot;+amount+&quot;开始扣款&quot;);
+           return payment.pay(uid,amount);
+       }
+   }
+</code></pre>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;策略模式在JDK源码中的体现</p>
+
+<pre><code class="language-java">   public interface Comparator&lt;T&gt; { int compare(T o1, T o2);
+		...
+   }
+   
+   //Arrays的parallelSort方法
+   public class Arrays {
+    	...
+    public static &lt;T&gt; void parallelSort(T[] a, int fromIndex, int toIndex, Comparator&lt;? super T&gt; cmp) {
+    	... 
+    } 
+    	...
+    }
+    
+    //TreeMap
+    public class TreeMap&lt;K,V&gt; extends AbstractMap&lt;K,V&gt;
+implements NavigableMap&lt;K,V&gt;, Cloneable, java.io.Serializable{
+            ...
+        public TreeMap(Comparator&lt;? super K&gt; comparator) {                           this.comparator = comparator;
+        }
+            ...
+    }
+</code></pre>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;策略模式在Spring源码中的体现</p>
+
+<pre><code class="language-java">   //Resource 我们经常使用Resource的子类 如 ClassPathResource 
+   public interface Resource extends InputStreamSource {
+        boolean exists();
+        default boolean isReadable() { 
+            return true;
+        }
+        default boolean isOpen() { 
+            return false;
+        }
+        default boolean isFile() { 
+            return false;
+        }
+        URL getURL() throws IOException; URI getURI() throws IOException; 		File getFile() throws IOException;
+        default ReadableByteChannel readableChannel() throws IOException {           return Channels.newChannel(this.getInputStream());
+        }
+        long contentLength() throws IOException;
+        long lastModified() throws IOException;
+        Resource createRelative(String var1) throws IOException;
+        @Nullable
+        String getFilename();
+        String getDescription(); 
+	}
+	
+	/**
+	 *另外Spring初始化采用了策略模式 InstantiationStrategy下有两种策略 SimpleInstantiationStrategy 和 CglibSubclassingInstantiationStrategy，
+	 *CglibSubclassingInstantiationStrategy继承了SimpleInstantiationStrategy
+	 */
+	public interface InstantiationStrategy {
+        Object instantiate(RootBeanDefinition var1, @Nullable String var2, BeanFactory var3) throws
+        BeansException;
+        Object instantiate(RootBeanDefinition var1, @Nullable String var2, BeanFactory var3,
+        Constructor&lt;?&gt; var4, @Nullable Object... var5) throws BeansException;
+        Object instantiate(RootBeanDefinition var1, @Nullable String var2, BeanFactory var3, @Nullable Object var4, Method var5, @Nullable Object... var6) throws BeansException;
+    }
+</code></pre>
+
+<p>3.委派模式和策略模式综合</p>
+
+<pre><code class="language-java">   public class DispatcherServlet extends HttpServlet{
+       private List&lt;Handler&gt; handlerMapping = new ArrayList&lt;&gt;();
+       
+       public void init() throws ServletException{
+           try{
+               Class&lt;?&gt; systemControllerClass = SystemController.class;
+               handlerMapping.add(new Handler()
+              .setController(systemControllerClass.newInstance())
+              .setMethod(systemControllerClass.getMethod(&quot;logout&quot;,null)
+              .setUrl(&quot;/web/logout&quot;));
+           }catch (Exception e){
+               
+           }
+       }
+       
+       public doDispatch(HttpServletRequest request, HttpServletResponse response){
+           //1.获取url
+           String uri = request.getRequestURI();
+           //2.Servlet拿到url后 做权衡 找到对应的方法
+           //3.通过uri 去handlerMapping
+           Handler handle = null;
+           for(Handler h: handlerMapping){
+               if(uri.equals(h.getUrl())){
+                   handler = h;
+                   break;
+               }
+           }
+           //4. 将具体任务分发给Method(反射调用)
+           Object obj = null;
+           try{
+               obj = handle.getMethod().invoke(handle.getController(),request.getParameter(&quot;mid&quot;));
+           }catch(Exception e){
+               e.printStackTrace();
+           }
+           //5.获取执行结果，通过response返回回去
+           response.getWriter().write();
+       }
+       
+       protected void service(HttpServletRequest request,HttpServletResponse response)throw ServletException,IOException{
+            try{
+                doDispatch(req,resp);
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+        }
+        
+        class Handler{
+            private Object controller;
+            private Method method;
+            private String url;
+            
+            public Object getController(){
+                return controller;
+            }
+            
+            public Handler setController(Object controller){
+                this.controller = controller;
+                return this;
+            }
+            
+            public Method getMethod(){
+                return method;
+            }
+            
+            public Handler setMethod(Method method){
+                this.method = method;
+                return this;
+            }
+            
+            public String getUrl(){
+                return url;
+            }
+            
+            public Handler setUrl(String url){
+                this.url = url;
+                return this;
+            }
+        }
+   }
+</code></pre>
+
+    </div>
+
+    <div class="post-copyright">
+             
+            <p class="copyright-item">
+                <span>Author:</span>
+                <span>ruichunjie </span>
+                </p>
+            
+           
+             
+            <p class="copyright-item">
+                    <span>Link:</span>
+                    <a href=https://ruichunjie.github.io/2019/delegateandstrategy20190320/>https://ruichunjie.github.io/2019/delegateandstrategy20190320/</span>
+            </p>
+            
+             
+            <p class="copyright-item lincese">
+                本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可
+            </p>
+            
+    </div>
+
+  
+    <div class="post-tags">
+        
+            <section>
+            <i class="iconfont icon-tag"></i>Tag(s): 
+            
+            <span class="tag"><a href="https://ruichunjie.github.io/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">
+                    #设计模式</a></span>
+            
+            </section>
+        
+        <section>
+                <a href="javascript:window.history.back();">back</a></span> · 
+                <span><a href="https://ruichunjie.github.io/">home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+        <a href="https://ruichunjie.github.io/2019/proxy20190319/" class="prev" rel="prev" title="代理模式"><i class="iconfont icon-left"></i>&nbsp;代理模式</a>
+         
+        
+    </div>
+
+    <div class="post-comment">
+          
+                 
+          
+    </div>
+</article>
+          </div>
+		   </main>
+      <footer class="footer">
+    <div class="copyright">
+        &copy;
+        
+        <span itemprop="copyrightYear">2019 - 2019</span>
+        
+        <span class="with-love">
+    	 <i class="iconfont icon-love"></i> 
+         </span>
+         
+            <span class="author" itemprop="copyrightHolder"><a href="https://ruichunjie.github.io/">ruichunjie</a> | </span> 
+         
+
+         
+		  <span>Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow">Hugo</a> & <a href="https://github.com/liuzc/leaveit" target="_blank" rel="external nofollow">LeaveIt</a></span> 
+    </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+    <script src="/js/vendor_no_gallery.min.js" async=""></script>
+    
+  
+
+
+
+     </div>
+  </body>
+</html>

@@ -6,8 +6,310 @@
     <description>Recent content in 空谷芝兰 on 空谷芝兰</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 19 Mar 2019 12:55:52 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 20 Mar 2019 05:10:19 +0800</lastBuildDate>
     <atom:link href="/" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>委派模式和策略模式</title>
+      <link>https://ruichunjie.github.io/2019/delegateandstrategy20190320/</link>
+      <pubDate>Wed, 20 Mar 2019 05:10:19 +0800</pubDate>
+      
+      <guid>https://ruichunjie.github.io/2019/delegateandstrategy20190320/</guid>
+      <description>&lt;p&gt;1.委派模式&lt;br /&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;委派模式(Delegate Pattern)的基本作用就是负责任务的调度和分配任务，跟代理模式很像，可以看做是一种特殊情况下的静态代理的全权代理，但是代理模式注重过程，而委派模式注重结果。不属于GOF23种设计模式之一，行为型模式，Delegate，Dispatch 结尾的一般都是代理模式。如BeanDefinitionParserDelegate&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;   /**
+    * 模拟SpringMVC 的 DispatcherServlet 
+    */
+    public class SystemController{
+        public void logout(){}
+    }
+    
+    public class DispatcherServlet extends HttpServlet{
+        private void doDispatch(HttpServletRequest request, HttpServletResponse response ) throws Exception{
+        
+            String uri = request.getRequestURI();
+            String mid = request.getParameter(&amp;quot;mid&amp;quot;);
+            
+            if(&amp;quot;logout&amp;quot;.equals(mid)){
+                new SystemController().logout();
+            }else{
+                response.getWriter().write(&amp;quot;404&amp;quot;);
+            }
+        }
+        
+        protected void service(HttpServletRequest request,HttpServletResponse response)throw ServletException,IOException{
+            try{
+                doDispatch(req,resp);
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+        }
+    }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-xml&#34;&gt;    &amp;lt;?xml version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;UTF-8&amp;quot;?&amp;gt;
+    &amp;lt;web-app xmlns:xsi=&amp;quot;http://www.w3.org/2001/XMLSchema-instance&amp;quot;
+    xmlns=&amp;quot;http://java.sun.com/xml/ns/j2ee&amp;quot;
+    xmlns:javaee=&amp;quot;http://java.sun.com/xml/ns/javaee&amp;quot;
+    xmlns:web=&amp;quot;http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd&amp;quot;
+    xsi:schemaLocation=&amp;quot;http://java.sun.com/xml/ns/j2ee
+    http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd&amp;quot; version=&amp;quot;2.4&amp;quot;&amp;gt;
+        &amp;lt;display-name&amp;gt;ServletDispatcher&amp;lt;/display-name&amp;gt;
+        &amp;lt;servlet&amp;gt;
+        &amp;lt;servlet-name&amp;gt;delegateServlet&amp;lt;/servlet-name&amp;gt; 
+       &amp;lt;!--此处是上面servelt类的路径--&amp;gt;
+       &amp;lt;servlet-class&amp;gt;...DispatcherServlet&amp;lt;/servlet-class&amp;gt; 
+        &amp;lt;load-on-startup&amp;gt;1&amp;lt;/load-on-startup&amp;gt;
+        &amp;lt;/servlet&amp;gt;
+        &amp;lt;servlet-mapping&amp;gt; 
+        	&amp;lt;servlet-name&amp;gt;delegateServlet&amp;lt;/servlet-name&amp;gt; 
+        	&amp;lt;url-pattern&amp;gt;/*&amp;lt;/url-pattern&amp;gt;
+        &amp;lt;/servlet-mapping&amp;gt;
+    &amp;lt;/web-app&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;2.策略模式&lt;br /&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;策略模式(Strategy Pattern)是指定义了算法家族，分别封装起来，让他们之间可以相互替换，此模式让算法的变化不会影响到使用算法的用户。可以避免使用多重分支的if&amp;hellip;else..和switch语句。&lt;br /&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;策略模式适用场景：&lt;br /&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;1)系统中有很多类，而他们的区别仅在于行为的不同。&lt;br /&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;2)一个系统需要动态的在几种算法中选择一种。&lt;br /&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;优点:&lt;br /&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;1) 策略模式符合开闭原则&lt;br /&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;2)避免使用多重条件转移语句，如if..else&amp;hellip;&lt;br /&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;3)使用策略模式可以提高算法保密性&lt;br /&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;缺点:&lt;br /&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;1)客户端必须知道所有的策略，并且自行决定使用哪一个策略类。&lt;br /&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;2)代码中会产生非常多的策略类，增加维护难度。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;   public abstract class Payment{
+       //支付类型
+       public abstract String getName();
+       //查询余额
+       protected abstract double queryBalance(String uid);
+       //扣款支付
+       public PayState pay(String uid, double amount){
+           if(queryBalance(uid)&amp;lt;amount){
+               return new PayState(500,&amp;quot;支付失败&amp;quot;,&amp;quot;余额不足&amp;quot;);
+           }
+           return new PayState(200,&amp;quot;支付成功&amp;quot;,&amp;quot;支付金额:&amp;quot;+amount);
+       }
+   }
+   
+   public class AliPay extends Payment {
+       public String getName(){
+           return &amp;quot;支付宝&amp;quot;;
+       }
+       protected double queryBalance(String uid){
+           return 900;
+       }
+   }
+   
+   public class PayState{
+       private int code;
+       private Object data;
+       private String msg;
+       public PayState(int code, String msg, Object data){
+           this.code = code;
+           this.data = data;
+           this.msg = msg;
+       }
+       
+       public String toString(){
+           return &amp;quot;支付状态[&amp;quot;+code+&amp;quot;],&amp;quot;+msg+&amp;quot;,交易详情:&amp;quot;+data;
+       }
+   }
+   
+   public class PayStrategy{
+       //为了简单 就只写了AliPay
+       public static final String ALI_PAY = &amp;quot;AliPay&amp;quot;;
+       public static final String DEFAULT_PAY = &amp;quot;AliPay&amp;quot;;
+       
+       private static Map&amp;lt;String, Payment&amp;gt; payStrategy = new HashMap&amp;lt;&amp;gt;();
+       static{
+           payStrategy.put(ALI_PAY, new AliPay());
+       }
+       
+       public static Payment get(String payKey){
+           if(!payStrategy.containsKey(payKey)){
+               return payStrategy.get(DEFAULT_PAY);
+           }else{
+               return payStrategy.get(payKey);
+           }
+       }
+   }
+   
+   public class Order{
+       private String uid;
+       private String orderId;
+       private double amount;
+       
+       public Order(String uid, String orderId, double amount){
+           this.uid = uid;
+           this.orderId = orderId;
+           this.amount =amount;
+       }
+       
+       public PayState pay(){
+           return pay(PayStrategy.DEFAULT_PAY);
+       }
+       
+       public PayState pay(String payKey){
+           Payment payment = PayStrategy.get(payKey);
+           System.out.println(&amp;quot;欢迎使用&amp;quot;+payment.getName());
+           System.out.println(&amp;quot;本次交易金额为:&amp;quot;+amount+&amp;quot;开始扣款&amp;quot;);
+           return payment.pay(uid,amount);
+       }
+   }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;策略模式在JDK源码中的体现&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;   public interface Comparator&amp;lt;T&amp;gt; { int compare(T o1, T o2);
+		...
+   }
+   
+   //Arrays的parallelSort方法
+   public class Arrays {
+    	...
+    public static &amp;lt;T&amp;gt; void parallelSort(T[] a, int fromIndex, int toIndex, Comparator&amp;lt;? super T&amp;gt; cmp) {
+    	... 
+    } 
+    	...
+    }
+    
+    //TreeMap
+    public class TreeMap&amp;lt;K,V&amp;gt; extends AbstractMap&amp;lt;K,V&amp;gt;
+implements NavigableMap&amp;lt;K,V&amp;gt;, Cloneable, java.io.Serializable{
+            ...
+        public TreeMap(Comparator&amp;lt;? super K&amp;gt; comparator) {                           this.comparator = comparator;
+        }
+            ...
+    }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;策略模式在Spring源码中的体现&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;   //Resource 我们经常使用Resource的子类 如 ClassPathResource 
+   public interface Resource extends InputStreamSource {
+        boolean exists();
+        default boolean isReadable() { 
+            return true;
+        }
+        default boolean isOpen() { 
+            return false;
+        }
+        default boolean isFile() { 
+            return false;
+        }
+        URL getURL() throws IOException; URI getURI() throws IOException; 		File getFile() throws IOException;
+        default ReadableByteChannel readableChannel() throws IOException {           return Channels.newChannel(this.getInputStream());
+        }
+        long contentLength() throws IOException;
+        long lastModified() throws IOException;
+        Resource createRelative(String var1) throws IOException;
+        @Nullable
+        String getFilename();
+        String getDescription(); 
+	}
+	
+	/**
+	 *另外Spring初始化采用了策略模式 InstantiationStrategy下有两种策略 SimpleInstantiationStrategy 和 CglibSubclassingInstantiationStrategy，
+	 *CglibSubclassingInstantiationStrategy继承了SimpleInstantiationStrategy
+	 */
+	public interface InstantiationStrategy {
+        Object instantiate(RootBeanDefinition var1, @Nullable String var2, BeanFactory var3) throws
+        BeansException;
+        Object instantiate(RootBeanDefinition var1, @Nullable String var2, BeanFactory var3,
+        Constructor&amp;lt;?&amp;gt; var4, @Nullable Object... var5) throws BeansException;
+        Object instantiate(RootBeanDefinition var1, @Nullable String var2, BeanFactory var3, @Nullable Object var4, Method var5, @Nullable Object... var6) throws BeansException;
+    }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;3.委派模式和策略模式综合&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;   public class DispatcherServlet extends HttpServlet{
+       private List&amp;lt;Handler&amp;gt; handlerMapping = new ArrayList&amp;lt;&amp;gt;();
+       
+       public void init() throws ServletException{
+           try{
+               Class&amp;lt;?&amp;gt; systemControllerClass = SystemController.class;
+               handlerMapping.add(new Handler()
+              .setController(systemControllerClass.newInstance())
+              .setMethod(systemControllerClass.getMethod(&amp;quot;logout&amp;quot;,null)
+              .setUrl(&amp;quot;/web/logout&amp;quot;));
+           }catch (Exception e){
+               
+           }
+       }
+       
+       public doDispatch(HttpServletRequest request, HttpServletResponse response){
+           //1.获取url
+           String uri = request.getRequestURI();
+           //2.Servlet拿到url后 做权衡 找到对应的方法
+           //3.通过uri 去handlerMapping
+           Handler handle = null;
+           for(Handler h: handlerMapping){
+               if(uri.equals(h.getUrl())){
+                   handler = h;
+                   break;
+               }
+           }
+           //4. 将具体任务分发给Method(反射调用)
+           Object obj = null;
+           try{
+               obj = handle.getMethod().invoke(handle.getController(),request.getParameter(&amp;quot;mid&amp;quot;));
+           }catch(Exception e){
+               e.printStackTrace();
+           }
+           //5.获取执行结果，通过response返回回去
+           response.getWriter().write();
+       }
+       
+       protected void service(HttpServletRequest request,HttpServletResponse response)throw ServletException,IOException{
+            try{
+                doDispatch(req,resp);
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+        }
+        
+        class Handler{
+            private Object controller;
+            private Method method;
+            private String url;
+            
+            public Object getController(){
+                return controller;
+            }
+            
+            public Handler setController(Object controller){
+                this.controller = controller;
+                return this;
+            }
+            
+            public Method getMethod(){
+                return method;
+            }
+            
+            public Handler setMethod(Method method){
+                this.method = method;
+                return this;
+            }
+            
+            public String getUrl(){
+                return url;
+            }
+            
+            public Handler setUrl(String url){
+                this.url = url;
+                return this;
+            }
+        }
+   }
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
     
     <item>
       <title>代理模式</title>
