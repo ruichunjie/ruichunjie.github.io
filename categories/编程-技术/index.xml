@@ -12,11 +12,11 @@
     
     
     <item>
-      <title>Templateandadapter</title>
-      <link>https://ruichunjie.github.io/2019/templateandadapter/</link>
+      <title>模版模式和适配器模式模式</title>
+      <link>https://ruichunjie.github.io/2019/templateandadapter20190320/</link>
       <pubDate>Wed, 20 Mar 2019 12:39:09 +0800</pubDate>
       
-      <guid>https://ruichunjie.github.io/2019/templateandadapter/</guid>
+      <guid>https://ruichunjie.github.io/2019/templateandadapter20190320/</guid>
       <description>1.模版模式
 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;模板模式通常又叫模板方法模式(Template Method Pattern)是指定义一个算法的骨 架，并允许子类为一个或者多个步骤提供实现。模板方法使得子类可以在不改变算法结 构的情况下，重新定义算法的某些步骤，属于行为性设计模式。模板方法适用于以下应 用场景:
 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;1)一次性实现一个算法的不变的部分，并将可变的行为留给子类来实现。
