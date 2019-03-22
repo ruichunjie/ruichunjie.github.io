@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noodp"/>
+  <meta name="author" content="ruichunjie">
+  
+  
+  
+  <link rel="prev" href="http://ruichunjie.github.io/2019/templateandadapter20190320/" />
+  
+  <link rel="canonical" href="http://ruichunjie.github.io/2019/decorationandobserve20190321/" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <title>
+       
+       
+           装饰者模式和观察者模式 | 空谷芝兰
+       
+  </title>
+  <meta name="title" content="装饰者模式和观察者模式 | 空谷芝兰">
+    
+  
+  <link rel="stylesheet" href="/font/iconfont.css">
+  <link rel="stylesheet" href="/css/main.min.css">
+
+
+  
+  
+ 
+
+<script type="application/ld+json">
+ "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "mainEntityOfPage": {
+         "@type": "WebPage",
+         "@id": "http://ruichunjie.github.io/"
+    },
+    "articleSection" : "posts",
+    "name" : "装饰者模式和观察者模式",
+    "headline" : "装饰者模式和观察者模式",
+    "description" : "1.装饰者模式
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;装饰者模式(Decorator Pattern)是指在不改变原有对象的基础之上，将功能附加到对象上，提供了比继承更有弹性的替代方案(扩展原有对象的功能)，属于结构型模式。装饰者在代码程序中适用于以下场景:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1、用于扩展一个类的功能或给一个类添加附加职责。
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2、动态的给一个对象添加功能，这些功能可以再动态的撤销。
+public abstract class Battercake(){ protected abstract String getMsg(); protected abstract int getPrice(); } public class BaseBattercake extends Battercake{ protected String getMsg(){ return &quot;煎饼&quot;; } public int getPrice(){ return 5; } } public abstract class BattercakeDecorator extends Battercake{ private Battercake battercake; public BattercakeDecorator(Battercake battercake){ this.battercake = battercake; } protected abstract void doSomething(); protected String getMsg(){ return this.battercake.getmsg(); } protected int getPrice(){ return this.battercake.getPrice(); } } public class EggDecorator extends BattercakeDecorator{ public EggDecorator(Battercake battercake){ super(battercake); } protected void doSomething(){} protected String getMsg(){ return super.",
+    "inLanguage" : "en-us",
+    "author" : "ruichunjie",
+    "creator" : "ruichunjie",
+    "publisher": "ruichunjie",
+    "accountablePerson" : "ruichunjie",
+    "copyrightHolder" : "ruichunjie",
+    "copyrightYear" : "2019",
+    "datePublished": "2019-03-21 09:09:43 &#43;0800 CST",
+    "dateModified" : "2019-03-21 09:09:43 &#43;0800 CST",
+    "url" : "http://ruichunjie.github.io/2019/decorationandobserve20190321/",
+    "wordCount" : "737",
+    "keywords" : [ "设计模式", "空谷芝兰"]
+}
+</script>
+
+</head>
+
+  
+
+
+  <body class="">
+    <div class="wrapper">
+        <nav class="navbar">
+    <div class="container">
+        <div class="navbar-header header-logo">
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="http://ruichunjie.github.io/">空谷芝兰</a>
+        </div>
+        <div class="menu navbar-right">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+     <div class="container">
+        <div class="navbar-header">
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="http://ruichunjie.github.io/">空谷芝兰</a></div>
+            <div class="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+     
+          <div class="menu" id="mobile-menu">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+    	 <main class="main">
+          <div class="container">
+      		
+<article class="post-warp" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">装饰者模式和观察者模式</h1>
+        <div class="post-meta">
+                Written by <a itemprop="name" href="http://ruichunjie.github.io/" rel="author">ruichunjie</a> with ♥ 
+                <span class="post-time">
+                on <time datetime=2019-03-21 itemprop="datePublished">March 21, 2019</time>
+                </span>
+                in
+                <i class="iconfont icon-folder"></i>
+                <span class="post-category">
+                        <a href="http://ruichunjie.github.io/categories/%E7%BC%96%E7%A8%8B-%E6%8A%80%E6%9C%AF/"> 编程 · 技术 </a>
+                        
+                </span>
+        </div>
+    </header>
+    <div class="post-content">
+        
+
+        
+
+        
+        
+     
+          
+          
+          
+
+          
+          
+          
+
+          <p>1.装饰者模式<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;装饰者模式(Decorator Pattern)是指在不改变原有对象的基础之上，将功能附加到对象上，提供了比继承更有弹性的替代方案(扩展原有对象的功能)，属于结构型模式。装饰者在代码程序中适用于以下场景:<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1、用于扩展一个类的功能或给一个类添加附加职责。<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2、动态的给一个对象添加功能，这些功能可以再动态的撤销。</p>
+
+<pre><code class="language-java">   public abstract class Battercake(){
+       protected abstract String getMsg();
+       protected abstract int getPrice();
+   }
+   public class BaseBattercake extends Battercake{
+       protected String getMsg(){
+           return &quot;煎饼&quot;;
+       }
+       public int getPrice(){
+           return 5;
+       }
+   }
+   public abstract class BattercakeDecorator extends Battercake{
+       private Battercake battercake;
+       public BattercakeDecorator(Battercake battercake){
+           this.battercake = battercake;
+       }
+       protected abstract void doSomething();
+       protected String getMsg(){
+           return this.battercake.getmsg();
+       }
+       protected int getPrice(){
+           return this.battercake.getPrice();
+       }
+   }
+   public class EggDecorator extends BattercakeDecorator{
+       public EggDecorator(Battercake battercake){
+           super(battercake);
+       }
+       protected void doSomething(){}
+       protected String getMsg(){
+           return super.getMsg()+&quot;+1个鸡蛋&quot;;
+       }
+       protected int getPrice(){
+           return super.getPrice()+1;
+       }
+   }
+   public class SausageDecorator extends BattercakeDecorator{
+       public SausageDecorator(Battercake battercake){
+           super(battercake);
+       }
+       protected void doSomething(){}
+       protected String getMsg(){
+           return super.getMsg()+&quot;+1根香肠&quot;;
+       }
+       protected int getPrice(){
+           return super.getPrice()+2;
+       }
+   }
+   public class Test{
+       public static void main(String[] args){
+           Battercake battercake;
+           battercake = new BaseBatterCake();
+           battercake = new EggDecorator(battercake);
+           battercake = new EggDecorator(battercake);
+           battercake = new SausageDecorator(battercake);
+       }
+   }
+</code></pre>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;装饰者模式实现登陆功能</p>
+
+<pre><code class="language-java">   @Data
+   public class Member{
+       private String username;
+       private String password;
+       private String mid;
+       private String info;
+   }
+   @Data
+   public class ResultMsg{
+       private int code;
+       private String msg;
+       private Object data;
+       public ResultMsg(int code, String msg, Object data){
+           this.code = code;
+           this.msg = msg;
+           this.data = data;
+       }
+   }
+   public interface ISinginService{
+       ResultMsg regist(String username, String password);
+       ResultMsg login(String username, String password);
+   }
+   public class SigninService implements ISigninService{
+       public ResultMsg regist(String username,String password){
+          return new ResultMsg(200,&quot;注册成功&quot;,new Member());
+       }
+       public ResultMsg login(String username,String password){
+          return null;
+       }
+   }
+   public interface ISigninForThirdService extends SigninService{
+       ResultMsg loginForQQ(String id);
+   }
+   public class SigninForThirdService implements ISigninForThirdService{
+       public ISigninService signin;
+       public SigninForThirdService(ISigninService signin){
+           this.signin = signin;
+       }
+       public ResultMsg loginForQQ(String id){
+           return null;
+       }
+   }
+</code></pre>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;装饰者模式和适配器模式对比<br />
+<table>
+    <tr>
+        <td></td>
+        <td>装饰者模式</td>
+        <td>适配器模式</td>
+    </tr>
+    <tr>
+        <td>形式</td>
+        <td>是一种非常特别的适配器模式</td>
+        <td>没有层级关系,装饰器模式有层级关系</td>
+    </tr>
+    <tr>
+        <td>定义</td>
+        <td>装饰者和被装饰者都实现同一个接口，主要目的是为了扩展之后依旧保留OOP关系</td>
+        <td>适配器和被适配器者没有必然的联系，通常是采用继承或者代理的形式进行包装</td>
+    </tr>
+    <tr>
+        <td>关系</td>
+        <td>满足is -a 的关系</td>
+        <td>满足has-a的关系</td>
+    </tr>
+    <tr>
+        <td>功能</td>
+        <td>注重覆盖,扩展</td>
+        <td>注重兼容,转换</td>
+    </tr>
+    <tr>
+        <td>设计</td>
+        <td>前置考虑</td>
+        <td>后置考虑</td>
+    </tr>
+</table>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;装饰者在源码中的应用:<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;在JDK中常见的有BufferedReader,InputStream,OutputStream<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;在Spring中的TransactionAwareCacheDecorator</p>
+
+<pre><code class="language-java">   public class TransactionAwareCacheDecorator implements Cache { 
+      private final Cache targetCache;
+      public TransactionAwareCacheDecorator(Cache targetCache) {
+         Assert.notNull(targetCache, &quot;Target Cache must not be null&quot;);
+         this.targetCache = targetCache; 
+      }
+      public Cache getTargetCache() {
+         return this.targetCache;
+      }
+      ...
+   }
+</code></pre>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;在Spring MVC中的HttpHeadResponseDecorator</p>
+
+<pre><code class="language-java">   public class HttpHeadResponseDecorator extends ServerHttpResponseDecorator {
+       public HttpHeadResponseDecorator(ServerHttpResponse delegate) {             super(delegate);
+       } 
+          ...
+  }
+</code></pre>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;优点:<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1)装饰者是继承的有力补充，比继承灵活，不改变元祐对象的情况下动态地给一个对象扩展功能，即插即用<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2)通过使用不同装饰类和这些装饰类的排列组合，可以使用不同效果<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3)装饰者完全遵守开闭原则<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;缺点:<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1)会出现更多代码，更多的类，增加程序复杂性<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2)动态装饰时，多层装饰会更复杂<br />
+2.观察者模式<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;观察者模式(Observer Pattern)定义了对象之间的一对多依赖，让多个观察者对象同 时监听一个主体对象，当主体对象发生变化时，它的所有依赖者(观察者)都会收到通 知并更新，属于行为型模式。观察者模式有时也叫做发布订阅模式。观察者模式主要用 于在关联行为之间建立一套触发机制的场景。</p>
+
+<pre><code class="language-java">   public class Event{
+       //事件源,事件由谁发起的保存起来
+       private Object source;
+       //事件触发,要通知谁
+       private Object target;
+       //事件触发，要做什么动作，回调
+       private Method callback;
+       //事件名称 触发的是什么事件
+       private String trigger;
+       //事件触发的时间
+       private long time;
+       
+       public Event(Object target, Method callback){
+           this.target = target;
+           this.callback = callback;
+       }
+       
+       public Event setSource(Object source){
+           this.source = source;
+           return this;
+       }
+        
+       public Event setTime(long time){
+           this.time = time;
+           return this;
+       }
+       
+       public Object getSource(){
+           return source;
+       }
+       
+       public Event setTrigger(String trigger){
+           this.trigger = trigger;
+           return this;
+       }
+       
+       public long getTime(){
+            return time;
+       }
+       
+       public Object getTarget(){
+           return target;
+       }
+       
+       public Method getCallback(){
+           return callback;
+       }
+       
+       public string toString(){
+       ,   return &quot;&quot;;
+       }
+   }
+   
+   public class EventListener{
+       protected Map&lt;String,Event&gt; events = new HashMap&lt;Sring, Event&gt;();
+       
+       public void addListener(String eventType, Object target){
+           try{
+               this.addListener(eventType,target,target.getClass().getMethod(&quot;on&quot;+toUpperFirstCase(eventType),Event.class));
+           }catch(Exception e){
+               e.printStackTrace();
+           }
+       }
+       
+       public void addlistener(String eventType, Object target,Method callback){
+           //注册事件
+           events.put(eventType,new Event(target,callback));
+       }
+       
+       private void trigger(Event event){
+           event.setSource(this);
+           event.setTime(System.currentTimeMillis());
+           
+           try{
+               if(event.getCallback() != null){
+                   event.getCallback().invoke(event.getTarget(),event);
+               }
+           }catch{
+               e.printStackTrace();
+           }
+       }
+       
+       protected void trigger(String trigger){
+           if(!this.events.containsKey(trigger)){
+               return ;
+           }
+           
+           trigger(this.events.get(trigger).setTrigger(trigger));
+       }
+       
+       private String toUpperFirstCase(String str){
+           char[] chars = str.toCharArray();
+           chars[0] -= 32;
+           return String.valueOf(chars);
+       }
+   }
+   
+   public interface MouseEventType{
+       //单击
+       String ON_CLICK = &quot;click&quot;;
+       //双击
+       String ON_DOUBLE_CLICK =&quot;doubleClick&quot;;
+       //弹起
+       String ON_UP = &quot;up&quot;;
+       //按下
+       String ON_DOWN = &quot;down&quot;;
+   }
+   
+   public class Mouse extends EventListener{
+       public void click(){
+           System.out.println(&quot;调用单击方法&quot;);
+           this.trigger(MouseEventType.ONCLICK);
+       }
+   }
+   
+   public class MouseEventCallback{
+       public void onClick(Event e){
+           System.out.println(&quot;触发单击事件&quot;);
+       }
+       public void onDoubleClick(Event e){
+           System.out.println(&quot;触发双击事件&quot;);
+       }
+       public void onUp(Event e){
+           System.out.println(&quot;触发弹起事件&quot;);
+       }
+       public void onDown(Event e){
+           System.out.println(&quot;触发鼠标按下事件&quot;);
+       }
+   }
+   
+   public class MouseEventTest{
+       public static void main(String[] args){
+           try{
+               MouseEventCallback callback = new MouseEventCallback();
+               
+               Mouse mouse = new Mouse();
+               mouse.addListener(MouseEventType.ON_CLICK,callback);
+               mouse.click();
+           }catch(Exception e){
+               e.printStackTrace();
+           }
+       }
+   }
+</code></pre>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;观察者在源码中应用:  Spring 中的 ContextLoaderListener 实现了 ServletContextListener 接口， ServletContextListener 接口又继承了 EventListener:</p>
+
+<pre><code class="language-java">   
+public class ContextLoaderListener extends ContextLoader implements ServletContextListener {
+    public ContextLoaderListener() {
+    }
+    public ContextLoaderListener(WebApplicationContext context) { 				super(context);
+    }
+    public void contextInitialized(ServletContextEvent event) { 		         this.initWebApplicationContext(event.getServletContext());
+    }
+    public void contextDestroyed(ServletContextEvent event) {   
+        this.closeWebApplicationContext(event.getServletContext());    
+     ContextCleanupListener.cleanupAttributes(event.getServletContext());
+    } 
+}
+public interface ServletContextListener extends EventListener {
+    public void contextInitialized(ServletContextEvent sce);
+    public void contextDestroyed(ServletContextEvent sce); 
+}
+public interface EventListener { }
+</code></pre>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;基于 Guava API 轻松落地观察者模式</p>
+
+<pre><code class="language-xml">   &lt;dependency&gt; 
+        &lt;groupId&gt;com.google.guava&lt;/groupId&gt;           
+        &lt;artifactId&gt;guava&lt;/artifactId&gt;
+        &lt;version&gt;20.0&lt;/version&gt;
+   &lt;/dependency&gt;
+</code></pre>
+
+<pre><code class="language-java">    public class GuavaEvent { 
+        @Subscribe
+        public void subscribe(String str){ //业务逻辑
+            System.out.println(&quot;执行 subscribe 方法,传入的参数是:&quot; + str); 
+        }
+    }
+    public class GuavaEventTest {
+        public static void main(String[] args) {
+            EventBus eventbus = new EventBus();
+            GuavaEvent guavaEvent = new GuavaEvent(); 
+            eventbus.register(guavaEvent); 
+            eventbus.post(&quot;Tom&quot;);
+        } 
+    }
+</code></pre>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;观察者模式的优点:<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1)观察者和被观察者之间建立了一个抽象的耦合<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2)观察者模式支持广播通信。<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;缺点:<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1)观察者之间有过多的细节依赖、提高时间消耗及程序的复杂度<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2)使用要得当，要避免循环调用。</p>
+
+    </div>
+
+    <div class="post-copyright">
+             
+            <p class="copyright-item">
+                <span>Author:</span>
+                <span>ruichunjie </span>
+                </p>
+            
+           
+             
+            <p class="copyright-item">
+                    <span>Link:</span>
+                    <a href=http://ruichunjie.github.io/2019/decorationandobserve20190321/>http://ruichunjie.github.io/2019/decorationandobserve20190321/</span>
+            </p>
+            
+             
+            <p class="copyright-item lincese">
+                本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可
+            </p>
+            
+    </div>
+
+  
+    <div class="post-tags">
+        
+            <section>
+            <i class="iconfont icon-tag"></i>Tag(s): 
+            
+            <span class="tag"><a href="http://ruichunjie.github.io/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">
+                    #设计模式</a></span>
+            
+            </section>
+        
+        <section>
+                <a href="javascript:window.history.back();">back</a></span> · 
+                <span><a href="http://ruichunjie.github.io/">home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+        <a href="http://ruichunjie.github.io/2019/templateandadapter20190320/" class="prev" rel="prev" title="模版模式和适配器模式"><i class="iconfont icon-left"></i>&nbsp;模版模式和适配器模式</a>
+         
+        
+    </div>
+
+    <div class="post-comment">
+          
+                 
+          
+    </div>
+</article>
+          </div>
+		   </main>
+      <footer class="footer">
+    <div class="copyright">
+        &copy;
+        
+        <span itemprop="copyrightYear">2019 - 2019</span>
+        
+        <span class="with-love">
+    	 <i class="iconfont icon-love"></i> 
+         </span>
+         
+            <span class="author" itemprop="copyrightHolder"><a href="http://ruichunjie.github.io/">ruichunjie</a> | </span> 
+         
+
+         
+		  <span>Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow">Hugo</a> & <a href="https://github.com/liuzc/leaveit" target="_blank" rel="external nofollow">LeaveIt</a></span> 
+    </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+    <script src="/js/vendor_no_gallery.min.js" async=""></script>
+    
+  
+
+
+
+     </div>
+  </body>
+</html>
