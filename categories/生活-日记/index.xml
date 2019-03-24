@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>生活  ·  日记 on 空谷芝兰</title>
+    <link>https://ruichunjie.github.io/categories/%E7%94%9F%E6%B4%BB-%E6%97%A5%E8%AE%B0/</link>
+    <description>Recent content in 生活  ·  日记 on 空谷芝兰</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 24 Mar 2019 15:35:15 +0800</lastBuildDate>
+    
+	<atom:link href="https://ruichunjie.github.io/categories/%E7%94%9F%E6%B4%BB-%E6%97%A5%E8%AE%B0/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>未来</title>
+      <link>https://ruichunjie.github.io/2019/thoughts20190324/</link>
+      <pubDate>Sun, 24 Mar 2019 15:35:15 +0800</pubDate>
+      
+      <guid>https://ruichunjie.github.io/2019/thoughts20190324/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

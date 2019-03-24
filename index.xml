@@ -6,8 +6,17 @@
     <description>Recent content in 空谷芝兰 on 空谷芝兰</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 23 Mar 2019 18:42:35 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 24 Mar 2019 15:35:15 +0800</lastBuildDate>
     <atom:link href="/" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>未来</title>
+      <link>https://ruichunjie.github.io/2019/thoughts20190324/</link>
+      <pubDate>Sun, 24 Mar 2019 15:35:15 +0800</pubDate>
+      
+      <guid>https://ruichunjie.github.io/2019/thoughts20190324/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>初识Spring</title>
@@ -615,12 +624,12 @@ public interface EventListener { }
     </item>
     
     <item>
-      <title>模版模式和适配器模式</title>
+      <title>模板模式和适配器模式</title>
       <link>https://ruichunjie.github.io/2019/templateandadapter20190320/</link>
       <pubDate>Wed, 20 Mar 2019 12:39:09 +0800</pubDate>
       
       <guid>https://ruichunjie.github.io/2019/templateandadapter20190320/</guid>
-      <description>&lt;p&gt;1.模版模式&lt;br /&gt;
+      <description>&lt;p&gt;1.模板模式&lt;br /&gt;
 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;模板模式通常又叫模板方法模式(Template Method Pattern)是指定义一个算法的骨 架，并允许子类为一个或者多个步骤提供实现。模板方法使得子类可以在不改变算法结 构的情况下，重新定义算法的某些步骤，属于行为性设计模式。模板方法适用于以下应 用场景:&lt;br /&gt;
 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;1)一次性实现一个算法的不变的部分，并将可变的行为留给子类来实现。&lt;br /&gt;
 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;2)各子类中公共的行为被提取出来并集中到一个公共的父类中，从而避免代码重复。&lt;/p&gt;
