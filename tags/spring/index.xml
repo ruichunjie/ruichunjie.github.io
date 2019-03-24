@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Spring on 空谷芝兰</title>
+    <link>https://ruichunjie.github.io/tags/spring/</link>
+    <description>Recent content in Spring on 空谷芝兰</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 23 Mar 2019 18:42:35 +0800</lastBuildDate>
+    
+	<atom:link href="https://ruichunjie.github.io/tags/spring/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>初识Spring</title>
+      <link>https://ruichunjie.github.io/2019/springbegin20190323/</link>
+      <pubDate>Sat, 23 Mar 2019 18:42:35 +0800</pubDate>
+      
+      <guid>https://ruichunjie.github.io/2019/springbegin20190323/</guid>
+      <description>1.Spring中的设计模式   设计模式 一句话归纳 举例   工厂模式(Factory) 只对结果负责，封装创建过程 BeanFactory,Calender   单例模式(Singleton) 保证独一无二 ApplicationContext, Calender   原型模式(Prototype) 拔一根猴毛,吹出千万个 ArrayList, PrototypeBean   代理模式(Proxy) 找人办事，增强职责 ProxyFactory, JdkDynamicAopProxy, CglibAopProxy   委派模式(Delegate) 干活算你的(普通员工),功劳算我的(项目经理) DispatcherServlet,BeanDefinitionParserDelegate   策略模式(Strategy) 用户选择,结果统一 InstantiationStrategy   模板模式(Template) 流程标准化，自己实现定制 JdbcTemplate,HttpServlet   适配器模式(Adapter) 兼容转化头 AdvisorAdapter, HandlerAdapter   装饰器模式(Decorator) 包装,同宗同源 BufferedReader,InputStream,OutputStream,HttpHeadResponseDecorator   观察者模式(Observer) 任务完成时通知 ContextLoaderListener   2.Spring编程思想总结   Spring思想 应用场景(特点) 一句话归纳   OOP Object Oriented Programming(面向对象编程)用程序归纳总结生活中的一切事物 封装, 继承, 多态   BOP Bean Oriented Programming(面向Bean编程)面向Bean(普通的java类)设计程序，解放程序员 一切从Bean开始   AOP Aspect Oriented Programming(面向切面编程)找出多个类中有一定规律的代码，开发时拆开，运行时合并。面向切面编程，即面向规则编程 解耦，专人做专事   IOC Inversion of Control(控制反转)将new对象的动作交给Spring管理，并由Spring保存已创建的对象(IOC容器) 转交控制权(即控制权反转)   DI/DL Dependency Injection(依赖注入)或者Dependency Lookup(依赖查找)依赖注入/依赖查找， Spring不仅保存自己创建的对象，而且保存对象与对象之间的关系, 注入即赋值，主要三种赋值方法,构造方法,set方法,直接赋值 赋值   &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;Spring 则立志于全方面的简化 Java 开发。 对此，主要采取了 4 个关键策略:</description>
+    </item>
+    
+  </channel>
+</rss>
