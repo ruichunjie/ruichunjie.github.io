@@ -6,10 +6,20 @@
     <description>Recent content in Posts on 空谷芝兰</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 27 Mar 2019 17:50:06 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 27 Mar 2019 18:57:33 +0800</lastBuildDate>
     
 	<atom:link href="https://ruichunjie.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Mini版Spring v1.0 </title>
+      <link>https://ruichunjie.github.io/2019/myspring20190327/</link>
+      <pubDate>Wed, 27 Mar 2019 18:57:33 +0800</pubDate>
+      
+      <guid>https://ruichunjie.github.io/2019/myspring20190327/</guid>
+      <description>实现思路 1.配置application.properties文件 scanPackage=com.gupao.demo  2.配置web.xml文件 &amp;lt;?xml version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;UTF-8&amp;quot;?&amp;gt; &amp;lt;web-app xmlns:xsi=&amp;quot;http://www.w3.org/2001/XMLSchema-instance&amp;quot; xmlns=&amp;quot;http://java.sun.com/xml/ns/j2ee&amp;quot; xmlns:javaee=&amp;quot;http://java.sun.com/xml/ns/javaee&amp;quot; xmlns:web=&amp;quot;http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd&amp;quot; xsi:schemaLocation=&amp;quot;http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd&amp;quot; version=&amp;quot;2.4&amp;quot;&amp;gt; &amp;lt;display-name&amp;gt;Web Application&amp;lt;/display-name&amp;gt; &amp;lt;servlet&amp;gt; &amp;lt;servlet-name&amp;gt;mymvc&amp;lt;/servlet-name&amp;gt; &amp;lt;servlet-class&amp;gt;com.gupao.mvcframework.servlet.MyDispatcherServlet&amp;lt;/servlet-class&amp;gt; &amp;lt;init-param&amp;gt; &amp;lt;param-name&amp;gt;contextConfigLocation&amp;lt;/param-name&amp;gt; &amp;lt;param-value&amp;gt;application.properties&amp;lt;/param-value&amp;gt; &amp;lt;/init-param&amp;gt; &amp;lt;load-on-startup&amp;gt;1&amp;lt;/load-on-startup&amp;gt; &amp;lt;/servlet&amp;gt; &amp;lt;servlet-mapping&amp;gt; &amp;lt;servlet-name&amp;gt;mymvc&amp;lt;/servlet-name&amp;gt; &amp;lt;url-pattern&amp;gt;/*&amp;lt;/url-pattern&amp;gt; &amp;lt;/servlet-mapping&amp;gt; &amp;lt;/web-app&amp;gt;  &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;MyDispatcherServlet是仿照DispatcherServlet写的仿照类
+3.自定义Annotation /** * @Author:ChunJieRen * @Date:2019/3/25 10:35 * @Description: 仿照@Autowired */ @Target({ElementType.FIELD}) @Retention(RetentionPolicy.RUNTIME) @Documented public @interface MyAutowired { String value() default &amp;quot;&amp;quot;; } /** * @Author:ChunJieRen * @Date:2019/3/25 09:55 * @Description: 仿照@Controller */ @Target({ElementType.TYPE}) @Retention(RetentionPolicy.RUNTIME) @Documented public @interface MyController { String value() default &amp;quot;&amp;quot;; } /** * @Author:ChunJieRen * @Date:2019/3/25 10:05 * @Description: 仿照@RequestMapping */ @Target({ElementType.</description>
+    </item>
     
     <item>
       <title>接下来一年的计划</title>
