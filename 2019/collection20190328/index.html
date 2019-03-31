@@ -9,9 +9,9 @@
   
   
   
-  <link rel="prev" href="http:ruichunjie.github.io/2019/singleton20190318/" />
-  <link rel="next" href="http:ruichunjie.github.io/2019/proxy20190319/" />
-  <link rel="canonical" href="http:ruichunjie.github.io/2019/prototype20190319/" />
+  <link rel="prev" href="http:ruichunjie.github.io/2019/myspring20190327/" />
+  <link rel="next" href="http:ruichunjie.github.io/2019/spring-ioc20190331/" />
+  <link rel="canonical" href="http:ruichunjie.github.io/2019/collection20190328/" />
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
@@ -22,10 +22,10 @@
   <title>
        
        
-           原型模式 | 空谷芝兰
+           java集合 | 空谷芝兰
        
   </title>
-  <meta name="title" content="原型模式 | 空谷芝兰">
+  <meta name="title" content="java集合 | 空谷芝兰">
     
   
   <link rel="stylesheet" href="/font/iconfont.css">
@@ -44,22 +44,10 @@
          "@id": "http:ruichunjie.github.io"
     },
     "articleSection" : "posts",
-    "name" : "原型模式",
-    "headline" : "原型模式",
-    "description" : "1.原型模式
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;原型模式(Prototype Pattern)是指原型实例指定创建对象的种类，并且通过拷贝这些原型创建新的对象。
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;原型模式主要适用于以下场景:
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1、类初始化消耗资源较多。
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2、new 产生的一个对象需要非常繁琐的过程(数据准备、访问权限等)
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3、构造函数比较复杂。
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4、循环体中生产大量对象时。
-2.原型模式的实现
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1)简单克隆
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;复制的不是值，而是引用的地址。浅克隆。只是完整 复制了值类型数据，没有赋值引用对象。换言之，所有的引用对象仍然指向原来的对象
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2)深度克隆
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;克隆破坏单例模式
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ArrayList 就实现了 Cloneable 接口
-public Object clone() { try { ArrayList&lt;?&gt; v = (ArrayList&lt;?&gt;) super.clone(); v.elementData = Arrays.copyOf(elementData, size); v.modCount = 0; return v; } catch (CloneNotSupportedException e) { // this shouldn't happen, since we are Cloneable throw new InternalError(e); } }  ",
+    "name" : "java集合",
+    "headline" : "java集合",
+    "description" : "概述 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;java中集合框架主要两类型，一种是集合(Collection),另一个是图(Map)。Collection是存储一组对象的集合容器，而Map是一种key-value数据结构的集合。
+Collection:",
     "inLanguage" : "en-us",
     "author" : "ruichunjie",
     "creator" : "ruichunjie",
@@ -67,11 +55,11 @@ public Object clone() { try { ArrayList&lt;?&gt; v = (ArrayList&lt;?&gt;) super.
     "accountablePerson" : "ruichunjie",
     "copyrightHolder" : "ruichunjie",
     "copyrightYear" : "2019",
-    "datePublished": "2019-03-19 12:33:42 &#43;0800 CST",
-    "dateModified" : "2019-03-19 12:33:42 &#43;0800 CST",
-    "url" : "http:ruichunjie.github.io/2019/prototype20190319/",
-    "wordCount" : "58",
-    "keywords" : [ "设计模式", "空谷芝兰"]
+    "datePublished": "2019-03-28 14:39:27 &#43;0800 CST",
+    "dateModified" : "2019-03-28 14:39:27 &#43;0800 CST",
+    "url" : "http:ruichunjie.github.io/2019/collection20190328/",
+    "wordCount" : "3",
+    "keywords" : [ "集合", "空谷芝兰"]
 }
 </script>
 
@@ -129,11 +117,11 @@ public Object clone() { try { ArrayList&lt;?&gt; v = (ArrayList&lt;?&gt;) super.
       		
 <article class="post-warp" itemscope itemtype="http://schema.org/Article">
     <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">原型模式</h1>
+        <h1 class="post-title" itemprop="name headline">java集合</h1>
         <div class="post-meta">
                 Written by <a itemprop="name" href="http:ruichunjie.github.io" rel="author">ruichunjie</a> with ♥ 
                 <span class="post-time">
-                on <time datetime=2019-03-19 itemprop="datePublished">March 19, 2019</time>
+                on <time datetime=2019-03-28 itemprop="datePublished">March 28, 2019</time>
                 </span>
                 in
                 <i class="iconfont icon-folder"></i>
@@ -159,32 +147,17 @@ public Object clone() { try { ArrayList&lt;?&gt; v = (ArrayList&lt;?&gt;) super.
           
           
 
-          <p>1.原型模式<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;原型模式(Prototype Pattern)是指原型实例指定创建对象的种类，并且通过拷贝这些原型创建新的对象。<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;原型模式主要适用于以下场景:<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1、类初始化消耗资源较多。<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2、new 产生的一个对象需要非常繁琐的过程(数据准备、访问权限等)<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3、构造函数比较复杂。<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4、循环体中生产大量对象时。<br />
-2.原型模式的实现<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1)简单克隆<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;复制的不是值，而是引用的地址。浅克隆。只是完整 复制了值类型数据，没有赋值引用对象。换言之，所有的引用对象仍然指向原来的对象<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2)深度克隆<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;克隆破坏单例模式<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ArrayList 就实现了 Cloneable 接口</p>
+          
 
-<pre><code class="language-java">       public Object clone() {
-        try {
-            ArrayList&lt;?&gt; v = (ArrayList&lt;?&gt;) super.clone();
-            v.elementData = Arrays.copyOf(elementData, size);
-            v.modCount = 0;
-            return v;
-        } catch (CloneNotSupportedException e) {
-            // this shouldn't happen, since we are Cloneable
-            throw new InternalError(e);
-        }
-    }
-</code></pre>
+<h3 id="概述">概述</h3>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;java中集合框架主要两类型，一种是集合(Collection),另一个是图(Map)。Collection是存储一组对象的集合容器，而Map是一种key-value数据结构的集合。<br />
+Collection:<br />
+<table>
+   <tr>
+      <td></td>
+   </tr>
+</table></p>
 
     </div>
 
@@ -199,7 +172,7 @@ public Object clone() { try { ArrayList&lt;?&gt; v = (ArrayList&lt;?&gt;) super.
              
             <p class="copyright-item">
                     <span>Link:</span>
-                    <a href=http:ruichunjie.github.io/2019/prototype20190319/>http:ruichunjie.github.io/2019/prototype20190319/</span>
+                    <a href=http:ruichunjie.github.io/2019/collection20190328/>http:ruichunjie.github.io/2019/collection20190328/</span>
             </p>
             
              
@@ -215,8 +188,8 @@ public Object clone() { try { ArrayList&lt;?&gt; v = (ArrayList&lt;?&gt;) super.
             <section>
             <i class="iconfont icon-tag"></i>Tag(s): 
             
-            <span class="tag"><a href="http:ruichunjie.github.io%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">
-                    #设计模式</a></span>
+            <span class="tag"><a href="http:ruichunjie.github.io%E9%9B%86%E5%90%88/">
+                    #集合</a></span>
             
             </section>
         
@@ -228,10 +201,10 @@ public Object clone() { try { ArrayList&lt;?&gt; v = (ArrayList&lt;?&gt;) super.
 
     <div class="post-nav">
         
-        <a href="http:ruichunjie.github.io/2019/singleton20190318/" class="prev" rel="prev" title="单例模式"><i class="iconfont icon-left"></i>&nbsp;单例模式</a>
+        <a href="http:ruichunjie.github.io/2019/myspring20190327/" class="prev" rel="prev" title="Mini版Spring v1.0 "><i class="iconfont icon-left"></i>&nbsp;Mini版Spring v1.0 </a>
          
         
-        <a href="http:ruichunjie.github.io/2019/proxy20190319/" class="next" rel="next" title="代理模式">代理模式&nbsp;<i class="iconfont icon-right"></i></a>
+        <a href="http:ruichunjie.github.io/2019/spring-ioc20190331/" class="next" rel="next" title="Spring Ioc源码初了解">Spring Ioc源码初了解&nbsp;<i class="iconfont icon-right"></i></a>
         
     </div>
 

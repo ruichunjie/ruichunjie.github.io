@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>mybatis on 空谷芝兰</title>
-    <link>https://ruichunjie.github.io/tags/mybatis/</link>
+    <link>http:ruichunjie.github.io/tags/mybatis/</link>
     <description>Recent content in mybatis on 空谷芝兰</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Sun, 17 Mar 2019 22:32:49 +0800</lastBuildDate>
     
-	<atom:link href="https://ruichunjie.github.io/tags/mybatis/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http:ruichunjie.github.io/tags/mybatis/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>mybatis基础</title>
-      <link>https://ruichunjie.github.io/2019/mybatis20190317/</link>
+      <link>http:ruichunjie.github.io/2019/mybatis20190317/</link>
       <pubDate>Sun, 17 Mar 2019 22:32:49 +0800</pubDate>
       
-      <guid>https://ruichunjie.github.io/2019/mybatis20190317/</guid>
+      <guid>http:ruichunjie.github.io/2019/mybatis20190317/</guid>
       <description>1.什么是mybatis
 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;MyBatis 是一款优秀的持久层框架，它支持定制化SQL、存储过程以及高级映射。MyBatis 避免了几乎所有的 JDBC 代码和手动设置参数以及获取结果集。MyBatis 可以使用简单的 XML 或注解来配置和映射原生信息，将接口和 Java 的POJOs(Plain Old Java Objects,普通的 Java对象)映射成数据库中的记录。
 2.使用mybatis
