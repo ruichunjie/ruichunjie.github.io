@@ -1,0 +1,1021 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noodp"/>
+  <meta name="author" content="ruichunjie">
+  
+  
+  
+  <link rel="prev" href="https://ruichunjie.github.io/2019/spring-di20190402/" />
+  
+  <link rel="canonical" href="https://ruichunjie.github.io/2019/spring-aop20190402/" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <title>
+       
+       
+           Spring AOP源码初了解 | 空谷芝兰
+       
+  </title>
+  <meta name="title" content="Spring AOP源码初了解 | 空谷芝兰">
+    
+  
+  <link rel="stylesheet" href="/font/iconfont.css">
+  <link rel="stylesheet" href="/css/main.min.css">
+
+
+  
+  
+ 
+
+<script type="application/ld+json">
+ "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "mainEntityOfPage": {
+         "@type": "WebPage",
+         "@id": "https://ruichunjie.github.io"
+    },
+    "articleSection" : "posts",
+    "name" : "Spring AOP源码初了解",
+    "headline" : "Spring AOP源码初了解",
+    "description" : "1.Spring AOP中的概念 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.切面(Aspect):官方定义为&rdquo;一个关注点的模块化，这个关注点可能横切多个对象&rdquo;。切面在ApplicationContext中aop:aspect来配置。 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;连接点(Joinpoint):程序执行过程中的某一行为。 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.通知(Advice):切面对于某个连接点所产生的动作，其中，一个“切面”可以包含多个“Advice”。 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.切入点(Pointcut):匹配连接点的断言，在AOP中通知和一个切入点表达式关联。切面中的所有通知所关注的连接点表达式来决定。 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4.目标对象(Target Object): 被一个或多个切面所通知的对象。 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5.AOP代理(AOP Proxy):Spring AOP 有两种代理方式，jdk动态代理和CGLib代理。默认情况下,实现了接口采用JDK动态代理，反之，采用CGLib代理。 强制使用CGLib代理需要将aop:config的proxy-target-class属性设为true &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;6.前置通知(Before Advice):在某连接点(JoinPoint)之前执行的通知，但这个通知不能阻止连接点前的执行。ApplicationContext在aop:aspect里面使用aop:before元素进行声明。 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;7.后置通知(After Advice):当某连接点退出的时候执行的通知(不论是正常返回还是异常退出)。ApplicationContext在aop:aspect里面用aop:after元素进行声明。 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;8.返回后通知(After Return Advice):在某连接点正常完成后执行的通知，不包括抛出异常的情况。(非void) ApplicationContext在aop:aspect里面使用进行声明。 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;9.环绕通知(Around Advice):包围一个连接点的通知。类似Web中Servlet规范中的Filter的doFilter方法。可以在方法的调用前后完成自定义的行为，也可以选择不执行。ApplicationContext中在aop:aspect里使用aop:around元素进行声明。 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;10.异常通知(After Throwing Advice):在方法抛出异常退出时执行的通知。ApplicationContext中在aop:aspect里面使用aop:after-throwing元素进行声明。 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;可以将多个通知应用到一个目标对象上，即可以将多个切面织入同一目标对象。
+2.实现方式 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;使用AOP基于两种方式，一种是比较方便和强大的注解方法，另一种是xml配置
+注解 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.xml中声明激活自动扫描组件功能，同时激活自动代理功能。
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt; &lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xmlns:context=&quot;http://www.springframework.org/schema/context&quot; xmlns:util=&quot;http://www.springframework.org/schema/util&quot; xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd&quot;&gt; &lt;context:component-scan base-package=&quot;com.gupaoedu&quot;/&gt; &lt;context:annotation-config /&gt; &lt;/beans&gt;  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.为Aspect切面类添加注解
+@Component //声明这是一个切面Bean，AnnotaionAspect是一个面，由框架实现的 @Aspect public class AnnotaionAspect { private final static Logger log = Logger.getLogger(AnnotaionAspect.class); //配置切入点,该方法无方法体,主要为方便同类中其他方法使用此处配置的切入点 //切点的集合，这个表达式所描述的是一个虚拟面（规则） //就是为了Annotation扫描时能够拿到注解中的内容 @Pointcut(&quot;execution(* com.",
+    "inLanguage" : "en-us",
+    "author" : "ruichunjie",
+    "creator" : "ruichunjie",
+    "publisher": "ruichunjie",
+    "accountablePerson" : "ruichunjie",
+    "copyrightHolder" : "ruichunjie",
+    "copyrightYear" : "2019",
+    "datePublished": "2019-04-02 13:59:07 &#43;0800 CST",
+    "dateModified" : "2019-04-02 13:59:07 &#43;0800 CST",
+    "url" : "https://ruichunjie.github.io/2019/spring-aop20190402/",
+    "wordCount" : "2281",
+    "keywords" : [ "Spring", "空谷芝兰"]
+}
+</script>
+
+</head>
+
+  
+
+
+  <body class="">
+    <div class="wrapper">
+        <nav class="navbar">
+    <div class="container">
+        <div class="navbar-header header-logo">
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://ruichunjie.github.io">空谷芝兰</a>
+        </div>
+        <div class="menu navbar-right">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+     <div class="container">
+        <div class="navbar-header">
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://ruichunjie.github.io">空谷芝兰</a></div>
+            <div class="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+     
+          <div class="menu" id="mobile-menu">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+    	 <main class="main">
+          <div class="container">
+      		
+<article class="post-warp" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">Spring AOP源码初了解</h1>
+        <div class="post-meta">
+                Written by <a itemprop="name" href="https://ruichunjie.github.io" rel="author">ruichunjie</a> with ♥ 
+                <span class="post-time">
+                on <time datetime=2019-04-02 itemprop="datePublished">April 2, 2019</time>
+                </span>
+                in
+                <i class="iconfont icon-folder"></i>
+                <span class="post-category">
+                        <a href="https://ruichunjie.github.io/categories/%E7%BC%96%E7%A8%8B-%E6%8A%80%E6%9C%AF/"> 编程 · 技术 </a>
+                        
+                </span>
+        </div>
+    </header>
+    <div class="post-content">
+        
+
+        
+            
+        
+
+        
+        
+     
+          
+          
+          
+
+          
+          
+          
+
+          
+
+<h3 id="1-spring-aop中的概念">1.Spring AOP中的概念</h3>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.切面(Aspect):官方定义为&rdquo;一个关注点的模块化，这个关注点可能横切多个对象&rdquo;。切面在ApplicationContext中<a href="aop:aspect" rel="nofollow noreferrer" target="_blank">aop:aspect</a>来配置。<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;连接点(Joinpoint):程序执行过程中的某一行为。<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.通知(Advice):切面对于某个连接点所产生的动作，其中，一个“切面”可以包含多个“Advice”。<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.切入点(Pointcut):匹配连接点的断言，在AOP中通知和一个切入点表达式关联。切面中的所有通知所关注的连接点表达式来决定。<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4.目标对象(Target Object): 被一个或多个切面所通知的对象。<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5.AOP代理(AOP Proxy):Spring AOP 有两种代理方式，jdk动态代理和CGLib代理。默认情况下,实现了接口采用JDK动态代理，反之，采用CGLib代理。
+强制使用CGLib代理需要将<a href="aop:config" rel="nofollow noreferrer" target="_blank">aop:config</a>的proxy-target-class属性设为true<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;6.前置通知(Before Advice):在某连接点(JoinPoint)之前执行的通知，但这个通知不能阻止连接点前的执行。ApplicationContext在<a href="aop:aspect" rel="nofollow noreferrer" target="_blank">aop:aspect</a>里面使用<a href="aop:before" rel="nofollow noreferrer" target="_blank">aop:before</a>元素进行声明。<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;7.后置通知(After Advice):当某连接点退出的时候执行的通知(不论是正常返回还是异常退出)。ApplicationContext在<a href="aop:aspect" rel="nofollow noreferrer" target="_blank">aop:aspect</a>里面用<a href="aop:after" rel="nofollow noreferrer" target="_blank">aop:after</a>元素进行声明。<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;8.返回后通知(After Return Advice):在某连接点正常完成后执行的通知，不包括抛出异常的情况。(非void) ApplicationContext在<a href="aop:aspect" rel="nofollow noreferrer" target="_blank">aop:aspect</a>里面使用<after-returning>进行声明。<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;9.环绕通知(Around Advice):包围一个连接点的通知。类似Web中Servlet规范中的Filter的doFilter方法。可以在方法的调用前后完成自定义的行为，也可以选择不执行。ApplicationContext中在<a href="aop:aspect" rel="nofollow noreferrer" target="_blank">aop:aspect</a>里使用<a href="aop:around" rel="nofollow noreferrer" target="_blank">aop:around</a>元素进行声明。<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;10.异常通知(After Throwing Advice):在方法抛出异常退出时执行的通知。ApplicationContext中在<a href="aop:aspect" rel="nofollow noreferrer" target="_blank">aop:aspect</a>里面使用<a href="aop:after-throwing" rel="nofollow noreferrer" target="_blank">aop:after-throwing</a>元素进行声明。<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;可以将多个通知应用到一个目标对象上，即可以将多个切面织入同一目标对象。</p>
+
+<h3 id="2-实现方式">2.实现方式</h3>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;使用AOP基于两种方式，一种是比较方便和强大的注解方法，另一种是xml配置<br/></p>
+
+<h5 id="注解">注解</h5>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.xml中声明激活自动扫描组件功能，同时激活自动代理功能。</p>
+
+<pre><code class="language-xml">   &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+	   xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+	   xmlns:context=&quot;http://www.springframework.org/schema/context&quot;
+	   xmlns:util=&quot;http://www.springframework.org/schema/util&quot;
+	   xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd
+	   http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd&quot;&gt;
+
+	&lt;context:component-scan base-package=&quot;com.gupaoedu&quot;/&gt;
+	&lt;context:annotation-config /&gt;
+
+&lt;/beans&gt;
+</code></pre>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.为Aspect切面类添加注解</p>
+
+<pre><code class="language-java">   @Component
+//声明这是一个切面Bean，AnnotaionAspect是一个面，由框架实现的
+@Aspect
+public class AnnotaionAspect {
+
+	private final static Logger log = Logger.getLogger(AnnotaionAspect.class);
+	
+	//配置切入点,该方法无方法体,主要为方便同类中其他方法使用此处配置的切入点
+	//切点的集合，这个表达式所描述的是一个虚拟面（规则）
+	//就是为了Annotation扫描时能够拿到注解中的内容
+	@Pointcut(&quot;execution(* com.gupaoedu.vip.aop.service..*(..))&quot;)
+	public void aspect(){}
+	
+	/*
+	 * 配置前置通知,使用在方法aspect()上注册的切入点
+	 * 同时接受JoinPoint切入点对象,可以没有该参数
+	 */
+	@Before(&quot;aspect()&quot;)
+	public void before(JoinPoint joinPoint){
+		log.info(&quot;before &quot; + joinPoint);
+	}
+    //配置前置通知,拦截含有 long 类型参数的方法,并将参数值注入到当前方法的形参 id 中   	      	    @Before(&quot;aspect()&amp;&amp;args(id)&quot;)
+    public void beforeArgId(JoinPoint joinPoint, long id){
+    log.info(&quot;beforeArgId &quot; + joinPoint + &quot;\tID:&quot; + id);
+    }
+	
+	//配置后置通知,使用在方法aspect()上注册的切入点
+	@After(&quot;aspect()&quot;)
+	public void after(JoinPoint joinPoint){
+		log.info(&quot;after &quot; + joinPoint);
+	}
+	
+	//配置环绕通知,使用在方法aspect()上注册的切入点
+	@Around(&quot;aspect()&quot;)
+	public void around(JoinPoint joinPoint){
+		long start = System.currentTimeMillis();
+		try {
+			((ProceedingJoinPoint) joinPoint).proceed();
+			long end = System.currentTimeMillis();
+			log.info(&quot;around &quot; + joinPoint + &quot;\tUse time : &quot; + (end - start) + &quot; ms!&quot;);
+		} catch (Throwable e) {
+			long end = System.currentTimeMillis();
+			log.info(&quot;around &quot; + joinPoint + &quot;\tUse time : &quot; + (end - start) + &quot; ms with exception : &quot; + e.getMessage());
+		}
+	}
+	
+	//配置后置返回通知,使用在方法aspect()上注册的切入点
+	@AfterReturning(&quot;aspect()&quot;)
+	public void afterReturn(JoinPoint joinPoint){
+		log.info(&quot;afterReturn &quot; + joinPoint);
+	}
+	
+	//配置抛出异常后通知,使用在方法aspect()上注册的切入点
+	@AfterThrowing(pointcut=&quot;aspect()&quot;, throwing=&quot;ex&quot;)
+	public void afterThrow(JoinPoint joinPoint, Exception ex){
+		log.info(&quot;afterThrow &quot; + joinPoint + &quot;\t&quot; + ex.getMessage());
+	}
+	
+}
+</code></pre>
+
+<h5 id="xml配置">xml配置</h5>
+
+<pre><code class="language-xml">   &lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+	   xmlns:tx=&quot;http://www.springframework.org/schema/tx&quot;
+	   xmlns:aop=&quot;http://www.springframework.org/schema/aop&quot;
+	   xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+	   xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans
+						http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+						http://www.springframework.org/schema/tx
+						http://www.springframework.org/schema/tx/spring-tx-4.3.xsd
+						http://www.springframework.org/schema/aop
+						http://www.springframework.org/schema/aop/spring-aop-4.3.xsd&quot;&gt;
+
+	&lt;!-- 注解驱动加上这句话 --&gt;
+	&lt;!--&lt;aop:aspectj-autoproxy proxy-target-class=&quot;true&quot;/&gt;--&gt;
+
+	&lt;bean id=&quot;xmlAspect&quot; class=&quot;com.gupaoedu.vip.aop.aspect.XmlAspect&quot;&gt;&lt;/bean&gt;
+	 &lt;!--AOP配置 --&gt;
+	&lt;aop:config&gt;
+		 &lt;!--声明一个切面,并注入切面Bean,相当于@Aspect --&gt;
+		&lt;aop:aspect ref=&quot;xmlAspect&quot; &gt;
+			 &lt;!--配置一个切入点,相当于@Pointcut --&gt;
+			&lt;aop:pointcut expression=&quot;execution(* com.gupaoedu.vip.aop.service..*(..))&quot; id=&quot;simplePointcut&quot;/&gt;
+			 &lt;!--配置通知,相当于@Before、@After、@AfterReturn、@Around、@AfterThrowing --&gt;
+			&lt;aop:before pointcut-ref=&quot;simplePointcut&quot; method=&quot;before&quot;/&gt;
+			&lt;aop:after pointcut-ref=&quot;simplePointcut&quot; method=&quot;after&quot;/&gt;
+			&lt;aop:after-returning pointcut-ref=&quot;simplePointcut&quot; method=&quot;afterReturn&quot;/&gt;
+			&lt;aop:after-throwing pointcut-ref=&quot;simplePointcut&quot; method=&quot;afterThrow&quot; throwing=&quot;ex&quot;/&gt;
+			&lt;aop:around pointcut-ref=&quot;simplePointcut&quot;  method=&quot;around&quot;/&gt;
+		&lt;/aop:aspect&gt;
+	&lt;/aop:config&gt;
+	
+&lt;/beans&gt;
+
+</code></pre>
+
+<pre><code class="language-java">   public class XmlAspect {
+
+	private final static Logger log = Logger.getLogger(XmlAspect.class);
+	
+	/*
+	 * 配置前置通知,使用在方法aspect()上注册的切入点
+	 * 同时接受JoinPoint切入点对象,可以没有该参数
+	 */
+	public void before(JoinPoint joinPoint){
+//		System.out.println(joinPoint.getArgs()); //获取实参列表
+//		System.out.println(joinPoint.getKind());	//连接点类型，如method-execution
+//		System.out.println(joinPoint.getSignature()); //获取被调用的切点
+//		System.out.println(joinPoint.getTarget());	//获取目标对象
+//		System.out.println(joinPoint.getThis());	//获取this的值
+		
+		log.info(&quot;before &quot; + joinPoint);
+	}
+	
+	//配置后置通知,使用在方法aspect()上注册的切入点
+	public void after(JoinPoint joinPoint){
+		log.info(&quot;after &quot; + joinPoint);
+	}
+	
+	//配置环绕通知,使用在方法aspect()上注册的切入点
+	public void around(JoinPoint joinPoint){
+		long start = System.currentTimeMillis();
+		try {
+			((ProceedingJoinPoint) joinPoint).proceed();
+			long end = System.currentTimeMillis();
+			log.info(&quot;around &quot; + joinPoint + &quot;\tUse time : &quot; + (end - start) + &quot; ms!&quot;);
+		} catch (Throwable e) {
+			long end = System.currentTimeMillis();
+			log.info(&quot;around &quot; + joinPoint + &quot;\tUse time : &quot; + (end - start) + &quot; ms with exception : &quot; + e.getMessage());
+		}
+	}
+	
+	//配置后置返回通知,使用在方法aspect()上注册的切入点
+	public void afterReturn(JoinPoint joinPoint){
+		log.info(&quot;afterReturn &quot; + joinPoint);
+	}
+	
+	//配置抛出异常后通知,使用在方法aspect()上注册的切入点
+	public void afterThrow(JoinPoint joinPoint, Exception ex){
+		log.info(&quot;afterThrow &quot; + joinPoint + &quot;\t&quot; + ex.getMessage());
+	}
+	
+}
+</code></pre>
+
+<h3 id="3-表达式配置规则">3.表达式配置规则</h3>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;execution(modifiers-pattern? ret-type-pattern declaring-type-pattern? name-pattern(param-pattern)throws-pattern?<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;modifiers-pattern:方法的操作权限<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ret-type-pattern:返回值 <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;declaring-type-pattern:方法所在的包<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name-pattern:方法名 <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;parm-pattern:参数名<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;throws-pattern:异常<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;通知参数: args(msg,..)是指将切入点方法上的第一个 String 类型参数添加到参数名为 msg 的通知的 入参上</p>
+
+<pre><code class="language-xml">   &lt;aop:config&gt;
+   &lt;aop:aspect ref=&quot;xmlAspect&quot;&gt;
+		&lt;aop:pointcut id=&quot;simplePointcut&quot;
+expression=&quot;execution(* com.gupaoedu.aop.service..*(..)) and args(msg,..)&quot; /&gt;
+     &lt;aop:after pointcut-ref=&quot;simplePointcut&quot; Method=&quot;after&quot;/&gt;
+   &lt;/aop:aspect&gt;
+&lt;/aop:config&gt;
+</code></pre>
+
+<h3 id="4-spring-aop源码分析">4.Spring AOP源码分析</h3>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Spring 的 AOP 是通过接入 BeanPostProcessor 后置处理器开始的，它是 Spring IOC 容器经常使用到的一个特性，这个 Bean 后置处理器是一个监听器，可以监听容器触发的 Bean 声明周期事件。后置处理器向容器注册以后，容器中管理的 Bean 就具备了接收 IOC 容器事件回调的能力。BeanPostProcessor 的使用非常简单，只需要提供一个实现接口 BeanPostProcessor 的实现类，然后 在 Bean 的配置文件中设置即可。</p>
+
+<h5 id="1-beanpostprocessor">1.BeanPostProcessor</h5>
+
+<pre><code class="language-java">   public interface BeanPostProcessor {
+       //为在Bean的初始化前提供回调入口
+	@Nullable
+	default Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
+		return bean;
+	}
+	//为在Bean的初始化之后提供回调入口
+	@Nullable
+	default Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+		return bean;
+	}
+   }
+</code></pre>
+
+<h5 id="2-abstractautowirecapablebeanfactory添加beanpostprocessor">2.AbstractAutowireCapableBeanFactory添加BeanPostProcessor</h5>
+
+<pre><code class="language-java">   	//真正创建Bean的方法
+	protected Object doCreateBean(final String beanName, final RootBeanDefinition mbd, final @Nullable Object[] args)
+			throws BeanCreationException {
+
+		// Instantiate the bean.
+		//封装被创建的Bean对象
+		BeanWrapper instanceWrapper = null;
+		if (mbd.isSingleton()) {
+			instanceWrapper = this.factoryBeanInstanceCache.remove(beanName);
+		}
+		if (instanceWrapper == null) {
+			instanceWrapper = createBeanInstance(beanName, mbd, args);
+		}
+		final Object bean = instanceWrapper.getWrappedInstance();
+		//获取实例化对象的类型
+		Class&lt;?&gt; beanType = instanceWrapper.getWrappedClass();
+		if (beanType != NullBean.class) {
+			mbd.resolvedTargetType = beanType;
+		}
+
+		// Allow post-processors to modify the merged bean definition.
+		//调用PostProcessor后置处理器
+		synchronized (mbd.postProcessingLock) {
+			if (!mbd.postProcessed) {
+				try {
+					applyMergedBeanDefinitionPostProcessors(mbd, beanType, beanName);
+				}
+				catch (Throwable ex) {
+					throw new BeanCreationException(mbd.getResourceDescription(), beanName,
+							&quot;Post-processing of merged bean definition failed&quot;, ex);
+				}
+				mbd.postProcessed = true;
+			}
+		}
+
+		// Eagerly cache singletons to be able to resolve circular references
+		// even when triggered by lifecycle interfaces like BeanFactoryAware.
+		//向容器中缓存单例模式的Bean对象，以防循环引用
+		boolean earlySingletonExposure = (mbd.isSingleton() &amp;&amp; this.allowCircularReferences &amp;&amp;
+				isSingletonCurrentlyInCreation(beanName));
+		if (earlySingletonExposure) {
+			if (logger.isDebugEnabled()) {
+				logger.debug(&quot;Eagerly caching bean '&quot; + beanName +
+						&quot;' to allow for resolving potential circular references&quot;);
+			}
+			//这里是一个匿名内部类，为了防止循环引用，尽早持有对象的引用
+			addSingletonFactory(beanName, () -&gt; getEarlyBeanReference(beanName, mbd, bean));
+		}
+
+		// Initialize the bean instance.
+		//Bean对象的初始化，依赖注入在此触发
+		//这个exposedObject在初始化完成之后返回作为依赖注入完成后的Bean
+		Object exposedObject = bean;
+		try {
+			//将Bean实例对象封装，并且Bean定义中配置的属性值赋值给实例对象
+			populateBean(beanName, mbd, instanceWrapper);
+			//初始化Bean对象
+			exposedObject = initializeBean(beanName, exposedObject, mbd);
+		}
+		catch (Throwable ex) {
+			if (ex instanceof BeanCreationException &amp;&amp; beanName.equals(((BeanCreationException) ex).getBeanName())) {
+				throw (BeanCreationException) ex;
+			}
+			else {
+				throw new BeanCreationException(
+						mbd.getResourceDescription(), beanName, &quot;Initialization of bean failed&quot;, ex);
+			}
+		}
+
+		if (earlySingletonExposure) {
+			//获取指定名称的已注册的单例模式Bean对象
+			Object earlySingletonReference = getSingleton(beanName, false);
+			if (earlySingletonReference != null) {
+				//根据名称获取的已注册的Bean和正在实例化的Bean是同一个
+				if (exposedObject == bean) {
+					//当前实例化的Bean初始化完成
+					exposedObject = earlySingletonReference;
+				}
+				//当前Bean依赖其他Bean，并且当发生循环引用时不允许新创建实例对象
+				else if (!this.allowRawInjectionDespiteWrapping &amp;&amp; hasDependentBean(beanName)) {
+					String[] dependentBeans = getDependentBeans(beanName);
+					Set&lt;String&gt; actualDependentBeans = new LinkedHashSet&lt;&gt;(dependentBeans.length);
+					//获取当前Bean所依赖的其他Bean
+					for (String dependentBean : dependentBeans) {
+						//对依赖Bean进行类型检查
+						if (!removeSingletonIfCreatedForTypeCheckOnly(dependentBean)) {
+							actualDependentBeans.add(dependentBean);
+						}
+					}
+					if (!actualDependentBeans.isEmpty()) {
+						throw new BeanCurrentlyInCreationException(beanName,
+								&quot;Bean with name '&quot; + beanName + &quot;' has been injected into other beans [&quot; +
+								StringUtils.collectionToCommaDelimitedString(actualDependentBeans) +
+								&quot;] in its raw version as part of a circular reference, but has eventually been &quot; +
+								&quot;wrapped. This means that said other beans do not use the final version of the &quot; +
+								&quot;bean. This is often the result of over-eager type matching - consider using &quot; +
+								&quot;'getBeanNamesOfType' with the 'allowEagerInit' flag turned off, for example.&quot;);
+					}
+				}
+			}
+		}
+
+		// Register bean as disposable.
+		//注册完成依赖注入的Bean
+		try {
+			registerDisposableBeanIfNecessary(beanName, bean, mbd);
+		}
+		catch (BeanDefinitionValidationException ex) {
+			throw new BeanCreationException(
+					mbd.getResourceDescription(), beanName, &quot;Invalid destruction signature&quot;, ex);
+		}
+
+		return exposedObject;
+	}
+</code></pre>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;为 Bean 实例对象添加 BeanPostProcessor 后置处理器的入口的是 initializeBean()方法。</p>
+
+<h5 id="3-initializebean-方法为容器产生的bean实例对象添加beanpostprocessor">3.initializeBean()方法为容器产生的Bean实例对象添加BeanPostProcessor</h5>
+
+<pre><code class="language-java">   //初始容器创建的Bean实例对象，为其添加BeanPostProcessor后置处理器
+	protected Object initializeBean(final String beanName, final Object bean, @Nullable RootBeanDefinition mbd) {
+		//JDK的安全机制验证权限
+		if (System.getSecurityManager() != null) {
+			//实现PrivilegedAction接口的匿名内部类
+			AccessController.doPrivileged((PrivilegedAction&lt;Object&gt;) () -&gt; {
+				invokeAwareMethods(beanName, bean);
+				return null;
+			}, getAccessControlContext());
+		}
+		else {
+			//为Bean实例对象包装相关属性，如名称，类加载器，所属容器等信息
+			invokeAwareMethods(beanName, bean);
+		}
+
+		Object wrappedBean = bean;
+		//对BeanPostProcessor后置处理器的postProcessBeforeInitialization
+		//回调方法的调用，为Bean实例初始化前做一些处理
+		if (mbd == null || !mbd.isSynthetic()) {
+			wrappedBean = applyBeanPostProcessorsBeforeInitialization(wrappedBean, beanName);
+		}
+
+		//调用Bean实例对象初始化的方法，这个初始化方法是在Spring Bean定义配置
+		//文件中通过init-method属性指定的
+		try {
+			invokeInitMethods(beanName, wrappedBean, mbd);
+		}
+		catch (Throwable ex) {
+			throw new BeanCreationException(
+					(mbd != null ? mbd.getResourceDescription() : null),
+					beanName, &quot;Invocation of init method failed&quot;, ex);
+		}
+		//对BeanPostProcessor后置处理器的postProcessAfterInitialization
+		//回调方法的调用，为Bean实例初始化之后做一些处理
+		if (mbd == null || !mbd.isSynthetic()) {
+			wrappedBean = applyBeanPostProcessorsAfterInitialization(wrappedBean, beanName);
+		}
+
+		return wrappedBean;
+	}
+	
+	@Override
+	//调用BeanPostProcessor后置处理器实例对象初始化之后的处理方法
+	public Object applyBeanPostProcessorsAfterInitialization(Object existingBean, String beanName)
+			throws BeansException {
+
+		Object result = existingBean;
+		//遍历容器为所创建的Bean添加的所有BeanPostProcessor后置处理器
+		for (BeanPostProcessor beanProcessor : getBeanPostProcessors()) {
+			//调用Bean实例所有的后置处理中的初始化后处理方法，为Bean实例对象在
+			//初始化之后做一些自定义的处理操作
+			Object current = beanProcessor.postProcessAfterInitialization(result, beanName);
+			if (current == null) {
+				return result;
+			}
+			result = current;
+		}
+		return result;
+	}
+</code></pre>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;分析下AbstractAutoProxyCreator的postProcessAfterInitialization()</p>
+
+<pre><code class="language-java">@Override
+	public Object postProcessAfterInitialization(@Nullable Object bean, String beanName) throws BeansException {
+		if (bean != null) {
+			Object cacheKey = getCacheKey(bean.getClass(), beanName);
+			if (!this.earlyProxyReferences.contains(cacheKey)) {
+				return wrapIfNecessary(bean, beanName, cacheKey);
+			}
+		}
+		return bean;
+	}
+	
+	protected Object wrapIfNecessary(Object bean, String beanName, Object cacheKey) {
+		if (StringUtils.hasLength(beanName) &amp;&amp; this.targetSourcedBeans.contains(beanName)) {
+			return bean;
+		}
+		//判断是否不应该代理这个Bean
+		if (Boolean.FALSE.equals(this.advisedBeans.get(cacheKey))) {
+			return bean;
+		}
+		/**
+		 * 判断是否是一些 InfrastructureClass 或者是否应该跳过这个 bean。
+		 * 所谓 InfrastructureClass 就是指 Advice/PointCut/Advisor 等接口的实现类。
+		 * shouldSkip 默认实现为返回 false,由于是 protected 方法，子类可以覆盖。
+		 */
+		if (isInfrastructureClass(bean.getClass()) || shouldSkip(bean.getClass(), beanName)) {
+			this.advisedBeans.put(cacheKey, Boolean.FALSE);
+			return bean;
+		}
+
+		//获取通知
+		Object[] specificInterceptors = getAdvicesAndAdvisorsForBean(bean.getClass(), beanName, null);
+		if (specificInterceptors != DO_NOT_PROXY) {
+			this.advisedBeans.put(cacheKey, Boolean.TRUE);
+			//创建代理
+			Object proxy = createProxy(
+					bean.getClass(), beanName, specificInterceptors, new SingletonTargetSource(bean));
+			this.proxyTypes.put(cacheKey, proxy.getClass());
+			return proxy;
+		}
+
+		this.advisedBeans.put(cacheKey, Boolean.FALSE);
+		return bean;
+	}
+	protected Object createProxy(Class&lt;?&gt; beanClass, @Nullable String beanName,
+			@Nullable Object[] specificInterceptors, TargetSource targetSource) {
+
+		if (this.beanFactory instanceof ConfigurableListableBeanFactory) {
+			AutoProxyUtils.exposeTargetClass((ConfigurableListableBeanFactory) this.beanFactory, beanName, beanClass);
+		}
+
+		ProxyFactory proxyFactory = new ProxyFactory();
+		proxyFactory.copyFrom(this);
+
+		if (!proxyFactory.isProxyTargetClass()) {
+			if (shouldProxyTargetClass(beanClass, beanName)) {
+				proxyFactory.setProxyTargetClass(true);
+			}
+			else {
+				evaluateProxyInterfaces(beanClass, proxyFactory);
+			}
+		}
+
+		Advisor[] advisors = buildAdvisors(beanName, specificInterceptors);
+		proxyFactory.addAdvisors(advisors);
+		proxyFactory.setTargetSource(targetSource);
+		customizeProxyFactory(proxyFactory);
+
+		proxyFactory.setFrozen(this.freezeProxy);
+		if (advisorsPreFiltered()) {
+			proxyFactory.setPreFiltered(true);
+		}
+
+		return proxyFactory.getProxy(getProxyClassLoader());
+	}
+</code></pre>
+
+<h5 id="4-最终调用的是-defaultaopproxyfactory-的-createaopproxy-方法">4. 最终调用的是 DefaultAopProxyFactory 的 createAopProxy()方法</h5>
+
+<pre><code class="language-java">   public class DefaultAopProxyFactory implements AopProxyFactory, Serializable {
+
+	@Override
+	public AopProxy createAopProxy(AdvisedSupport config) throws AopConfigException {
+		if (config.isOptimize() || config.isProxyTargetClass() || hasNoUserSuppliedProxyInterfaces(config)) {
+			Class&lt;?&gt; targetClass = config.getTargetClass();
+			if (targetClass == null) {
+				throw new AopConfigException(&quot;TargetSource cannot determine target class: &quot; +
+						&quot;Either an interface or a target is required for proxy creation.&quot;);
+			}
+			if (targetClass.isInterface() || Proxy.isProxyClass(targetClass)) {
+				return new JdkDynamicAopProxy(config);
+			}
+			return new ObjenesisCglibAopProxy(config);
+		}
+		else {
+			return new JdkDynamicAopProxy(config);
+		}
+	}
+
+	/**
+	 * Determine whether the supplied {@link AdvisedSupport} has only the
+	 * {@link org.springframework.aop.SpringProxy} interface specified
+	 * (or no proxy interfaces specified at all).
+	 */
+	private boolean hasNoUserSuppliedProxyInterfaces(AdvisedSupport config) {
+		Class&lt;?&gt;[] ifcs = config.getProxiedInterfaces();
+		return (ifcs.length == 0 || (ifcs.length == 1 &amp;&amp; SpringProxy.class.isAssignableFrom(ifcs[0])));
+	}
+
+}
+</code></pre>
+
+<h5 id="5-调用代理方法">5.调用代理方法</h5>
+
+<pre><code class="language-java">   	/**
+	 * 获取代理类要实现的接口,除了Advised对象中配置的,还会加上SpringProxy, Advised(opaque=false)
+	 * 检查上面得到的接口中有没有定义 equals或者hashcode的接口
+	 * 调用Proxy.newProxyInstance创建代理对象
+	 */
+	@Override
+	public Object getProxy(@Nullable ClassLoader classLoader) {
+		if (logger.isDebugEnabled()) {
+			logger.debug(&quot;Creating JDK dynamic proxy: target source is &quot; + this.advised.getTargetSource());
+		}
+		Class&lt;?&gt;[] proxiedInterfaces = AopProxyUtils.completeProxiedInterfaces(this.advised, true);
+		findDefinedEqualsAndHashCodeMethods(proxiedInterfaces);
+		return Proxy.newProxyInstance(classLoader, proxiedInterfaces, this);
+</code></pre>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;InvocationHandler 是 JDK 动态代理的核心，生成的代理对象的方法调用都会委托到 InvocationHandler.invoke()方法。而从 JdkDynamicAopProxy 的源码我们可以看到这个类其实也实现了InvocationHandler</p>
+
+<pre><code class="language-java">   	@Override
+	@Nullable
+	public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+		MethodInvocation invocation;
+		Object oldProxy = null;
+		boolean setProxyContext = false;
+
+		TargetSource targetSource = this.advised.targetSource;
+		Object target = null;
+
+		try {
+			//eqauls()方法，具目标对象未实现此方法
+			if (!this.equalsDefined &amp;&amp; AopUtils.isEqualsMethod(method)) {
+				// The target does not implement the equals(Object) method itself.
+				return equals(args[0]);
+			}
+			//hashCode()方法，具目标对象未实现此方法
+			else if (!this.hashCodeDefined &amp;&amp; AopUtils.isHashCodeMethod(method)) {
+				// The target does not implement the hashCode() method itself.
+				return hashCode();
+			}
+			else if (method.getDeclaringClass() == DecoratingProxy.class) {
+				// There is only getDecoratedClass() declared -&gt; dispatch to proxy config.
+				return AopProxyUtils.ultimateTargetClass(this.advised);
+			}
+			//Advised接口或者其父接口中定义的方法,直接反射调用,不应用通知
+			else if (!this.advised.opaque &amp;&amp; method.getDeclaringClass().isInterface() &amp;&amp;
+					method.getDeclaringClass().isAssignableFrom(Advised.class)) {
+				// Service invocations on ProxyConfig with the proxy config...
+				return AopUtils.invokeJoinpointUsingReflection(this.advised, method, args);
+			}
+
+			Object retVal;
+
+			if (this.advised.exposeProxy) {
+				// Make invocation available if necessary.
+				oldProxy = AopContext.setCurrentProxy(proxy);
+				setProxyContext = true;
+			}
+
+			// Get as late as possible to minimize the time we &quot;own&quot; the target,
+			// in case it comes from a pool.
+			//获得目标对象的类
+			target = targetSource.getTarget();
+			Class&lt;?&gt; targetClass = (target != null ? target.getClass() : null);
+
+			// Get the interception chain for this method.
+			//获取可以应用到此方法上的Interceptor列表
+			List&lt;Object&gt; chain = this.advised.getInterceptorsAndDynamicInterceptionAdvice(method, targetClass);
+
+			// Check whether we have any advice. If we don't, we can fallback on direct
+			// reflective invocation of the target, and avoid creating a MethodInvocation.
+			//如果没有可以应用到此方法的通知(Interceptor)，此直接反射调用 method.invoke(target, args)
+			if (chain.isEmpty()) {
+				// We can skip creating a MethodInvocation: just invoke the target directly
+				// Note that the final invoker must be an InvokerInterceptor so we know it does
+				// nothing but a reflective operation on the target, and no hot swapping or fancy proxying.
+				Object[] argsToUse = AopProxyUtils.adaptArgumentsIfNecessary(method, args);
+				retVal = AopUtils.invokeJoinpointUsingReflection(target, method, argsToUse);
+			}
+			else {
+				// We need to create a method invocation...
+				//创建MethodInvocation
+				invocation = new ReflectiveMethodInvocation(proxy, target, method, args, targetClass, chain);
+				// Proceed to the joinpoint through the interceptor chain.
+				retVal = invocation.proceed();
+			}
+
+			// Massage return value if necessary.
+			Class&lt;?&gt; returnType = method.getReturnType();
+			if (retVal != null &amp;&amp; retVal == target &amp;&amp;
+					returnType != Object.class &amp;&amp; returnType.isInstance(proxy) &amp;&amp;
+					!RawTargetAccess.class.isAssignableFrom(method.getDeclaringClass())) {
+				// Special case: it returned &quot;this&quot; and the return type of the method
+				// is type-compatible. Note that we can't help if the target sets
+				// a reference to itself in another returned object.
+				retVal = proxy;
+			}
+			else if (retVal == null &amp;&amp; returnType != Void.TYPE &amp;&amp; returnType.isPrimitive()) {
+				throw new AopInvocationException(
+						&quot;Null return value from advice does not match primitive return type for: &quot; + method);
+			}
+			return retVal;
+		}
+		finally {
+			if (target != null &amp;&amp; !targetSource.isStatic()) {
+				// Must have come from TargetSource.
+				targetSource.releaseTarget(target);
+			}
+			if (setProxyContext) {
+				// Restore old proxy.
+				AopContext.setCurrentProxy(oldProxy);
+			}
+		}
+	}
+
+	public List&lt;Object&gt; getInterceptorsAndDynamicInterceptionAdvice(Method method, @Nullable Class&lt;?&gt; targetClass) {
+		MethodCacheKey cacheKey = new MethodCacheKey(method);
+		List&lt;Object&gt; cached = this.methodCache.get(cacheKey);
+		if (cached == null) {
+			cached = this.advisorChainFactory.getInterceptorsAndDynamicInterceptionAdvice(
+					this, method, targetClass);
+			this.methodCache.put(cacheKey, cached);
+		}
+		return cached;
+	}
+	
+	/**
+	 * 从提供的配置实例config中获取advisor列表,遍历处理这些advisor.如果是IntroductionAdvisor,
+	 * 则判断此Advisor能否应用到目标类targetClass上.如果是PointcutAdvisor,则判断
+	 * 此Advisor能否应用到目标方法method上.将满足条件的Advisor通过AdvisorAdaptor转化成Interceptor列表返回.
+	 */
+	@Override
+	public List&lt;Object&gt; getInterceptorsAndDynamicInterceptionAdvice(
+			Advised config, Method method, @Nullable Class&lt;?&gt; targetClass) {
+
+		// This is somewhat tricky... We have to process introductions first,
+		// but we need to preserve order in the ultimate list.
+		List&lt;Object&gt; interceptorList = new ArrayList&lt;&gt;(config.getAdvisors().length);
+		Class&lt;?&gt; actualClass = (targetClass != null ? targetClass : method.getDeclaringClass());
+		//查看是否包含IntroductionAdvisor
+		boolean hasIntroductions = hasMatchingIntroductions(config, actualClass);
+		//这里实际上注册一系列AdvisorAdapter,用于将Advisor转化成MethodInterceptor
+		AdvisorAdapterRegistry registry = GlobalAdvisorAdapterRegistry.getInstance();
+
+		for (Advisor advisor : config.getAdvisors()) {
+			if (advisor instanceof PointcutAdvisor) {
+				// Add it conditionally.
+				PointcutAdvisor pointcutAdvisor = (PointcutAdvisor) advisor;
+				if (config.isPreFiltered() || pointcutAdvisor.getPointcut().getClassFilter().matches(actualClass)) {
+					//这个地方这两个方法的位置可以互换下
+					//将Advisor转化成Interceptor
+					MethodInterceptor[] interceptors = registry.getInterceptors(advisor);
+					//检查当前advisor的pointcut是否可以匹配当前方法
+					MethodMatcher mm = pointcutAdvisor.getPointcut().getMethodMatcher();
+					if (MethodMatchers.matches(mm, method, actualClass, hasIntroductions)) {
+						if (mm.isRuntime()) {
+							// Creating a new object instance in the getInterceptors() method
+							// isn't a problem as we normally cache created chains.
+							for (MethodInterceptor interceptor : interceptors) {
+								interceptorList.add(new InterceptorAndDynamicMethodMatcher(interceptor, mm));
+							}
+						}
+						else {
+							interceptorList.addAll(Arrays.asList(interceptors));
+						}
+					}
+				}
+			}
+			else if (advisor instanceof IntroductionAdvisor) {
+				IntroductionAdvisor ia = (IntroductionAdvisor) advisor;
+				if (config.isPreFiltered() || ia.getClassFilter().matches(actualClass)) {
+					Interceptor[] interceptors = registry.getInterceptors(advisor);
+					interceptorList.addAll(Arrays.asList(interceptors));
+				}
+			}
+			else {
+				Interceptor[] interceptors = registry.getInterceptors(advisor);
+				interceptorList.addAll(Arrays.asList(interceptors));
+			}
+		}
+
+		return interceptorList;
+	}
+	
+		@Override
+	@Nullable
+	public Object proceed() throws Throwable {
+		//	We start with an index of -1 and increment early.
+		//如果Interceptor执行完了，则执行joinPoint
+		if (this.currentInterceptorIndex == this.interceptorsAndDynamicMethodMatchers.size() - 1) {
+			return invokeJoinpoint();
+		}
+
+		Object interceptorOrInterceptionAdvice =
+				this.interceptorsAndDynamicMethodMatchers.get(++this.currentInterceptorIndex);
+		//如果要动态匹配joinPoint
+		if (interceptorOrInterceptionAdvice instanceof InterceptorAndDynamicMethodMatcher) {
+			// Evaluate dynamic method matcher here: static part will already have
+			// been evaluated and found to match.
+			InterceptorAndDynamicMethodMatcher dm =
+					(InterceptorAndDynamicMethodMatcher) interceptorOrInterceptionAdvice;
+			//动态匹配：运行时参数是否满足匹配条件
+			if (dm.methodMatcher.matches(this.method, this.targetClass, this.arguments)) {
+				return dm.interceptor.invoke(this);
+			}
+			else {
+				// Dynamic matching failed.
+				// Skip this interceptor and invoke the next in the chain.
+				//动态匹配失败时,略过当前Intercetpor,调用下一个Interceptor
+				return proceed();
+			}
+		}
+		else {
+			// It's an interceptor, so we just invoke it: The pointcut will have
+			// been evaluated statically before this object was constructed.
+			//执行当前Intercetpor
+			return ((MethodInterceptor) interceptorOrInterceptionAdvice).invoke(this);
+		}
+	}
+	
+		@Nullable
+	public static Object invokeJoinpointUsingReflection(@Nullable Object target, Method method, Object[] args)
+			throws Throwable {
+
+		// Use reflection to invoke the method.
+		try {
+			ReflectionUtils.makeAccessible(method);
+			return method.invoke(target, args);
+		}
+		catch (InvocationTargetException ex) {
+			// Invoked method threw a checked exception.
+			// We must rethrow it. The client won't see the interceptor.
+			throw ex.getTargetException();
+		}
+		catch (IllegalArgumentException ex) {
+			throw new AopInvocationException(&quot;AOP configuration seems to be invalid: tried calling method [&quot; +
+					method + &quot;] on target [&quot; + target + &quot;]&quot;, ex);
+		}
+		catch (IllegalAccessException ex) {
+			throw new AopInvocationException(&quot;Could not access method [&quot; + method + &quot;]&quot;, ex);
+		}
+	}
+</code></pre>
+
+<p><figure><img src="/images/ring.svg" data-sizes="auto" data-src="data:image/png;base64,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spJ4FemnOBBUZXKyLIGWtHQpKCjQBx98oE8//VR79+6V0+lUkyZN9OSTT+rSSy/1W1w4fwLt2CShjtK4nqo/ceKEvv32W82ZM0fffPONJk2adNaPksqSkZGhJ554QjNnzlS/fv1UWFhYafGlp6dr/PjxWrBgwVlj/UrS0qVL1axZMy1durTKrjtr1qxR7dq1tXfvXj3xxBOaPHmynnvuuSpZl6/xVMY9grd9izO83ZsVHXdi+/btZc5b2YXoqnTo0CHdcccdWrRokc/ngZpUoAbAGI01USCMixQTE6NHHnlE999/v66++mq1a9fO59xgabzlBs8lX1dS+/bt1bhxY82aNUuDBw92P5VUnrymJN144416++23FRMT4y4OlWdbpNJz0t74kn9s3ry5EhISNGfOHD3xxBP67bff9Pbbb3tt25uy9p0vMXl677zlfM9lP6F0vt1FVhNLly5V9+7dz7o5rVWrlgYMGKClS5e6X+vYsaOuu+46/elPf1LPnj31X//1X5LOPJU1depU9ezZUx988IGmT5/uftqlZcuWGjFihMaPH1+sG8OSLrroIo0cOVITJkzQmDFjdMUVVxSbPmPGDHXs2FF33XWXevXqpSlTpigvL6/MdfiyXREREZoxY4Y++ugjDRs2THfddddZ6y0r/qlTp8put+vuu+9Wjx49NGnSJI0dO1YjR450z9O2bVs5nU61bdvW/cW1V69e+v7779W7d28P70pxTz/9tEJCQpScnKyePXtqypQpMub/ujZt0aKF3nvvPdWpU0f33HOPkpKSNGTIEL333nsKDQ31um8lqVOnTho+fLj+9Kc/qUePHrr99tt9el+kso+L8m6HdKaQ2KVLF40ePVrR0dGaNWuWT8v7Emd5VPbxKPl2zCBwFU3iVZb09HRdf/31ys/Pr7Q2y7uOimxXReNfs2aNNm7cqNdee00//fSTezBZf8jNzdUdd9yhr7/+Wg888IBWrVqlr7/+Wg899JAiIyOrZJ3n4/3HuQmkY9MVT2pqqlJTUytUEOOYqz5sNpvq1aunq6++Wm+99Va5j41ff/1VTqdTffv2VVhYmGrXrl1psZ08eVLp6emlTsvMzNQ333yjhx56SLt27dL27dsrbb0lhYSEqFWrVrrjjju0du3aatG9iqd9i6qzZs0affvtt1q0aJGGDx+uOXPmaMqUKQF1TMXHx+uTTz7xuSAmVc29bUmBdj0FAJx/ffr00aBBgzR16lQVFhb6lBv0xNvy55KvK2nYsGFyOBwaMWJEudZdlKsQlJycXGZXiN7a8zXeknzJPz711FP69ddfNXDgQE2cOPGsbXX9uKVHjx4+r1cqe9/5ElNZ7523HO257idUMwxKjPKoyMCDCBzVZRDIQD1/nTx50nTv3t2sX7/edOnSxWzbts09rSKfodIGA61sntbhabsq2rYvyxXdZ+vXrzddu3Y1hYWF5WqrssyaNcuMGjWqSt+Lks7H++8PvpyPAvWzHmjHZmVfo6vrMeer83GtrMpj29PxMH/+fJOcnOz+/7y8PPP000+bfv36mZ49e5qHH37Y/Pbbb2fti6Lxbtiwwdxyyy2mW7duZsiQIWb9+vVlrrfosVRyemltu3zwwQdm5MiRxhhjxo0bZ2bNmlVsen5+vvmf//kfc+2115pu3bqZwYMHm1dffdX9+XOta+3ateaGG24wSUlJ5m9/+5s5fvx4mbGuXLnS9OnTp9j0xYsXm/79+7vX7229H374oenXr585efKkMcaYtLQ006tXL7N582bTvXt3s3btWvf6cnJyTO/evc369evLfM/K2tfGGFNYWGjefPNNM3ToUHcsW7Zs8bhvfd1vRbf76NGjHmOvCuX5DFbks+Tt3Onp+PWlnZMnT5ohQ4aY+fPnn1N8gaCi94DeBNr1tDyqy/cqwCVQ77tR9Sp6PuPYQU1Vk+8FatSTYgAAz1asWKFWrVqpR48e6tq1a6m/qE1LS1NycrJ69Oihe++9VydOnHBP++CDD3T11VerR48emj17tvv1or+8cXVt8MMPP8hut2vJkiW68sor3fNv3LhRo0aNUvfu3TV06FClpKS423E6nZo3b56GDRum7t276w9/+IO2bt1a5jp82S5XHNnZ2We95nrKpKy2CwoK9M9//lNDhgxxx/Paa695/EV1Xl6eIiMjFRISUuY+8NbuwoUL1b9/f2VmZko68+h87969tWXLFiUlJWndunXu9eXm5qpPnz5KSUnR6dOntXjxYt1+++1ldkdVVkz5+fl65pln1L9/f/Xq1UuPPPJIsbEpPb1v57r/yooFVcOfx2ZZKvt8cC7H3LFjx84pdlSNiy++WHv27HG/Z9OnT9e2bdv0wQcfaNmyZTp+/LieffZZ9/zz5s2TJKWkpLi7Uzp16pQee+wxrVmzRv369dOTTz55TrGU1rbL0qVLde2110qSrr32Wn322Wfu7lCkM78OXbVqlZ577jmtW7dOTz31lD7++GO98sorxdpZsmSJXn31VS1evFi//vprsZ4FXJxOp7Zs2aJ//vOf7kG+XTZs2KClS5fqzjvv9Gm9ycnJatWqlV5//XU5nU4988wzuvvuu3XZZZepf//++vTTT91tf/XVV6pbt66SkpLK3Eee9vXzzz+vRYsWadq0aVq3bp3mzp2runXrety3vu63ottdv379c4o9GGVmZmrChAm64oorNGTIEG3YsKHMeefOnaurr75a+/btK3Oe2NhY/fGPf9S//vUvr+dC1/lzw4YNGjVqlJKSknTTTTe5z8tS2ed017JLly7V1VdfrUGDBmnjxo1677331L9/fw0cOFDffPNNsXld922ergWS93tbX68L69atK/P+t6RAvJ4CAADg/1AUAwC4eUviSWUn6Pbv369Zs2Zp+vTp+uqrrzR48GD3Mp4ShyUTdpWdQPN1uzypaHJOCoykZXp6urKzs93jZ3pSMiZviWdP71tlJjdR+QLh2CwLCXWUdPr0adWqVUshISE6fvy4Pv30Uz300EOKj49X3bp1NXr0aH311Vce2+jfv78SEhK0e/du1alTRwcOHCjXNcGb3bt3a/v27brmmmskSVdeeaVyc3O1du1aSdKJEye0bNkyPfroo7rkkksUGhqqTp066c4779SiRYuKtTVu3DjVr19fjRo10tixY92FAZfevXure/fueuyxx3T99ddr3LhxxaaPGTNG0dHRqlOnjk/rtdlseuyxx/Txxx9r7ty5io6Odp8XkpOTtWrVKncxYunSpRoxYoS7K3lXPHa7XXa7XbNnzy5zX//2229asGCBJk2apM6dOys0NFQJCQlq0qRJmfu1PPut6Hb7Gnt1MHnyZJ08eVJLlizRvHnzyiySfPjhh1q0aJFeeuklNW/e3GObrkJ03bp1fToXLlq0SC+++KK++OILNW7cWNOmTXNP81aQ3rVrlz755BMlJSXp0Ucf1d69e7V8+XL169evzLHyPF0LJArUAMpnzZo1stvtev/9973OW/KHlGU5dOiQhg8fXuld0ZZc/6FDh/T4449rwIAB6tq1q/r27auXX365UtcJANUFRTHUGB07dlRqamqlDP4NVEfeknguRRN0t956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Xhm8rffNN9/U0aNH9Ze//EXR0dEaP368nnvuOXdxJSYmRv3791dkZGSxJ8hK42lfS2fGVOrYsaPuuusu9erVS1OmTFFeXp6k0vdtefZbacoTe6A7evSosrKy9NFHH2ngwIGSpObNmyshIUFz5sxRZmamDhw4oLfffvusZdu1a6enn35azz77bLFxqVw8FaKlcz8XertXOBeernSZ10kAACAASURBVAUUqAGUl7cxCD2N2zhs2DCtWrXK3X3z0aNH9e2332rEiBHF1uFpHG5vYzh7Wn9sbKyefvppffPNNxo2bJjeeOONUotj3ngbP9HT9HMdL9rT2OAAgFJYlmUsyzIAag7X597f55+KCrTz14QJE8zf/va3Uqc9+eSTZuTIkeb77783lmWZDz/80Fx11VWmd+/e5qmnnjIFBQXGGGP27dtnrr/+etOtWzdz/fXXm2+++aZYO9OnTzdJSUlmwIABxhjjbu/UqVPF5nvmmWdMjx49zHXXXWfmz59vLMsyeXl5xhhjTp06ZWbOnGmuuuoqk5SUZEaOHGl2795d5jp82S5jjFm9erUZOnSoGTp0qPnzn/9s3nnnnWLrLa1tY4zJyckxs2bNMgMHDjRdu3Y1119/vVm4cKF7elnb6G26t3Zff/11M3ToUHd8y5YtM7179zYZGRnueR5//HGTnJxc6noPHjxonnjiCTNo0CDTpUsX07t3b/OXv/zF7Nmzp8yYjh49aiZMmGB69eplunfvbm655Rbz73//2z3d0/tWVfvP33w5HwXaZ90l0I7N83E+8CV+b/vF0+cqkJyPa2WgHtvVRSCf/26++WYzf/58f4dxTs5X7OX5DJ7LZ+nBBx80SUlJZsKECSYrK8v9+q5du8zo0aNNt27dzB//+Efz8ccfu8+bJY+ppUuXmm7dupmVK1e6p1mWZex2u+nfv7/529/+ZtatW1fq+n09j7tec523yzqnl1y25HJF/7/kvGVdC3y9B/T1urBw4UIzYMAA07t3bzNz5kyTn59f5nZ72y++rLei93q+qC7fqwCXityb7Nq1y3Tp0sUcOXLEGGNMdna26dmzp1m5cqUx5sx3IcuyzObNm93LrF+/3n1uysvLM3379jWrV682xhjz3nvvmdtuu80YU/w8kJGRYex2u1m8eHGx9R87dszY7Xazfft292tr1641vXv39mn9LpmZmeal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nTuHESNG1Dkqp6ysDD169Kg1kqWyshIvvPACRo8ejZtvvhkLFixAWVlZwG3YsWMHZs2ahaFDh+JnP/sZDh486LU/HA4H2rVrB03T4HQ68dprr2HixIlISEjA7bffjlWrVtVKYL3//vu45ZZbkJiYiKVLl3rWJycnAwASExN9TslXc3/ueNetW4cxY8Z46gskDtM0sXr1akyePNmzjbud/vrPWxu8rfcXj7d2eKsPADZt2oS+ffsiMTERQ4YMuWi02L333ntRf3rrY1/t9RbbhfwdOxdOD1pXLBdu4+04rWu/NacdrTm1o2EYmDhxoqfMV52BxBToZ1mfnyEiIqJQxekTiYiIWjdd18X9bCYiIiJqgfz9shcR+eyzz2T//v3icDhk6dKlMmnSJBERycrKEl3X5fHHH5dTp05JYWGhzJw5UxYsWFCv8vLycpk/f75nvYjI+vXrZdKkSWKaZq3tTp06JcnJyfLee+9JTc8884z84he/kIKCAikqKpI5c+bIwoULPeWBtOHEiRNSUlIiDz/8sMycOfOiGF0ul+zfv1+mT58uv//970VEJCUlRaZPny7Z2dnidDplz549MmHCBHnttddEROTbb78VXddlx44dUl5eLvv27fPE5K7b4XBctM7b/tzlCxYskLKyMjlz5kxAcYiIp92ZmZnidDolNzdXvvvuO7/9560NvtrmL5662uGrPhGRu+++W95++23P8TF27FhxOp0B9WfNdf7a662PL6yrPsdOIJ93IMdpeXn5Re+pqbCwUMaNGydffvmlZ523OgONKdDP0ls/NMX3FBH5xp8hosBZrdbJ1T8z64IdC1FDcP8OaCj8nUJELR2/56i54rFLwcA7CanFGj16NOLi4pCbm4sOHTogPz8fVVVVnvK5c+eia9euiI6ORnJyMrZs2VLr/f7KASApKQmbN2/2jE5JS0vDtGnToNQPj3MYPnw4xo8fj+LiYkRFRXlGqhQVFWHjxo2YP38+YmJi0LlzZ9xzzz349NNPA27DQw89hO7duyMqKgozZsxATk5OrVFWw4cPR0JCAp5++mlMnToVc+fORXFxMdavX4+nnnoK1113HcLCwhAfH485c+Zg7dq1AIDw8HAopVBQUID27dujf//+AfV5Xfurafbs2YiMjESHDh0CiuPMmTP44IMP8Oyzz2LgwIEICwtDXFwcevbs6bf/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vfjii3rttde0f/9+Pf7446nXn3jiCb388st64IEHVFlZqaeeekoDBgw45bI7d+7UY489pgcffFBr167VZZdd1ub09myX47fjwIEDVVZWptWrV6deX7t2rQYMGKAJEya0ub0AIAzHtRQjFAMAAACAVhCKAQCQZiZOnKgdO3Zo7969OnDggP74xz/qsssuS7VQeueddzRp0qTU/LNnz1ZBQYH69u0rSSorK1NhYaFqa2vVt29f7dq1S4lEIjX/rbfeqoEDB2rQoEGaM2eO3nrrrU7Xeu655+q2227Tww8/rHg83uy1/fv3a/Xq1brnnns0ePBgDRgwQDfeeGMqQDt06JBeeukl3X///RozZoxycnJUWFiooUOHnnLZ3NxcGWO0Z88e9enTR6NGjWpzenu2y4nbsby8XOvWrdORI0ckSStXrtTVV18tY0yntxcAdBdaigEAAADAqRGKAQCQZs4880ydf/75euedd1RVVaWJEydq4sSJqqqq0rFjx7RlyxZNnDgxNf/ZZ5/dbPknn3xS06dP13PPPaft27dLauimsMmgQYNSz8866ywdOXKk2esd9d3vfldf/vKXm3VVKEl79uyRtVbXX3+9PM+T53m64447dPjwYdXX12vXrl1KJpMaOXLkSes81bKDBw/WAw88oKefflrXXnutYrGYJLU6vT3b5cTt6Hmehg4dqjfeeEO7d+/Wpk2b9J3vfKfT2wkAupO1NiHJSiK5BwAAAIBWMAgzAABpqKkLxSAIdNlll8nzPN1333367W9/q5EjR6p///6peY9vubRz504tXbpUFRUVKiwsVFVVldasWdNs3Z9++qn69OkjSdq+fbsGDRokx+n892Qcx9H8+fN1/fXXNwuWBg4cKElatWqVhgwZctJyZ5xxhiRpx44dzVp0tWdZSbrssss0bdo0/eM//qN+8pOf6D//8z9bnd6e7dJSC7Dy8nKtWrVKu3fv1pQpU1I1o/v5vs+NfaADotHof4gvPQIAAABAm7hoQkbyfd9wswxAOvu8x6lJkybJ931t3rxZ48aNU+/evVVUVKQXXnhBkydPbnW5pu4Ad+/erXg8rmXLlp00z1NPPaXDhw9r+/btev755zV9+vTOlpkybNgw3Xzzzanxx6SGVluu62rRokXau3evksmktm3blhovbfDgwZo8ebIWLlyobdu2KZlMauvWrdq1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WkAoBgBAmnviiSf08ssv64EHHlBlZaWeeuopDRgwIPX622+/rZUrV+qWW26RJD344IP64IMP9OKLL+q1117T/v379fjjj6fmP3z4sObOnav169ertLRUDz30UOq1pUuXSpKqqqoUjUZT00+1ziZBEOi9997T008/reuuu67ZayfWuXDhQq1bt06LFy9WZWWlHn74Yb3yyit65plnJEnl5eUaPny4nnvuOQVBoEcffVS33367zj//fJWVlWn16tWpda9du1YDBgzQhAkTOruZASAbJCRaigEAAABAawjFAABIY4cOHdJLL72k+++/X2PGjFFOTo4KCws1dOjQ1DyzZ89WQUGB+vbtq/3792v16tW65557NHjwYA0YMEA33nij1q5dm5q/rKxMhYWFqq2tVd++fbVr1y4lEolWa2jPOiVp0qRJGj9+vObOnaurrrpKt956a7PXj6/zwIEDeu2113TffffpvPPOU05OjoqKinTLLbfo5ZdfliQZYzR37ly98soreuqpp1RQUJAK2srLy7Vu3TodOXJEkrRy5UpdffXVMoZu9AH0XE3dJwZBkBN2LQAA4PRhXCYAaD8ulgAASGO7du1SMpnUyJEjW53n7LPPTj3fs2ePrLW6/vrrT5qvvr5eubm5evLJJ7VixQoVFRUpLy9Pktoc++tU62yyfv169enTp1117t69W9ZaFRYWNpvnnHPO0b59+xQEgRzHUWFhoaZOnapf/vKXWrJkSSr08jxPQ4cO1Rtvw7AlSQAAIABJREFUvCHP87Rp06ZmLd4AoCey1iaNMbQUAwAAAIBWEIoBAJDGzjjjDEnSjh07NGrUqBbnOb511MCBAyVJq1at0pAhQ06ad+fOnVq6dKkqKipUWFioqqoqrVmzps0aTrXO9jq+zrPOOkuStH37dl1wwQXN6hs8eLAcx0n9+80339TUqVP1/PPPy3Xd1Lzl5eVatWqVdu/erSlTpqS2FQD0VI7jJK21hGIAAAAA0Aq6TwQAII0NHjxYkydP1sKFC7Vt2zYlk0lt3bpVu3btanV+13W1aNEi7d27V8lkUtu2bdOGDRskKdVN4u7duxWPx7Vs2bJmy/fv31+SVF1drXg83q51dsaZZ56pqVOnauHChfrwww+VTCa1efNm/fznP9fs2bMlNbRe++lPf6prr71W8+bN07Zt2/Tqq6+m1nHFFVdo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SHl5eZKU6hatJe1Z54oVK2St1TXXXJN6ra6uTitXrlRpaal2794ta60KCwubLX/OOedo3759zd5/0KBBqednnXWWjhw50uz19evXq0+fPu3aHu15X8dxVFhYqKlTp+qXv/yllixZkrqB73mehg4dqjfeeEOe52nTpk166KGHJGXG31B3XfCk8+/OPsM+01mu68479VwAAAAAgPYiFAMAAB1yxhlnSJJ27NihUaNGtTjP8S0wBg4cKElatWqVhgwZctK8O3fu1NKlS1VRUaHCwkJVVVVpzZo1bdZwqnUmk0m9/vrr+vGPf6xLLrkkNb2mpkbz5s3T/v37ddZZZ0mStm/frgsuuKBZPYMHD5bj/LlB/aeffpq6gb99+3YNGjSo2euncvz2aO/77ty5U2+++aamTp2q559/vlnXmOXl5Vq1apV2796tKVOmpP5PkJ7YZ9hnAAAAAADpge4TAQBAhwwePFiTJ0/WwoULtW3bNiWTSW3dulW7du1qdX7XdbVo0SLt3btXyWRS27Zt04YNGyQp1eXb7t27FY/HtWzZsmbL9+/fX5JUXV2teDzernX+5je/0cGDB/Xtb39bX/rSl1KPb3zjG+rXr59ef/11nXnmmZo6daoWLlyoDz/8UMlkUps3b9bPf/5zzZ49u1kNTz31lA4fPqzt27fr+eef1/Tp0zu9/drzvkEQ6Kc//amuvfZazZs3T9u2bdOrr76aWscVV1yhzZs3a/ny5c1a9SA9sc+wzwAAAAAA0gOhGAAA6LCFCxdq9OjRuu222zRx4kTNnz9fdXV1rc7/yCOPyHEclZeX6+KLL9b8+fNlbUMvesOGDdOsWbN09913a/bs2brooouaLXvuuefq6quv1p133tnsZnZb61y5cqXGjx+vfv36NVtXJBLRtGnTtHLlSknSggUL5Hmebr/9dpWUlOj+++/XnDlzNGvWrGbLFRUV6corr9T3vvc9lZSU6Ic//GHnN1473veFF17QJ598optuukkFBQW68847tXjxYu3du1eS1K9fP5WVlSk/P79ZaxikL/YZ9hkAAIDuwrhMAABkOU72AMLQdOzpapl2TOvyDZDGampqrOu69vDhw2GXcpLrrrvOLlu2rNm0sP822qOr96NM2H+67JfNAOwzXas7zjuZsM8A7cXfMwA04HiITMXfLsLAmGIAAAAZ5ODBg1qzZo0+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" alt="" class="lazyload"><figcaption class="image-caption"></figcaption></figure></p>
+
+    </div>
+
+    <div class="post-copyright">
+             
+            <p class="copyright-item">
+                <span>Author:</span>
+                <span>ruichunjie </span>
+                </p>
+            
+           
+             
+            <p class="copyright-item">
+                    <span>Link:</span>
+                    <a href=https://ruichunjie.github.io/2019/spring-aop20190402/>https://ruichunjie.github.io/2019/spring-aop20190402/</span>
+            </p>
+            
+             
+            <p class="copyright-item lincese">
+                本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可
+            </p>
+            
+    </div>
+
+  
+    <div class="post-tags">
+        
+            <section>
+            <i class="iconfont icon-tag"></i>Tag(s): 
+            
+            <span class="tag"><a href="https://ruichunjie.github.io/tags/spring/">
+                    #Spring</a></span>
+            
+            </section>
+        
+        <section>
+                <a href="javascript:window.history.back();">back</a></span> · 
+                <span><a href="https://ruichunjie.github.io">home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+        <a href="https://ruichunjie.github.io/2019/spring-di20190402/" class="prev" rel="prev" title="Spring DI源码初了解"><i class="iconfont icon-left"></i>&nbsp;Spring DI源码初了解</a>
+         
+        
+    </div>
+
+    <div class="post-comment">
+          
+                 
+          
+    </div>
+</article>
+          </div>
+		   </main>
+      <footer class="footer">
+    <div class="copyright">
+        &copy;
+        
+        <span itemprop="copyrightYear">2019 - 2019</span>
+        
+        <span class="with-love">
+    	 <i class="iconfont icon-love"></i> 
+         </span>
+         
+            <span class="author" itemprop="copyrightHolder"><a href="https://ruichunjie.github.io">ruichunjie</a> | </span> 
+         
+
+         
+		  <span>Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow">Hugo</a> & <a href="https://github.com/liuzc/leaveit" target="_blank" rel="external nofollow">LeaveIt</a></span> 
+    </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+    
+     <link href="//lib.baomitu.com/lightgallery/1.6.11/css/lightgallery.min.css" rel="stylesheet">  
+      
+     <script src="/js/vendor_gallery.min.js" async="" ></script>
+    
+  
+
+
+
+     </div>
+  </body>
+</html>

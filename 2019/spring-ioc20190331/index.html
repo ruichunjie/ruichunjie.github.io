@@ -9,9 +9,9 @@
   
   
   
-  <link rel="prev" href="http://ruichunjie.github.io/2019/collection20190328/" />
-  <link rel="next" href="http://ruichunjie.github.io/2019/spring-di20190402/" />
-  <link rel="canonical" href="http://ruichunjie.github.io/2019/spring-ioc20190331/" />
+  <link rel="prev" href="https://ruichunjie.github.io/2019/collection20190328/" />
+  <link rel="next" href="https://ruichunjie.github.io/2019/spring-di20190402/" />
+  <link rel="canonical" href="https://ruichunjie.github.io/2019/spring-ioc20190331/" />
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
@@ -22,10 +22,10 @@
   <title>
        
        
-           Spring Ioc源码初了解 | 空谷芝兰
+           Spring IOC源码初了解 | 空谷芝兰
        
   </title>
-  <meta name="title" content="Spring Ioc源码初了解 | 空谷芝兰">
+  <meta name="title" content="Spring IOC源码初了解 | 空谷芝兰">
     
   
   <link rel="stylesheet" href="/font/iconfont.css">
@@ -41,11 +41,11 @@
     "@type" : "BlogPosting",
     "mainEntityOfPage": {
          "@type": "WebPage",
-         "@id": "http://ruichunjie.github.io/"
+         "@id": "https://ruichunjie.github.io"
     },
     "articleSection" : "posts",
-    "name" : "Spring Ioc源码初了解",
-    "headline" : "Spring Ioc源码初了解",
+    "name" : "Spring IOC源码初了解",
+    "headline" : "Spring IOC源码初了解",
     "description" : "1.IOC 与DI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IOC(Inversion of Control)控制反转:原来代码里要实现的对象创建,依赖的代码，反转给容器实现.
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DI(Dependency Injection)依赖注入:对象被动接受依赖类而不是自己主动去找。也就是说对象不是从容器中查找它依赖的类，而是在容器实例化对象的时候主动将它依赖的对象注入给它。
 2. Spring 核心容器类图 1&gt; BeanFactory &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BeanFactory定义了 IOC 容器的基本功能规范，BeanFactory 有三 个重要的子类:ListableBeanFactory、HierarchicalBeanFactory 和 AutowireCapableBeanFactory , ListableBeanFactory 接口表示这些 Bean 是可列表化的，而 HierarchicalBeanFactory 表示的是 这些 Bean 是有继承关系的，也就是每个 Bean 有可能有父 Bean。AutowireCapableBeanFactory 接 口定义 Bean 的自动装配规则。这三个接口共同定义了 Bean的集合、Bean之间的关系、以及 Bean行为。
@@ -59,7 +59,7 @@
     "copyrightYear" : "2019",
     "datePublished": "2019-03-31 14:12:15 &#43;0800 CST",
     "dateModified" : "2019-03-31 14:12:15 &#43;0800 CST",
-    "url" : "http://ruichunjie.github.io/2019/spring-ioc20190331/",
+    "url" : "https://ruichunjie.github.io/2019/spring-ioc20190331/",
     "wordCount" : "4314",
     "keywords" : [ "Spring", "空谷芝兰"]
 }
@@ -75,7 +75,7 @@
         <nav class="navbar">
     <div class="container">
         <div class="navbar-header header-logo">
-        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="http://ruichunjie.github.io/">空谷芝兰</a>
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://ruichunjie.github.io">空谷芝兰</a>
         </div>
         <div class="menu navbar-right">
                 
@@ -94,7 +94,7 @@
 <nav class="navbar-mobile" id="nav-mobile" style="display: none">
      <div class="container">
         <div class="navbar-header">
-            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="http://ruichunjie.github.io/">空谷芝兰</a></div>
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://ruichunjie.github.io">空谷芝兰</a></div>
             <div class="menu-toggle">
                 <span></span><span></span><span></span>
             </div>
@@ -119,16 +119,16 @@
       		
 <article class="post-warp" itemscope itemtype="http://schema.org/Article">
     <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">Spring Ioc源码初了解</h1>
+        <h1 class="post-title" itemprop="name headline">Spring IOC源码初了解</h1>
         <div class="post-meta">
-                Written by <a itemprop="name" href="http://ruichunjie.github.io/" rel="author">ruichunjie</a> with ♥ 
+                Written by <a itemprop="name" href="https://ruichunjie.github.io" rel="author">ruichunjie</a> with ♥ 
                 <span class="post-time">
                 on <time datetime=2019-03-31 itemprop="datePublished">March 31, 2019</time>
                 </span>
                 in
                 <i class="iconfont icon-folder"></i>
                 <span class="post-category">
-                        <a href="http://ruichunjie.github.io/categories/%E7%BC%96%E7%A8%8B-%E6%8A%80%E6%9C%AF/"> 编程 · 技术 </a>
+                        <a href="https://ruichunjie.github.io/categories/%E7%BC%96%E7%A8%8B-%E6%8A%80%E6%9C%AF/"> 编程 · 技术 </a>
                         
                 </span>
         </div>
@@ -1689,7 +1689,7 @@ d、通过 BeanDefinitionReaderUtils 向容器注册 Bean。<br />
              
             <p class="copyright-item">
                     <span>Link:</span>
-                    <a href=http://ruichunjie.github.io/2019/spring-ioc20190331/>http://ruichunjie.github.io/2019/spring-ioc20190331/</span>
+                    <a href=https://ruichunjie.github.io/2019/spring-ioc20190331/>https://ruichunjie.github.io/2019/spring-ioc20190331/</span>
             </p>
             
              
@@ -1705,23 +1705,23 @@ d、通过 BeanDefinitionReaderUtils 向容器注册 Bean。<br />
             <section>
             <i class="iconfont icon-tag"></i>Tag(s): 
             
-            <span class="tag"><a href="http://ruichunjie.github.io/tags/spring/">
+            <span class="tag"><a href="https://ruichunjie.github.io/tags/spring/">
                     #Spring</a></span>
             
             </section>
         
         <section>
                 <a href="javascript:window.history.back();">back</a></span> · 
-                <span><a href="http://ruichunjie.github.io/">home</a></span>
+                <span><a href="https://ruichunjie.github.io">home</a></span>
         </section>
     </div>
 
     <div class="post-nav">
         
-        <a href="http://ruichunjie.github.io/2019/collection20190328/" class="prev" rel="prev" title="java集合"><i class="iconfont icon-left"></i>&nbsp;java集合</a>
+        <a href="https://ruichunjie.github.io/2019/collection20190328/" class="prev" rel="prev" title="java集合"><i class="iconfont icon-left"></i>&nbsp;java集合</a>
          
         
-        <a href="http://ruichunjie.github.io/2019/spring-di20190402/" class="next" rel="next" title="Spring DI源码初了解">Spring DI源码初了解&nbsp;<i class="iconfont icon-right"></i></a>
+        <a href="https://ruichunjie.github.io/2019/spring-di20190402/" class="next" rel="next" title="Spring DI源码初了解">Spring DI源码初了解&nbsp;<i class="iconfont icon-right"></i></a>
         
     </div>
 
@@ -1743,7 +1743,7 @@ d、通过 BeanDefinitionReaderUtils 向容器注册 Bean。<br />
     	 <i class="iconfont icon-love"></i> 
          </span>
          
-            <span class="author" itemprop="copyrightHolder"><a href="http://ruichunjie.github.io/">ruichunjie</a> | </span> 
+            <span class="author" itemprop="copyrightHolder"><a href="https://ruichunjie.github.io">ruichunjie</a> | </span> 
          
 
          

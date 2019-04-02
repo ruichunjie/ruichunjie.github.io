@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>集合 on 空谷芝兰</title>
-    <link>http://ruichunjie.github.io/tags/%E9%9B%86%E5%90%88/</link>
+    <link>https://ruichunjie.github.io/tags/%E9%9B%86%E5%90%88/</link>
     <description>Recent content in 集合 on 空谷芝兰</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Thu, 28 Mar 2019 14:39:27 +0800</lastBuildDate>
     
-	<atom:link href="http://ruichunjie.github.io/tags/%E9%9B%86%E5%90%88/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://ruichunjie.github.io/tags/%E9%9B%86%E5%90%88/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>java集合</title>
-      <link>http://ruichunjie.github.io/2019/collection20190328/</link>
+      <link>https://ruichunjie.github.io/2019/collection20190328/</link>
       <pubDate>Thu, 28 Mar 2019 14:39:27 +0800</pubDate>
       
-      <guid>http://ruichunjie.github.io/2019/collection20190328/</guid>
+      <guid>https://ruichunjie.github.io/2019/collection20190328/</guid>
       <description>概述 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;java中集合框架主要两类型，一种是集合(Collection),另一个是图(Map)。Collection是存储一组对象的集合容器，而Map是一种key-value数据结构的集合。
 Collection:</description>
     </item>
