@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>生活 · 随笔 on 空谷芝兰</title>
-    <link>https://ruichunjie.github.io/categories/%E7%94%9F%E6%B4%BB-%E9%9A%8F%E7%AC%94/</link>
+    <link>http://ruichunjie.github.io/categories/%E7%94%9F%E6%B4%BB-%E9%9A%8F%E7%AC%94/</link>
     <description>Recent content in 生活 · 随笔 on 空谷芝兰</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Wed, 27 Mar 2019 17:50:06 +0800</lastBuildDate>
     
-	<atom:link href="https://ruichunjie.github.io/categories/%E7%94%9F%E6%B4%BB-%E9%9A%8F%E7%AC%94/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://ruichunjie.github.io/categories/%E7%94%9F%E6%B4%BB-%E9%9A%8F%E7%AC%94/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>接下来一年的计划</title>
-      <link>https://ruichunjie.github.io/2019/shenghuo20190327/</link>
+      <link>http://ruichunjie.github.io/2019/shenghuo20190327/</link>
       <pubDate>Wed, 27 Mar 2019 17:50:06 +0800</pubDate>
       
-      <guid>https://ruichunjie.github.io/2019/shenghuo20190327/</guid>
+      <guid>http://ruichunjie.github.io/2019/shenghuo20190327/</guid>
       <description>关于工作 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; 目前来说，应该是我很窘迫的时期了。在这边感觉学不到有用的东西了。只是因为前几年跳槽太快的缘故，决定再留一年稳定下吧，趁着一年我要把基础知识学完，并且把架构师进阶教程学完。今年九月初试着在新的地点投投简历吧。
 关于学习 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;现在学习分两大类: 1.基础知识 2.架构进阶。基础知识今年必须学完十本书。架构进阶应该能够熟练应用并且深入源码学习。
 关于地点 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;今年在七月份前，决定去哪个城市稳定生活吧。备选:太原，西安，宁波，苏州，杭州</description>

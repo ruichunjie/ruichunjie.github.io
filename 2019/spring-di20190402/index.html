@@ -1,0 +1,1589 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noodp"/>
+  <meta name="author" content="ruichunjie">
+  
+  
+  
+  <link rel="prev" href="http://ruichunjie.github.io/2019/spring-ioc20190331/" />
+  
+  <link rel="canonical" href="http://ruichunjie.github.io/2019/spring-di20190402/" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <title>
+       
+       
+           Spring DI源码初了解 | 空谷芝兰
+       
+  </title>
+  <meta name="title" content="Spring DI源码初了解 | 空谷芝兰">
+    
+  
+  <link rel="stylesheet" href="/font/iconfont.css">
+  <link rel="stylesheet" href="/css/main.min.css">
+
+
+  
+  
+ 
+
+<script type="application/ld+json">
+ "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "mainEntityOfPage": {
+         "@type": "WebPage",
+         "@id": "http://ruichunjie.github.io/"
+    },
+    "articleSection" : "posts",
+    "name" : "Spring DI源码初了解",
+    "headline" : "Spring DI源码初了解",
+    "description" : "1.依赖注入发生的时间 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;当Spring IOC容器完成了Bean定义资源的定位,载入和解析注册后，IOC容器中已经管理类bean定义的相关数据，但是此时IOC容器还没有对所管理的Bean进行依赖注入，依赖注入在一下两种情况发生:1)用户第一次调用getBean()方法时，IOC容器触发依赖注入。2)当用户在配置文件中将元素配置了lazy-init =false属性，即让容器在解析注册Bean定义时进行预实例化，触发依赖注入。
+2. 源码 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.AbstractBeanFactory#getBean()入口
+//获取IOC容器中指定名称的Bean @Override public Object getBean(String name) throws BeansException { //doGetBean才是真正向IoC容器获取被管理Bean的过程 return doGetBean(name, null, null, false); } //真正实现向IOC容器获取Bean的功能，也是触发依赖注入功能的地方 protected &lt;T&gt; T doGetBean(final String name, @Nullable final Class&lt;T&gt; requiredType, @Nullable final Object[] args, boolean typeCheckOnly) throws BeansException { //根据指定的名称获取被管理Bean的名称，剥离指定名称中对容器的相关依赖 //如果指定的是别名，将别名转换为规范的Bean名称 final String beanName = transformedBeanName(name); Object bean; // Eagerly check singleton cache for manually registered singletons. //先从缓存中取是否已经有被创建过的单态类型的Bean //对于单例模式的Bean整个IOC容器中只创建一次，不需要重复创建 Object sharedInstance = getSingleton(beanName); //IOC容器创建单例模式Bean实例对象 if (sharedInstance !",
+    "inLanguage" : "en-us",
+    "author" : "ruichunjie",
+    "creator" : "ruichunjie",
+    "publisher": "ruichunjie",
+    "accountablePerson" : "ruichunjie",
+    "copyrightHolder" : "ruichunjie",
+    "copyrightYear" : "2019",
+    "datePublished": "2019-04-02 09:37:55 &#43;0800 CST",
+    "dateModified" : "2019-04-02 09:37:55 &#43;0800 CST",
+    "url" : "http://ruichunjie.github.io/2019/spring-di20190402/",
+    "wordCount" : "4231",
+    "keywords" : [ "Spring", "空谷芝兰"]
+}
+</script>
+
+</head>
+
+  
+
+
+  <body class="">
+    <div class="wrapper">
+        <nav class="navbar">
+    <div class="container">
+        <div class="navbar-header header-logo">
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="http://ruichunjie.github.io/">空谷芝兰</a>
+        </div>
+        <div class="menu navbar-right">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+     <div class="container">
+        <div class="navbar-header">
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="http://ruichunjie.github.io/">空谷芝兰</a></div>
+            <div class="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+     
+          <div class="menu" id="mobile-menu">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+    	 <main class="main">
+          <div class="container">
+      		
+<article class="post-warp" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">Spring DI源码初了解</h1>
+        <div class="post-meta">
+                Written by <a itemprop="name" href="http://ruichunjie.github.io/" rel="author">ruichunjie</a> with ♥ 
+                <span class="post-time">
+                on <time datetime=2019-04-02 itemprop="datePublished">April 2, 2019</time>
+                </span>
+                in
+                <i class="iconfont icon-folder"></i>
+                <span class="post-category">
+                        <a href="http://ruichunjie.github.io/categories/%E7%BC%96%E7%A8%8B-%E6%8A%80%E6%9C%AF/"> 编程 · 技术 </a>
+                        
+                </span>
+        </div>
+    </header>
+    <div class="post-content">
+        
+
+        
+            
+        
+
+        
+        
+     
+          
+          
+          
+
+          
+          
+          
+
+          
+
+<h3 id="1-依赖注入发生的时间">1.依赖注入发生的时间</h3>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;当Spring IOC容器完成了Bean定义资源的定位,载入和解析注册后，IOC容器中已经管理类bean定义的相关数据，但是此时IOC容器还没有对所管理的Bean进行依赖注入，依赖注入在一下两种情况发生:1)用户第一次调用getBean()方法时，IOC容器触发依赖注入。2)当用户在配置文件中将<bean>元素配置了lazy-init =false属性，即让容器在解析注册Bean定义时进行预实例化，触发依赖注入。</p>
+
+<h3 id="2-源码">2. 源码</h3>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.AbstractBeanFactory#getBean()入口</p>
+
+<pre><code class="language-java">    //获取IOC容器中指定名称的Bean
+	@Override
+	public Object getBean(String name) throws BeansException {
+		//doGetBean才是真正向IoC容器获取被管理Bean的过程
+		return doGetBean(name, null, null, false);
+	}
+	
+	//真正实现向IOC容器获取Bean的功能，也是触发依赖注入功能的地方
+	protected &lt;T&gt; T doGetBean(final String name, @Nullable final Class&lt;T&gt; requiredType,
+			@Nullable final Object[] args, boolean typeCheckOnly) throws BeansException {
+
+		//根据指定的名称获取被管理Bean的名称，剥离指定名称中对容器的相关依赖
+		//如果指定的是别名，将别名转换为规范的Bean名称
+		final String beanName = transformedBeanName(name);
+		Object bean;
+
+		// Eagerly check singleton cache for manually registered singletons.
+		//先从缓存中取是否已经有被创建过的单态类型的Bean
+		//对于单例模式的Bean整个IOC容器中只创建一次，不需要重复创建
+		Object sharedInstance = getSingleton(beanName);
+		//IOC容器创建单例模式Bean实例对象
+		if (sharedInstance != null &amp;&amp; args == null) {
+			if (logger.isDebugEnabled()) {
+				//如果指定名称的Bean在容器中已有单例模式的Bean被创建
+				//直接返回已经创建的Bean
+				if (isSingletonCurrentlyInCreation(beanName)) {
+					logger.debug(&quot;Returning eagerly cached instance of singleton bean '&quot; + beanName +
+							&quot;' that is not fully initialized yet - a consequence of a circular reference&quot;);
+				}
+				else {
+					logger.debug(&quot;Returning cached instance of singleton bean '&quot; + beanName + &quot;'&quot;);
+				}
+			}
+			//获取给定Bean的实例对象，主要是完成FactoryBean的相关处理
+			//注意：BeanFactory是管理容器中Bean的工厂，而FactoryBean是
+			//创建创建对象的工厂Bean，两者之间有区别
+			bean = getObjectForBeanInstance(sharedInstance, name, beanName, null);
+		}
+
+		else {
+			// Fail if we're already creating this bean instance:
+			// We're assumably within a circular reference.
+			//缓存没有正在创建的单例模式Bean
+			//缓存中已经有已经创建的原型模式Bean
+			//但是由于循环引用的问题导致实例化对象失败
+			if (isPrototypeCurrentlyInCreation(beanName)) {
+				throw new BeanCurrentlyInCreationException(beanName);
+			}
+
+			// Check if bean definition exists in this factory.
+			//对IOC容器中是否存在指定名称的BeanDefinition进行检查，首先检查是否
+			//能在当前的BeanFactory中获取的所需要的Bean，如果不能则委托当前容器
+			//的父级容器去查找，如果还是找不到则沿着容器的继承体系向父级容器查找
+			BeanFactory parentBeanFactory = getParentBeanFactory();
+			//当前容器的父级容器存在，且当前容器中不存在指定名称的Bean
+			if (parentBeanFactory != null &amp;&amp; !containsBeanDefinition(beanName)) {
+				// Not found -&gt; check parent.
+				//解析指定Bean名称的原始名称
+				String nameToLookup = originalBeanName(name);
+				if (parentBeanFactory instanceof AbstractBeanFactory) {
+					return ((AbstractBeanFactory) parentBeanFactory).doGetBean(
+							nameToLookup, requiredType, args, typeCheckOnly);
+				}
+				else if (args != null) {
+					// Delegation to parent with explicit args.
+					//委派父级容器根据指定名称和显式的参数查找
+					return (T) parentBeanFactory.getBean(nameToLookup, args);
+				}
+				else {
+					// No args -&gt; delegate to standard getBean method.
+					//委派父级容器根据指定名称和类型查找
+					return parentBeanFactory.getBean(nameToLookup, requiredType);
+				}
+			}
+
+			//创建的Bean是否需要进行类型验证，一般不需要
+			if (!typeCheckOnly) {
+				//向容器标记指定的Bean已经被创建
+				markBeanAsCreated(beanName);
+			}
+
+			try {
+				//根据指定Bean名称获取其父级的Bean定义
+				//主要解决Bean继承时子类合并父类公共属性问题
+				final RootBeanDefinition mbd = getMergedLocalBeanDefinition(beanName);
+				checkMergedBeanDefinition(mbd, beanName, args);
+
+				// Guarantee initialization of beans that the current bean depends on.
+				//获取当前Bean所有依赖Bean的名称
+				String[] dependsOn = mbd.getDependsOn();
+				//如果当前Bean有依赖Bean
+				if (dependsOn != null) {
+					for (String dep : dependsOn) {
+						if (isDependent(beanName, dep)) {
+							throw new BeanCreationException(mbd.getResourceDescription(), beanName,
+									&quot;Circular depends-on relationship between '&quot; + beanName + &quot;' and '&quot; + dep + &quot;'&quot;);
+						}
+						//递归调用getBean方法，获取当前Bean的依赖Bean
+						registerDependentBean(dep, beanName);
+						//把被依赖Bean注册给当前依赖的Bean
+						getBean(dep);
+					}
+				}
+
+				// Create bean instance.
+				//创建单例模式Bean的实例对象
+				if (mbd.isSingleton()) {
+					//这里使用了一个匿名内部类，创建Bean实例对象，并且注册给所依赖的对象
+					sharedInstance = getSingleton(beanName, () -&gt; {
+						try {
+							//创建一个指定Bean实例对象，如果有父级继承，则合并子类和父类的定义
+							return createBean(beanName, mbd, args);
+						}
+						catch (BeansException ex) {
+							// Explicitly remove instance from singleton cache: It might have been put there
+							// eagerly by the creation process, to allow for circular reference resolution.
+							// Also remove any beans that received a temporary reference to the bean.
+							//显式地从容器单例模式Bean缓存中清除实例对象
+							destroySingleton(beanName);
+							throw ex;
+						}
+					});
+					//获取给定Bean的实例对象
+					bean = getObjectForBeanInstance(sharedInstance, name, beanName, mbd);
+				}
+
+				//IOC容器创建原型模式Bean实例对象
+				else if (mbd.isPrototype()) {
+					// It's a prototype -&gt; create a new instance.
+					//原型模式(Prototype)是每次都会创建一个新的对象
+					Object prototypeInstance = null;
+					try {
+						//回调beforePrototypeCreation方法，默认的功能是注册当前创建的原型对象
+						beforePrototypeCreation(beanName);
+						//创建指定Bean对象实例
+						prototypeInstance = createBean(beanName, mbd, args);
+					}
+					finally {
+						//回调afterPrototypeCreation方法，默认的功能告诉IOC容器指定Bean的原型对象不再创建
+						afterPrototypeCreation(beanName);
+					}
+					//获取给定Bean的实例对象
+					bean = getObjectForBeanInstance(prototypeInstance, name, beanName, mbd);
+				}
+
+				//要创建的Bean既不是单例模式，也不是原型模式，则根据Bean定义资源中
+				//配置的生命周期范围，选择实例化Bean的合适方法，这种在Web应用程序中
+				//比较常用，如：request、session、application等生命周期
+				else {
+					String scopeName = mbd.getScope();
+					final Scope scope = this.scopes.get(scopeName);
+					//Bean定义资源中没有配置生命周期范围，则Bean定义不合法
+					if (scope == null) {
+						throw new IllegalStateException(&quot;No Scope registered for scope name '&quot; + scopeName + &quot;'&quot;);
+					}
+					try {
+						//这里又使用了一个匿名内部类，获取一个指定生命周期范围的实例
+						Object scopedInstance = scope.get(beanName, () -&gt; {
+							beforePrototypeCreation(beanName);
+							try {
+								return createBean(beanName, mbd, args);
+							}
+							finally {
+								afterPrototypeCreation(beanName);
+							}
+						});
+						//获取给定Bean的实例对象
+						bean = getObjectForBeanInstance(scopedInstance, name, beanName, mbd);
+					}
+					catch (IllegalStateException ex) {
+						throw new BeanCreationException(beanName,
+								&quot;Scope '&quot; + scopeName + &quot;' is not active for the current thread; consider &quot; +
+								&quot;defining a scoped proxy for this bean if you intend to refer to it from a singleton&quot;,
+								ex);
+					}
+				}
+			}
+			catch (BeansException ex) {
+				cleanupAfterBeanCreationFailure(beanName);
+				throw ex;
+			}
+		}
+
+		// Check if required type matches the type of the actual bean instance.
+		//对创建的Bean实例对象进行类型检查
+		if (requiredType != null &amp;&amp; !requiredType.isInstance(bean)) {
+			try {
+				T convertedBean = getTypeConverter().convertIfNecessary(bean, requiredType);
+				if (convertedBean == null) {
+					throw new BeanNotOfRequiredTypeException(name, requiredType, bean.getClass());
+				}
+				return convertedBean;
+			}
+			catch (TypeMismatchException ex) {
+				if (logger.isDebugEnabled()) {
+					logger.debug(&quot;Failed to convert bean '&quot; + name + &quot;' to required type '&quot; +
+							ClassUtils.getQualifiedName(requiredType) + &quot;'&quot;, ex);
+				}
+				throw new BeanNotOfRequiredTypeException(name, requiredType, bean.getClass());
+			}
+		}
+		return (T) bean;
+	}
+</code></pre>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;如果Bean定义的单例模式，则容器在创建之前先从缓存中查找，以确保整个容器中只存在一个实例对象，如果定义的是原型模式，则容器每次都会创建新的实例对象。 <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.AbstractAutowireCapableBeanFactory #createBean</p>
+
+<pre><code class="language-java">   //创建Bean实例对象
+	@Override
+	protected Object createBean(String beanName, RootBeanDefinition mbd, @Nullable Object[] args)
+			throws BeanCreationException {
+
+		if (logger.isDebugEnabled()) {
+			logger.debug(&quot;Creating instance of bean '&quot; + beanName + &quot;'&quot;);
+		}
+		RootBeanDefinition mbdToUse = mbd;
+
+		// Make sure bean class is actually resolved at this point, and
+		// clone the bean definition in case of a dynamically resolved Class
+		// which cannot be stored in the shared merged bean definition.
+		//判断需要创建的Bean是否可以实例化，即是否可以通过当前的类加载器加载
+		Class&lt;?&gt; resolvedClass = resolveBeanClass(mbd, beanName);
+		if (resolvedClass != null &amp;&amp; !mbd.hasBeanClass() &amp;&amp; mbd.getBeanClassName() != null) {
+			mbdToUse = new RootBeanDefinition(mbd);
+			mbdToUse.setBeanClass(resolvedClass);
+		}
+
+		// Prepare method overrides.
+		//校验和准备Bean中的方法覆盖
+		try {
+			mbdToUse.prepareMethodOverrides();
+		}
+		catch (BeanDefinitionValidationException ex) {
+			throw new BeanDefinitionStoreException(mbdToUse.getResourceDescription(),
+					beanName, &quot;Validation of method overrides failed&quot;, ex);
+		}
+
+		try {
+			// Give BeanPostProcessors a chance to return a proxy instead of the target bean instance.
+			//如果Bean配置了初始化前和初始化后的处理器，则试图返回一个需要创建Bean的代理对象
+			Object bean = resolveBeforeInstantiation(beanName, mbdToUse);
+			if (bean != null) {
+				return bean;
+			}
+		}
+		catch (Throwable ex) {
+			throw new BeanCreationException(mbdToUse.getResourceDescription(), beanName,
+					&quot;BeanPostProcessor before instantiation of bean failed&quot;, ex);
+		}
+
+		try {
+			//创建Bean的入口
+			Object beanInstance = doCreateBean(beanName, mbdToUse, args);
+			if (logger.isDebugEnabled()) {
+				logger.debug(&quot;Finished creating instance of bean '&quot; + beanName + &quot;'&quot;);
+			}
+			return beanInstance;
+		}
+		catch (BeanCreationException ex) {
+			// A previously detected exception with proper bean creation context already...
+			throw ex;
+		}
+		catch (ImplicitlyAppearedSingletonException ex) {
+			// An IllegalStateException to be communicated up to DefaultSingletonBeanRegistry...
+			throw ex;
+		}
+		catch (Throwable ex) {
+			throw new BeanCreationException(
+					mbdToUse.getResourceDescription(), beanName, &quot;Unexpected exception during bean creation&quot;, ex);
+		}
+	}
+	
+	//真正创建Bean的方法
+	protected Object doCreateBean(final String beanName, final RootBeanDefinition mbd, final @Nullable Object[] args)
+			throws BeanCreationException {
+
+		// Instantiate the bean.
+		//封装被创建的Bean对象
+		BeanWrapper instanceWrapper = null;
+		if (mbd.isSingleton()) {
+			instanceWrapper = this.factoryBeanInstanceCache.remove(beanName);
+		}
+		if (instanceWrapper == null) {
+			instanceWrapper = createBeanInstance(beanName, mbd, args);
+		}
+		final Object bean = instanceWrapper.getWrappedInstance();
+		//获取实例化对象的类型
+		Class&lt;?&gt; beanType = instanceWrapper.getWrappedClass();
+		if (beanType != NullBean.class) {
+			mbd.resolvedTargetType = beanType;
+		}
+
+		// Allow post-processors to modify the merged bean definition.
+		//调用PostProcessor后置处理器
+		synchronized (mbd.postProcessingLock) {
+			if (!mbd.postProcessed) {
+				try {
+					applyMergedBeanDefinitionPostProcessors(mbd, beanType, beanName);
+				}
+				catch (Throwable ex) {
+					throw new BeanCreationException(mbd.getResourceDescription(), beanName,
+							&quot;Post-processing of merged bean definition failed&quot;, ex);
+				}
+				mbd.postProcessed = true;
+			}
+		}
+
+		// Eagerly cache singletons to be able to resolve circular references
+		// even when triggered by lifecycle interfaces like BeanFactoryAware.
+		//向容器中缓存单例模式的Bean对象，以防循环引用
+		boolean earlySingletonExposure = (mbd.isSingleton() &amp;&amp; this.allowCircularReferences &amp;&amp;
+				isSingletonCurrentlyInCreation(beanName));
+		if (earlySingletonExposure) {
+			if (logger.isDebugEnabled()) {
+				logger.debug(&quot;Eagerly caching bean '&quot; + beanName +
+						&quot;' to allow for resolving potential circular references&quot;);
+			}
+			//这里是一个匿名内部类，为了防止循环引用，尽早持有对象的引用
+			addSingletonFactory(beanName, () -&gt; getEarlyBeanReference(beanName, mbd, bean));
+		}
+
+		// Initialize the bean instance.
+		//Bean对象的初始化，依赖注入在此触发
+		//这个exposedObject在初始化完成之后返回作为依赖注入完成后的Bean
+		Object exposedObject = bean;
+		try {
+			//将Bean实例对象封装，并且Bean定义中配置的属性值赋值给实例对象
+			populateBean(beanName, mbd, instanceWrapper);
+			//初始化Bean对象
+			exposedObject = initializeBean(beanName, exposedObject, mbd);
+		}
+		catch (Throwable ex) {
+			if (ex instanceof BeanCreationException &amp;&amp; beanName.equals(((BeanCreationException) ex).getBeanName())) {
+				throw (BeanCreationException) ex;
+			}
+			else {
+				throw new BeanCreationException(
+						mbd.getResourceDescription(), beanName, &quot;Initialization of bean failed&quot;, ex);
+			}
+		}
+
+		if (earlySingletonExposure) {
+			//获取指定名称的已注册的单例模式Bean对象
+			Object earlySingletonReference = getSingleton(beanName, false);
+			if (earlySingletonReference != null) {
+				//根据名称获取的已注册的Bean和正在实例化的Bean是同一个
+				if (exposedObject == bean) {
+					//当前实例化的Bean初始化完成
+					exposedObject = earlySingletonReference;
+				}
+				//当前Bean依赖其他Bean，并且当发生循环引用时不允许新创建实例对象
+				else if (!this.allowRawInjectionDespiteWrapping &amp;&amp; hasDependentBean(beanName)) {
+					String[] dependentBeans = getDependentBeans(beanName);
+					Set&lt;String&gt; actualDependentBeans = new LinkedHashSet&lt;&gt;(dependentBeans.length);
+					//获取当前Bean所依赖的其他Bean
+					for (String dependentBean : dependentBeans) {
+						//对依赖Bean进行类型检查
+						if (!removeSingletonIfCreatedForTypeCheckOnly(dependentBean)) {
+							actualDependentBeans.add(dependentBean);
+						}
+					}
+					if (!actualDependentBeans.isEmpty()) {
+						throw new BeanCurrentlyInCreationException(beanName,
+								&quot;Bean with name '&quot; + beanName + &quot;' has been injected into other beans [&quot; +
+								StringUtils.collectionToCommaDelimitedString(actualDependentBeans) +
+								&quot;] in its raw version as part of a circular reference, but has eventually been &quot; +
+								&quot;wrapped. This means that said other beans do not use the final version of the &quot; +
+								&quot;bean. This is often the result of over-eager type matching - consider using &quot; +
+								&quot;'getBeanNamesOfType' with the 'allowEagerInit' flag turned off, for example.&quot;);
+					}
+				}
+			}
+		}
+
+		// Register bean as disposable.
+		//注册完成依赖注入的Bean
+		try {
+			registerDisposableBeanIfNecessary(beanName, bean, mbd);
+		}
+		catch (BeanDefinitionValidationException ex) {
+			throw new BeanCreationException(
+					mbd.getResourceDescription(), beanName, &quot;Invalid destruction signature&quot;, ex);
+		}
+
+		return exposedObject;
+	}
+</code></pre>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;在doCreateBean中有两个重要方法createBeanInstance和populateBeans<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.创建Bean的实例对象</p>
+
+<pre><code class="language-java">   //创建Bean的实例对象
+	protected BeanWrapper createBeanInstance(String beanName, RootBeanDefinition mbd, @Nullable Object[] args) {
+		// Make sure bean class is actually resolved at this point.
+		//检查确认Bean是可实例化的
+		Class&lt;?&gt; beanClass = resolveBeanClass(mbd, beanName);
+
+		//使用工厂方法对Bean进行实例化
+		if (beanClass != null &amp;&amp; !Modifier.isPublic(beanClass.getModifiers()) &amp;&amp; !mbd.isNonPublicAccessAllowed()) {
+			throw new BeanCreationException(mbd.getResourceDescription(), beanName,
+					&quot;Bean class isn't public, and non-public access not allowed: &quot; + beanClass.getName());
+		}
+
+		Supplier&lt;?&gt; instanceSupplier = mbd.getInstanceSupplier();
+		if (instanceSupplier != null) {
+			return obtainFromSupplier(instanceSupplier, beanName);
+		}
+
+		if (mbd.getFactoryMethodName() != null)  {
+			//调用工厂方法实例化
+			return instantiateUsingFactoryMethod(beanName, mbd, args);
+		}
+
+		// Shortcut when re-creating the same bean...
+		//使用容器的自动装配方法进行实例化
+		boolean resolved = false;
+		boolean autowireNecessary = false;
+		if (args == null) {
+			synchronized (mbd.constructorArgumentLock) {
+				if (mbd.resolvedConstructorOrFactoryMethod != null) {
+					resolved = true;
+					autowireNecessary = mbd.constructorArgumentsResolved;
+				}
+			}
+		}
+		if (resolved) {
+			if (autowireNecessary) {
+				//配置了自动装配属性，使用容器的自动装配实例化
+				//容器的自动装配是根据参数类型匹配Bean的构造方法
+				return autowireConstructor(beanName, mbd, null, null);
+			}
+			else {
+				//使用默认的无参构造方法实例化
+				return instantiateBean(beanName, mbd);
+			}
+		}
+
+		// Need to determine the constructor...
+		//使用Bean的构造方法进行实例化
+		Constructor&lt;?&gt;[] ctors = determineConstructorsFromBeanPostProcessors(beanClass, beanName);
+		if (ctors != null ||
+				mbd.getResolvedAutowireMode() == RootBeanDefinition.AUTOWIRE_CONSTRUCTOR ||
+				mbd.hasConstructorArgumentValues() || !ObjectUtils.isEmpty(args))  {
+			//使用容器的自动装配特性，调用匹配的构造方法实例化
+			return autowireConstructor(beanName, mbd, ctors, args);
+		}
+
+		// No special handling: simply use no-arg constructor.
+		//使用默认的无参构造方法实例化
+		return instantiateBean(beanName, mbd);
+	}
+</code></pre>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;对使用工厂方法和自动装配特性的 Bean 的实例化相当比较清 楚，调用相应的工厂方法或者参数匹配的构造方法即可完成实例化对象的工作，但是对于我们最常使用 的默认无参构造方法就需要使用相应的初始化策略(JDK 的反射机制或者 CGLib)来进行初始化了，在方 法 getInstantiationStrategy().instantiate()中就具体实现类使用初始策略实例化对象<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4.执行Bean实例化</p>
+
+<pre><code class="language-java">   //使用默认的无参构造方法实例化Bean对象
+	protected BeanWrapper instantiateBean(final String beanName, final RootBeanDefinition mbd) {
+		try {
+			Object beanInstance;
+			final BeanFactory parent = this;
+			//获取系统的安全管理接口，JDK标准的安全管理API
+			if (System.getSecurityManager() != null) {
+				//这里是一个匿名内置类，根据实例化策略创建实例对象
+				beanInstance = AccessController.doPrivileged((PrivilegedAction&lt;Object&gt;) () -&gt;
+						getInstantiationStrategy().instantiate(mbd, beanName, parent),
+						getAccessControlContext());
+			}
+			else {
+				//将实例化的对象封装起来
+				beanInstance = getInstantiationStrategy().instantiate(mbd, beanName, parent);
+			}
+			BeanWrapper bw = new BeanWrapperImpl(beanInstance);
+			initBeanWrapper(bw);
+			return bw;
+		}
+		catch (Throwable ex) {
+			throw new BeanCreationException(
+					mbd.getResourceDescription(), beanName, &quot;Instantiation of bean failed&quot;, ex);
+		}
+	}
+	
+	//使用初始化策略实例化Bean对象
+	@Override
+	public Object instantiate(RootBeanDefinition bd, @Nullable String beanName, BeanFactory owner) {
+		// Don't override the class with CGLIB if no overrides.
+		//如果Bean定义中没有方法覆盖，则就不需要CGLIB父类类的方法
+		if (!bd.hasMethodOverrides()) {
+			Constructor&lt;?&gt; constructorToUse;
+			synchronized (bd.constructorArgumentLock) {
+				//获取对象的构造方法或工厂方法
+				constructorToUse = (Constructor&lt;?&gt;) bd.resolvedConstructorOrFactoryMethod;
+				//如果没有构造方法且没有工厂方法
+				if (constructorToUse == null) {
+					//使用JDK的反射机制，判断要实例化的Bean是否是接口
+					final Class&lt;?&gt; clazz = bd.getBeanClass();
+					if (clazz.isInterface()) {
+						throw new BeanInstantiationException(clazz, &quot;Specified class is an interface&quot;);
+					}
+					try {
+						if (System.getSecurityManager() != null) {
+							//这里是一个匿名内置类，使用反射机制获取Bean的构造方法
+							constructorToUse = AccessController.doPrivileged(
+									(PrivilegedExceptionAction&lt;Constructor&lt;?&gt;&gt;) () -&gt; clazz.getDeclaredConstructor());
+						}
+						else {
+							constructorToUse =	clazz.getDeclaredConstructor();
+						}
+						bd.resolvedConstructorOrFactoryMethod = constructorToUse;
+					}
+					catch (Throwable ex) {
+						throw new BeanInstantiationException(clazz, &quot;No default constructor found&quot;, ex);
+					}
+				}
+			}
+			//使用BeanUtils实例化，通过反射机制调用”构造方法.newInstance(arg)”来进行实例化
+			return BeanUtils.instantiateClass(constructorToUse);
+		}
+		else {
+			// Must generate CGLIB subclass.
+			//使用CGLIB来实例化对象
+			return instantiateWithMethodInjection(bd, beanName, owner);
+		}
+	}
+</code></pre>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5.依赖注入populateBean</p>
+
+<pre><code class="language-java">   //将Bean属性设置到生成的实例对象上
+	protected void populateBean(String beanName, RootBeanDefinition mbd, @Nullable BeanWrapper bw) {
+		if (bw == null) {
+			if (mbd.hasPropertyValues()) {
+				throw new BeanCreationException(
+						mbd.getResourceDescription(), beanName, &quot;Cannot apply property values to null instance&quot;);
+			}
+			else {
+				// Skip property population phase for null instance.
+				return;
+			}
+		}
+
+		// Give any InstantiationAwareBeanPostProcessors the opportunity to modify the
+		// state of the bean before properties are set. This can be used, for example,
+		// to support styles of field injection.
+		boolean continueWithPropertyPopulation = true;
+
+		if (!mbd.isSynthetic() &amp;&amp; hasInstantiationAwareBeanPostProcessors()) {
+			for (BeanPostProcessor bp : getBeanPostProcessors()) {
+				if (bp instanceof InstantiationAwareBeanPostProcessor) {
+					InstantiationAwareBeanPostProcessor ibp = (InstantiationAwareBeanPostProcessor) bp;
+					if (!ibp.postProcessAfterInstantiation(bw.getWrappedInstance(), beanName)) {
+						continueWithPropertyPopulation = false;
+						break;
+					}
+				}
+			}
+		}
+
+		if (!continueWithPropertyPopulation) {
+			return;
+		}
+		//获取容器在解析Bean定义资源时为BeanDefiniton中设置的属性值
+		PropertyValues pvs = (mbd.hasPropertyValues() ? mbd.getPropertyValues() : null);
+
+		//对依赖注入处理，首先处理autowiring自动装配的依赖注入
+		if (mbd.getResolvedAutowireMode() == RootBeanDefinition.AUTOWIRE_BY_NAME ||
+				mbd.getResolvedAutowireMode() == RootBeanDefinition.AUTOWIRE_BY_TYPE) {
+			MutablePropertyValues newPvs = new MutablePropertyValues(pvs);
+
+			// Add property values based on autowire by name if applicable.
+			//根据Bean名称进行autowiring自动装配处理
+			if (mbd.getResolvedAutowireMode() == RootBeanDefinition.AUTOWIRE_BY_NAME) {
+				autowireByName(beanName, mbd, bw, newPvs);
+			}
+
+			// Add property values based on autowire by type if applicable.
+			//根据Bean类型进行autowiring自动装配处理
+			if (mbd.getResolvedAutowireMode() == RootBeanDefinition.AUTOWIRE_BY_TYPE) {
+				autowireByType(beanName, mbd, bw, newPvs);
+			}
+
+			pvs = newPvs;
+		}
+
+		//对非autowiring的属性进行依赖注入处理
+
+		boolean hasInstAwareBpps = hasInstantiationAwareBeanPostProcessors();
+		boolean needsDepCheck = (mbd.getDependencyCheck() != RootBeanDefinition.DEPENDENCY_CHECK_NONE);
+
+		if (hasInstAwareBpps || needsDepCheck) {
+			if (pvs == null) {
+				pvs = mbd.getPropertyValues();
+			}
+			PropertyDescriptor[] filteredPds = filterPropertyDescriptorsForDependencyCheck(bw, mbd.allowCaching);
+			if (hasInstAwareBpps) {
+				for (BeanPostProcessor bp : getBeanPostProcessors()) {
+					if (bp instanceof InstantiationAwareBeanPostProcessor) {
+						InstantiationAwareBeanPostProcessor ibp = (InstantiationAwareBeanPostProcessor) bp;
+						pvs = ibp.postProcessPropertyValues(pvs, filteredPds, bw.getWrappedInstance(), beanName);
+						if (pvs == null) {
+							return;
+						}
+					}
+				}
+			}
+			if (needsDepCheck) {
+				checkDependencies(beanName, mbd, filteredPds, pvs);
+			}
+		}
+
+		if (pvs != null) {
+			//对属性进行注入
+			applyPropertyValues(beanName, mbd, bw, pvs);
+		}
+	}
+	
+	//解析并注入依赖属性的过程
+	protected void applyPropertyValues(String beanName, BeanDefinition mbd, BeanWrapper bw, PropertyValues pvs) {
+		if (pvs.isEmpty()) {
+			return;
+		}
+
+		//封装属性值
+		MutablePropertyValues mpvs = null;
+		List&lt;PropertyValue&gt; original;
+
+		if (System.getSecurityManager() != null) {
+			if (bw instanceof BeanWrapperImpl) {
+				//设置安全上下文，JDK安全机制
+				((BeanWrapperImpl) bw).setSecurityContext(getAccessControlContext());
+			}
+		}
+
+		if (pvs instanceof MutablePropertyValues) {
+			mpvs = (MutablePropertyValues) pvs;
+			//属性值已经转换
+			if (mpvs.isConverted()) {
+				// Shortcut: use the pre-converted values as-is.
+				try {
+					//为实例化对象设置属性值
+					bw.setPropertyValues(mpvs);
+					return;
+				}
+				catch (BeansException ex) {
+					throw new BeanCreationException(
+							mbd.getResourceDescription(), beanName, &quot;Error setting property values&quot;, ex);
+				}
+			}
+			//获取属性值对象的原始类型值
+			original = mpvs.getPropertyValueList();
+		}
+		else {
+			original = Arrays.asList(pvs.getPropertyValues());
+		}
+
+		//获取用户自定义的类型转换
+		TypeConverter converter = getCustomTypeConverter();
+		if (converter == null) {
+			converter = bw;
+		}
+		//创建一个Bean定义属性值解析器，将Bean定义中的属性值解析为Bean实例对象的实际值
+		BeanDefinitionValueResolver valueResolver = new BeanDefinitionValueResolver(this, beanName, mbd, converter);
+
+		// Create a deep copy, resolving any references for values.
+
+		//为属性的解析值创建一个拷贝，将拷贝的数据注入到实例对象中
+		List&lt;PropertyValue&gt; deepCopy = new ArrayList&lt;&gt;(original.size());
+		boolean resolveNecessary = false;
+		for (PropertyValue pv : original) {
+			//属性值不需要转换
+			if (pv.isConverted()) {
+				deepCopy.add(pv);
+			}
+			//属性值需要转换
+			else {
+				String propertyName = pv.getName();
+				//原始的属性值，即转换之前的属性值
+				Object originalValue = pv.getValue();
+				//转换属性值，例如将引用转换为IOC容器中实例化对象引用
+				Object resolvedValue = valueResolver.resolveValueIfNecessary(pv, originalValue);
+				//转换之后的属性值
+				Object convertedValue = resolvedValue;
+				//属性值是否可以转换
+				boolean convertible = bw.isWritableProperty(propertyName) &amp;&amp;
+						!PropertyAccessorUtils.isNestedOrIndexedProperty(propertyName);
+				if (convertible) {
+					//使用用户自定义的类型转换器转换属性值
+					convertedValue = convertForProperty(resolvedValue, propertyName, bw, converter);
+				}
+				// Possibly store converted value in merged bean definition,
+				// in order to avoid re-conversion for every created bean instance.
+				//存储转换后的属性值，避免每次属性注入时的转换工作
+				if (resolvedValue == originalValue) {
+					if (convertible) {
+						//设置属性转换之后的值
+						pv.setConvertedValue(convertedValue);
+					}
+					deepCopy.add(pv);
+				}
+				//属性是可转换的，且属性原始值是字符串类型，且属性的原始类型值不是
+				//动态生成的字符串，且属性的原始值不是集合或者数组类型
+				else if (convertible &amp;&amp; originalValue instanceof TypedStringValue &amp;&amp;
+						!((TypedStringValue) originalValue).isDynamic() &amp;&amp;
+						!(convertedValue instanceof Collection || ObjectUtils.isArray(convertedValue))) {
+					pv.setConvertedValue(convertedValue);
+					//重新封装属性的值
+					deepCopy.add(pv);
+				}
+				else {
+					resolveNecessary = true;
+					deepCopy.add(new PropertyValue(pv, convertedValue));
+				}
+			}
+		}
+		if (mpvs != null &amp;&amp; !resolveNecessary) {
+			//标记属性值已经转换过
+			mpvs.setConverted();
+		}
+
+		// Set our (possibly massaged) deep copy.
+		//进行属性依赖注入
+		try {
+			bw.setPropertyValues(new MutablePropertyValues(deepCopy));
+		}
+		catch (BeansException ex) {
+			throw new BeanCreationException(
+					mbd.getResourceDescription(), beanName, &quot;Error setting property values&quot;, ex);
+		}
+	}
+</code></pre>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注入分为两种情况:1)属性值类型不需要强制转换时，不需要解析属性值，直接准备进行依赖注入。 2)、属性值需要进行类型强制转换时，如对其他对象的引用等，首先需要解析属性值，然后对解析后的属性值进行依赖注入。<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;6.解析属性注入规则resolveValueIfNecessary()</p>
+
+<pre><code class="language-java">   //解析属性值，对注入类型进行转换
+	@Nullable
+	public Object resolveValueIfNecessary(Object argName, @Nullable Object value) {
+		// We must check each value to see whether it requires a runtime reference
+		// to another bean to be resolved.
+		//对引用类型的属性进行解析
+		if (value instanceof RuntimeBeanReference) {
+			RuntimeBeanReference ref = (RuntimeBeanReference) value;
+			//调用引用类型属性的解析方法
+			return resolveReference(argName, ref);
+		}
+		//对属性值是引用容器中另一个Bean名称的解析
+		else if (value instanceof RuntimeBeanNameReference) {
+			String refName = ((RuntimeBeanNameReference) value).getBeanName();
+			refName = String.valueOf(doEvaluate(refName));
+			//从容器中获取指定名称的Bean
+			if (!this.beanFactory.containsBean(refName)) {
+				throw new BeanDefinitionStoreException(
+						&quot;Invalid bean name '&quot; + refName + &quot;' in bean reference for &quot; + argName);
+			}
+			return refName;
+		}
+		//对Bean类型属性的解析，主要是Bean中的内部类
+		else if (value instanceof BeanDefinitionHolder) {
+			// Resolve BeanDefinitionHolder: contains BeanDefinition with name and aliases.
+			BeanDefinitionHolder bdHolder = (BeanDefinitionHolder) value;
+			return resolveInnerBean(argName, bdHolder.getBeanName(), bdHolder.getBeanDefinition());
+		}
+		else if (value instanceof BeanDefinition) {
+			// Resolve plain BeanDefinition, without contained name: use dummy name.
+			BeanDefinition bd = (BeanDefinition) value;
+			String innerBeanName = &quot;(inner bean)&quot; + BeanFactoryUtils.GENERATED_BEAN_NAME_SEPARATOR +
+					ObjectUtils.getIdentityHexString(bd);
+			return resolveInnerBean(argName, innerBeanName, bd);
+		}
+		//对集合数组类型的属性解析
+		else if (value instanceof ManagedArray) {
+			// May need to resolve contained runtime references.
+			ManagedArray array = (ManagedArray) value;
+			//获取数组的类型
+			Class&lt;?&gt; elementType = array.resolvedElementType;
+			if (elementType == null) {
+				//获取数组元素的类型
+				String elementTypeName = array.getElementTypeName();
+				if (StringUtils.hasText(elementTypeName)) {
+					try {
+						//使用反射机制创建指定类型的对象
+						elementType = ClassUtils.forName(elementTypeName, this.beanFactory.getBeanClassLoader());
+						array.resolvedElementType = elementType;
+					}
+					catch (Throwable ex) {
+						// Improve the message by showing the context.
+						throw new BeanCreationException(
+								this.beanDefinition.getResourceDescription(), this.beanName,
+								&quot;Error resolving array type for &quot; + argName, ex);
+					}
+				}
+				//没有获取到数组的类型，也没有获取到数组元素的类型
+				//则直接设置数组的类型为Object
+				else {
+					elementType = Object.class;
+				}
+			}
+			//创建指定类型的数组
+			return resolveManagedArray(argName, (List&lt;?&gt;) value, elementType);
+		}
+		//解析list类型的属性值
+		else if (value instanceof ManagedList) {
+			// May need to resolve contained runtime references.
+			return resolveManagedList(argName, (List&lt;?&gt;) value);
+		}
+		//解析set类型的属性值
+		else if (value instanceof ManagedSet) {
+			// May need to resolve contained runtime references.
+			return resolveManagedSet(argName, (Set&lt;?&gt;) value);
+		}
+		//解析map类型的属性值
+		else if (value instanceof ManagedMap) {
+			// May need to resolve contained runtime references.
+			return resolveManagedMap(argName, (Map&lt;?, ?&gt;) value);
+		}
+		//解析props类型的属性值，props其实就是key和value均为字符串的map
+		else if (value instanceof ManagedProperties) {
+			Properties original = (Properties) value;
+			//创建一个拷贝，用于作为解析后的返回值
+			Properties copy = new Properties();
+			original.forEach((propKey, propValue) -&gt; {
+				if (propKey instanceof TypedStringValue) {
+					propKey = evaluate((TypedStringValue) propKey);
+				}
+				if (propValue instanceof TypedStringValue) {
+					propValue = evaluate((TypedStringValue) propValue);
+				}
+				if (propKey == null || propValue == null) {
+					throw new BeanCreationException(
+							this.beanDefinition.getResourceDescription(), this.beanName,
+							&quot;Error converting Properties key/value pair for &quot; + argName + &quot;: resolved to null&quot;);
+				}
+				copy.put(propKey, propValue);
+			});
+			return copy;
+		}
+		//解析字符串类型的属性值
+		else if (value instanceof TypedStringValue) {
+			// Convert value to target type here.
+			TypedStringValue typedStringValue = (TypedStringValue) value;
+			Object valueObject = evaluate(typedStringValue);
+			try {
+				//获取属性的目标类型
+				Class&lt;?&gt; resolvedTargetType = resolveTargetType(typedStringValue);
+				if (resolvedTargetType != null) {
+					//对目标类型的属性进行解析，递归调用
+					return this.typeConverter.convertIfNecessary(valueObject, resolvedTargetType);
+				}
+				//没有获取到属性的目标对象，则按Object类型返回
+				else {
+					return valueObject;
+				}
+			}
+			catch (Throwable ex) {
+				// Improve the message by showing the context.
+				throw new BeanCreationException(
+						this.beanDefinition.getResourceDescription(), this.beanName,
+						&quot;Error converting typed String value for &quot; + argName, ex);
+			}
+		}
+		else if (value instanceof NullBean) {
+			return null;
+		}
+		else {
+			return evaluate(value);
+		}
+	}
+	
+	//解析引用类型的属性值
+	@Nullable
+	private Object resolveReference(Object argName, RuntimeBeanReference ref) {
+		try {
+			Object bean;
+			//获取引用的Bean名称
+			String refName = ref.getBeanName();
+			refName = String.valueOf(doEvaluate(refName));
+			//如果引用的对象在父类容器中，则从父类容器中获取指定的引用对象
+			if (ref.isToParent()) {
+				if (this.beanFactory.getParentBeanFactory() == null) {
+					throw new BeanCreationException(
+							this.beanDefinition.getResourceDescription(), this.beanName,
+							&quot;Can't resolve reference to bean '&quot; + refName +
+							&quot;' in parent factory: no parent factory available&quot;);
+				}
+				bean = this.beanFactory.getParentBeanFactory().getBean(refName);
+			}
+			//从当前的容器中获取指定的引用Bean对象，如果指定的Bean没有被实例化
+			//则会递归触发引用Bean的初始化和依赖注入
+			else {
+				bean = this.beanFactory.getBean(refName);
+				//将当前实例化对象的依赖引用对象
+				this.beanFactory.registerDependentBean(refName, this.beanName);
+			}
+			if (bean instanceof NullBean) {
+				bean = null;
+			}
+			return bean;
+		}
+		catch (BeansException ex) {
+			throw new BeanCreationException(
+					this.beanDefinition.getResourceDescription(), this.beanName,
+					&quot;Cannot resolve reference to bean '&quot; + ref.getBeanName() + &quot;' while setting &quot; + argName, ex);
+		}
+	}
+</code></pre>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;7.依赖注入。真正的依赖注入是通过 bw.setPropertyValues()方法实现的，该方法也使用了委托模 式，在 BeanWrapper 接口中至少定义了方法声明，依赖注入的具体实现交由其实现类 BeanWrapperImpl 来完成</p>
+
+<pre><code class="language-java">    AbstractPropertyAccessor # setPropertyValues
+   @Override
+	public void setPropertyValues(PropertyValues pvs, boolean ignoreUnknown, boolean ignoreInvalid)
+			throws BeansException {
+
+		List&lt;PropertyAccessException&gt; propertyAccessExceptions = null;
+		List&lt;PropertyValue&gt; propertyValues = (pvs instanceof MutablePropertyValues ?
+				((MutablePropertyValues) pvs).getPropertyValueList() : Arrays.asList(pvs.getPropertyValues()));
+		for (PropertyValue pv : propertyValues) {
+			try {
+				// This method may throw any BeansException, which won't be caught
+				// here, if there is a critical failure such as no matching field.
+				// We can attempt to deal only with less serious exceptions.
+				setPropertyValue(pv);
+			}
+			catch (NotWritablePropertyException ex) {
+				if (!ignoreUnknown) {
+					throw ex;
+				}
+				// Otherwise, just ignore it and continue...
+			}
+			catch (NullValueInNestedPathException ex) {
+				if (!ignoreInvalid) {
+					throw ex;
+				}
+				// Otherwise, just ignore it and continue...
+			}
+			catch (PropertyAccessException ex) {
+				if (propertyAccessExceptions == null) {
+					propertyAccessExceptions = new LinkedList&lt;&gt;();
+				}
+				propertyAccessExceptions.add(ex);
+			}
+		}
+
+		// If we encountered individual exceptions, throw the composite exception.
+		if (propertyAccessExceptions != null) {
+			PropertyAccessException[] paeArray =
+					propertyAccessExceptions.toArray(new PropertyAccessException[propertyAccessExceptions.size()]);
+			throw new PropertyBatchUpdateException(paeArray);
+		}
+	}
+	
+	AbstractNestablePropertyAccessor#setPropertyValue
+	@Override
+	public void setPropertyValue(String propertyName, @Nullable Object value) throws BeansException {
+		AbstractNestablePropertyAccessor nestedPa;
+		try {
+			nestedPa = getPropertyAccessorForPropertyPath(propertyName);
+		}
+		catch (NotReadablePropertyException ex) {
+			throw new NotWritablePropertyException(getRootClass(), this.nestedPath + propertyName,
+					&quot;Nested property in path '&quot; + propertyName + &quot;' does not exist&quot;, ex);
+		}
+		PropertyTokenHolder tokens = getPropertyNameTokens(getFinalPath(nestedPa, propertyName));
+		nestedPa.setPropertyValue(tokens, new PropertyValue(propertyName, value));
+	}
+	
+	//实现属性依赖注入功能
+	protected void setPropertyValue(PropertyTokenHolder tokens, PropertyValue pv) throws BeansException {
+		if (tokens.keys != null) {
+			processKeyedProperty(tokens, pv);
+		}
+		else {
+			processLocalProperty(tokens, pv);
+		}
+	}
+	
+	//实现属性依赖注入功能
+	@SuppressWarnings(&quot;unchecked&quot;)
+	private void processKeyedProperty(PropertyTokenHolder tokens, PropertyValue pv) {
+		//调用属性的getter(readerMethod)方法，获取属性的值
+		Object propValue = getPropertyHoldingValue(tokens);
+		PropertyHandler ph = getLocalPropertyHandler(tokens.actualName);
+		if (ph == null) {
+			throw new InvalidPropertyException(
+					getRootClass(), this.nestedPath + tokens.actualName, &quot;No property handler found&quot;);
+		}
+		Assert.state(tokens.keys != null, &quot;No token keys&quot;);
+		String lastKey = tokens.keys[tokens.keys.length - 1];
+
+		//注入array类型的属性值
+		if (propValue.getClass().isArray()) {
+			Class&lt;?&gt; requiredType = propValue.getClass().getComponentType();
+			int arrayIndex = Integer.parseInt(lastKey);
+			Object oldValue = null;
+			try {
+				if (isExtractOldValueForEditor() &amp;&amp; arrayIndex &lt; Array.getLength(propValue)) {
+					oldValue = Array.get(propValue, arrayIndex);
+				}
+				Object convertedValue = convertIfNecessary(tokens.canonicalName, oldValue, pv.getValue(),
+						requiredType, ph.nested(tokens.keys.length));
+				//获取集合类型属性的长度
+				int length = Array.getLength(propValue);
+				if (arrayIndex &gt;= length &amp;&amp; arrayIndex &lt; this.autoGrowCollectionLimit) {
+					Class&lt;?&gt; componentType = propValue.getClass().getComponentType();
+					Object newArray = Array.newInstance(componentType, arrayIndex + 1);
+					System.arraycopy(propValue, 0, newArray, 0, length);
+					setPropertyValue(tokens.actualName, newArray);
+					//调用属性的getter(readerMethod)方法，获取属性的值
+					propValue = getPropertyValue(tokens.actualName);
+				}
+				//将属性的值赋值给数组中的元素
+				Array.set(propValue, arrayIndex, convertedValue);
+			}
+			catch (IndexOutOfBoundsException ex) {
+				throw new InvalidPropertyException(getRootClass(), this.nestedPath + tokens.canonicalName,
+						&quot;Invalid array index in property path '&quot; + tokens.canonicalName + &quot;'&quot;, ex);
+			}
+		}
+
+		//注入list类型的属性值
+		else if (propValue instanceof List) {
+			//获取list集合的类型
+			Class&lt;?&gt; requiredType = ph.getCollectionType(tokens.keys.length);
+			List&lt;Object&gt; list = (List&lt;Object&gt;) propValue;
+			//获取list集合的size
+			int index = Integer.parseInt(lastKey);
+			Object oldValue = null;
+			if (isExtractOldValueForEditor() &amp;&amp; index &lt; list.size()) {
+				oldValue = list.get(index);
+			}
+			//获取list解析后的属性值
+			Object convertedValue = convertIfNecessary(tokens.canonicalName, oldValue, pv.getValue(),
+					requiredType, ph.nested(tokens.keys.length));
+			int size = list.size();
+			//如果list的长度大于属性值的长度，则多余的元素赋值为null
+			if (index &gt;= size &amp;&amp; index &lt; this.autoGrowCollectionLimit) {
+				for (int i = size; i &lt; index; i++) {
+					try {
+						list.add(null);
+					}
+					catch (NullPointerException ex) {
+						throw new InvalidPropertyException(getRootClass(), this.nestedPath + tokens.canonicalName,
+								&quot;Cannot set element with index &quot; + index + &quot; in List of size &quot; +
+								size + &quot;, accessed using property path '&quot; + tokens.canonicalName +
+								&quot;': List does not support filling up gaps with null elements&quot;);
+					}
+				}
+				list.add(convertedValue);
+			}
+			else {
+				try {
+					//将值添加到list中
+					list.set(index, convertedValue);
+				}
+				catch (IndexOutOfBoundsException ex) {
+					throw new InvalidPropertyException(getRootClass(), this.nestedPath + tokens.canonicalName,
+							&quot;Invalid list index in property path '&quot; + tokens.canonicalName + &quot;'&quot;, ex);
+				}
+			}
+		}
+
+		//注入map类型的属性值
+		else if (propValue instanceof Map) {
+			//获取map集合key的类型
+			Class&lt;?&gt; mapKeyType = ph.getMapKeyType(tokens.keys.length);
+			//获取map集合value的类型
+			Class&lt;?&gt; mapValueType = ph.getMapValueType(tokens.keys.length);
+			Map&lt;Object, Object&gt; map = (Map&lt;Object, Object&gt;) propValue;
+			// IMPORTANT: Do not pass full property name in here - property editors
+			// must not kick in for map keys but rather only for map values.
+			TypeDescriptor typeDescriptor = TypeDescriptor.valueOf(mapKeyType);
+			//解析map类型属性key值
+			Object convertedMapKey = convertIfNecessary(null, null, lastKey, mapKeyType, typeDescriptor);
+			Object oldValue = null;
+			if (isExtractOldValueForEditor()) {
+				oldValue = map.get(convertedMapKey);
+			}
+			// Pass full property name and old value in here, since we want full
+			// conversion ability for map values.
+			//解析map类型属性value值
+			Object convertedMapValue = convertIfNecessary(tokens.canonicalName, oldValue, pv.getValue(),
+					mapValueType, ph.nested(tokens.keys.length));
+			//将解析后的key和value值赋值给map集合属性
+			map.put(convertedMapKey, convertedMapValue);
+		}
+
+		else {
+			throw new InvalidPropertyException(getRootClass(), this.nestedPath + tokens.canonicalName,
+					&quot;Property referenced in indexed property path '&quot; + tokens.canonicalName +
+					&quot;' is neither an array nor a List nor a Map; returned value was [&quot; + propValue + &quot;]&quot;);
+		}
+	}
+	
+	private Object getPropertyHoldingValue(PropertyTokenHolder tokens) {
+		// Apply indexes and map keys: fetch value for all keys but the last one.
+		Assert.state(tokens.keys != null, &quot;No token keys&quot;);
+		PropertyTokenHolder getterTokens = new PropertyTokenHolder(tokens.actualName);
+		getterTokens.canonicalName = tokens.canonicalName;
+		getterTokens.keys = new String[tokens.keys.length - 1];
+		System.arraycopy(tokens.keys, 0, getterTokens.keys, 0, tokens.keys.length - 1);
+
+		Object propValue;
+		try {
+			//获取属性值
+			propValue = getPropertyValue(getterTokens);
+		}
+		catch (NotReadablePropertyException ex) {
+			throw new NotWritablePropertyException(getRootClass(), this.nestedPath + tokens.canonicalName,
+					&quot;Cannot access indexed value in property referenced &quot; +
+					&quot;in indexed property path '&quot; + tokens.canonicalName + &quot;'&quot;, ex);
+		}
+
+		if (propValue == null) {
+			// null map value case
+			if (isAutoGrowNestedPaths()) {
+				int lastKeyIndex = tokens.canonicalName.lastIndexOf('[');
+				getterTokens.canonicalName = tokens.canonicalName.substring(0, lastKeyIndex);
+				propValue = setDefaultValue(getterTokens);
+			}
+			else {
+				throw new NullValueInNestedPathException(getRootClass(), this.nestedPath + tokens.canonicalName,
+						&quot;Cannot access indexed value in property referenced &quot; +
+						&quot;in indexed property path '&quot; + tokens.canonicalName + &quot;': returned null&quot;);
+			}
+		}
+		return propValue;
+	}
+</code></pre>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Spring IOC 容器是如何将属性的值注入到 Bean 实例对象中去的:1)、对于集合类型的属性，将其属性值解析为目标类型的集合后直接赋值给属性。 2)、对于非集合类型的属性，大量使用了 JDK 的反射机制，通过属性的 getter()方法获取指定属性注入 以前的值，同时调用属性的 setter()方法为属性设置注入后的值。
+<figure><img src="/images/ring.svg" data-sizes="auto" data-src="data:image/png;base64,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63s7duwoSa5+jo2NlSRX/1YvSHnKyep8yQtPPOVDffZn9c09X5+R5K39uviTe97i9GdbV+frvt4Tb9v5+PHjkqRrr73WLX4AAAAAAJwoSAFAGKisrNSmTZv02GOP6ec//7nr9c8//1zz589XcXGx67WzZ8+6/pF8+PBhxcfHKyLi4gWv6enpGjx4sF555RU98cQT+uijj7wu22b78Znxx44d08qVK/Xee+8pISFBOTk52rx5syTp8ssvlyQdOXLE56uvfFkv5z9Zz58/71qvup494xQXFyfpYh/cdNNNbutQvU8GDBignTt3qqqqSunp6bLb7Zo7d67+9re/qVu3boqJifHaL506dZIkbdiwQV27dr3kva1bt1ZSUpL+8Ic/eCxI1dW3TjW3bZcuXRQREVGveav3ga/rUXP9r7zySo0fP14PPvigqqqqvM7vS5z+CHQ++pozkvv2b0piYmJ077336qGHHvLr6h9PPOVkdf7klT/82Z8FOvcC3b4/ueermtvaWxu+7us98badnVdenTx50vX7iRMn/FonAAAAAEDzxi37fuB84LPdblefPn00bdo0/fOf/2z0ZTt/7r777kZZdkuVnZ0tu92uP/7xj26v13wAeVNA7jYPO3bs0JkzZzRixAhdeeWVrp8hQ4YoOjpamzZtcr331VdfVWlpqQ4fPqw333xTo0aNknTxG/i7d++WzWbT1VdfrfLychlz8Xa0zqLL7t27VVJS4jEO55UqhYWFKikp0TvvvOOaFh8frwEDBmjx4sU6ePCgKisrdeDAARUUFHhchi/rdd111ykqKkrr16+XdPHqqVWrVrnFVVvbsbGxuvXWW7V48WJ99dVXqqys1BdffKHXXntNU6dOdc2bmpoqh8OhL774Qn369NFll12mnj176r//+781YMAAn7ZPfHy8LMvSkiVLdOLECVVWVurgwYPauXOn6z1PPvmk9u7dqyeeeEJff/21KisrVVJSoo8//liHDh2qs2+dam7bkSNHet0unuZ15oW/6+FkjFFBQYFWr16tXr16KSIiwuv8vsTpj0Dno68505R89dVXWrFihY4cOaLKykqdOnVK77//vm655ZZ6FTlq8pST1fmTV77yd3/W0Nzzto/01r63+QORe75s60Ds6z214207X3311br++uu1bNkylZSUqKCgQG+99ZZP6xYq4XIM1bt3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N0/Z2dkaOHDgJbfLWbt2rV555RVt2bJFXbt21cKFC+uMo672fvOb32jt2rVauHChtm/frldffVUdO3aU5H4pYl5enmuexYsXa9u2bXrppZe0fft2Pffcc3r//ff1+9//3m25ubm5yszM1PTp09WpUyelpaVp48aNrulZWVnq2LGjkpOTfejN8JOZmanbb79dknT77bfrww8/dLskVZLWrVun119/XX/5y1/07bffuk4Ijx07phdffFGLFi1SVlaW2y1FPPW75N6nUuC3rRO527xzFwCAcHb48GHdd9996tu3r5588kkNHz7c4+1Dw024HENJ0s9+9jP985//dP0TxVsM3o4P/YnDl7Z8PS6ra5np6enKzc11PaNs9+7dKioq0tChQyV571dfees7J2OMvv76ay1fvlwTJ070af66zgt87SNJGjVqlLZt26aKigpJ0qlTp7Rr1y6NGTPG53Woea4RjprzOVhVVZW+/PJLLV++XOPHj68zBl9zw1NfSPXLiZrr4Ou5krftVle/1TWtPmMrEGMunMdKcx0jNptN8+fPV3Z2trKysmpd9/ruaz0t19tnSF3jy9e4qmMfwD4gGEJxbNq3b1/X82H/8Y9/6NSpU0pKStItt9ziKlTt2rVL119/vWJjY13z+bMvkbyPwUDnvydff/21PvjgAyUnJ2vu3Lk6fPiwNmzYoIEDB+qll17yK2b4h4JUDampqRoyZIhOnz6tmJgY14lgcXGxNm7cqNmzZys+Pl4dO3bU5MmT3T5Q09LSlJCQoEOHDqlDhw4qKChw21E//PDDio2NVUxMjCZMmKCDBw+6fUsuNTXV9ZC1JUuWeGzvu+++07vvvqunn35avXr1UmRkpBISEnTFFVd4XK/Tp09r/fr1mjt3rm644QZFRkaqZ8+emj59utauXev23qlTp6p9+/bq0KGDJGns2LHatm2b69uHmZmZGjNmTJO5V2h1hw4d0oEDB3TbbbdJkgYNGqTz58/rk08+cXvfQw89pE6dOqlLly6aNm2aqzLeunVr2Ww2HT9+XFFRUerevbtPy63Zp4Hctk7kbvPOXTRvPXr0UF5enqKiokIdCiCJnET93Hvvvfrwww+Vm5urDRs26KGHHlKrVq1CHZZXoTyGqs2FCxfUqlUrRURE+BSDL+oTR238OS6ra5nJyclq3769Pv74Y0nShx9+qH79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9YIiP6VApaJWra2IWrQ5vailPpwqYr1ELntPAIPKJQqSchcI4JDL7Pf3B5kUkFyGzGTN5fN5njzZ2Xvtd74zs99n9ppv3nddnt122+1Z5a2qKnvssUde85rX5PTTT0+v19vkuHfeeWcuueSSLF68OPPmzcuSJUs2+/pPO+20U5LkgQceyHbbbbf+/vvvvz9z5szZZIkGAAAAADCW2LIPaMTcuXMzb968XHzxxVm5cmVWrFiRSy+9dP3jO+20U4455pice+65ueWWWzI4OJgf/vCH+eQnP5lTTz11/XFnnXVWbr311px55pn5yU9+kjVr1mTlypW54YYb1h+z6667pq7rXHDBBbnnnnsyODiYm2++Oddcc836Y+bMmZMkWbp0aVauXPkreUspWbFiRb7whS9k4cKFabVamxx3aFu9u+66KytXrsxll1222V+fnXfeObvssktuuummp9x/0003Zf78+Zs9DgAAAADAWKCQAhrz4Q9/OPfff3+OPfbYnHXWWTn++OOf8vgHPvCBtNvtvOENb8jhhx+e9773vTnttNNy0kknrT9mt912yxe+8IXssssueetb35pFixbl5S9/ea644oqcccYZmTr1iYWg5513XlqtVl796ldn0aJFOfvss5+y7d3ee++d448/Pm9+85tzwgknPCXHkUcemUMOOSSnnHJKZs+enfPPP3/9Yxsbd5999slJJ52Ut73tbTn11FNzxBFHDOvr89KXvjTf+MY31v+7lJIrr7wyL33pS4c1DgAAAAAAbJKLazNSxtJrqbBJ999/f/nN3/zNcuutt5ZSSrniiivKcccdV1avXl1KcRGpsWoszTNg+MxhGFnmFIwMcwnGFnMShsecYYgVUgBj1I477pg///M/zznnnJP77rsvn/jEJ3Luuee6fhQAAAAAMO5MbToAABt27LHH5thjj02S/Mu//EvDaQAAAAAAnh2FFNCIqqqqpjM8k3a7fVgp5QdJ+rvdbt10HgAAAAAAACaYvr6+D9R1Xfr6+v6/prMAsPXZ2xwAAABGhxVSAE9SVdUrkqSU8q9NZwFg6+t2u2NyBS8AAACMd62mAwCMFQsXLvxvSfqSPLD//vtf3XQeAAAAAICJQiEFsM6UKVOOW3fz64sXLx5sNAwAAAAAwASikBoHXMuAkeK1tFFVkjPW3f5sk0EY38wzAPgvfi7CyDCXYGwxJ2F4zBmGKKQAkvT19R2T5MCqqpZ1u91vNZ0HgGY4UQIAAIDRoZACSFJV1Z8mSa/X+1gSv4gEAAAAABhBCilg0lu4cOHzkrwyycOrV6/+QtN5AAAAAAAmGoUUMOlNnTr1L/LENaQ+smzZskebzgMAAAAAMNFMbToAsOX6+vqurqrqBZt7/OZcG6OUclV/f//RW5Zs7Gu320eXUv57khVr1669oOk8AAAAAAATkRVSMAEMp4waxphHjfSYY82JJ544JclfrvvnO2644YbHmswDAAAAADBRWSEFE0in0xmRcdrt9oiMM9YtX7789FLKwUmu7Xa7f990HgAAAACAiUohyc7ptAAAIABJREFUBUxKCxcunF9KuTDJmiSvT9JrOBJjnK0xAQAAAODZs2UfMOkcddRRM6ZMmXJZkhlVVb2r2+2OzNIyJjRbYwIAAADAs2eF1DjQ7XarpjPARPLwww+fV1XVQUm+0el0/nKTT4AnsTUmAGw+5zIwMswlGFvMSRgec4YhCilgUmm3268tpbwpyf1VVZ0aW/UB8CROlAAAAGB02LIPmDQOOeSQ3y2l/G2S1a1W68ROp3NX05kAAAAAACYDK6SASaHdbh/W6/UWJ2lVVXXyddddd1XTmQAAAAAAJgsrpMaBuq5LXdel6RwwXh1yyCG/UUq5PMmsqqre0ul0FjedCQBgMnAuAyPDXIKxxZyE4TFnGKKQAia0uq6P7PV630myY1VV53U6nY82nQmAscuJEgAAAIwOhRQwYdV1fXySf0+yfZJ3dzqddzYcCQAAAABgUnINKWBCarfbry+lfDxJKaX8UX9//982nQkAAAAAYLJSSAETyqJFi7b75S9/eXEp5bVJHk/y+/39/V9rOhcAAAAAwGSmkAImjLqu2wMDA1+qqmq/qqp+Ojg4+JqlS5de23QuAAAAAIDJzjWkgImg1W63/0+SJUn2S/IPSfqUUQAAAAAAY4MVUsC4Vtf1C5N8tJRyaJKBqqrO6HQ6f5ukNBwNAAAAAIB1FFLAuNRut3dP8uFSyqnr7vru4ODgn1x//fXLmswFAAAAAMCvUkgB48qiRYu2e/zxx99QSvnzJNsm+c+qqt7W6XQui1VRAAAAAABjkkJqHOh2u1XTGaBphx122K5r1qx508DAwBlJtk+ypqqq8x5//PEPLlu27NGm8wEA8Kucy8DIMJdgbDEnYXjMGYYopIAxrd1u75vkzDVr1vxBkulJ1pRSPlNV1XmdTufW0fiYpRQrrTaiqipvIoAJy4kSAAAAjA6FFDDmHHzwwdtXVXV8VVX/s5RydJIqyWOllI/1er2PXH/99SuazggAAAAAwOZTSAFjwlFHHTVj5cqVv5vkfyZ5eZ5YDZU8cY2oT02bNu1jS5Ys+UVzCQEAAAAAeLYUUuNAXdclsYUME07r4IMPXjBlypRjSinHrFy58sVJZq977LEk/1BKuXS//fb71uLFiwcbzDkm3XjjjTnttNOSJK1WK89//vPz/ve/P/vss0+juQAAnsy5DIwMcwnGFnMShsecYYhCCtgq5s+fv+2MGTPm93q9vqqqjk7yW0l2etLlmtYm+UYp5dLVq1f/87Jlyx5Nkv7+/oYSbz133HFH3vzmN+fLX/5ypk2bNqznfuc730mv18s555yT97znPfn85z8/SikBJgcnSgAAADA6FFLASGr19fXtWFXV7lVVHZBkQZKDSikHJZlXSklVPeX3ez9M8o1Wq/XvAwMD/zFUQk02Dz/8cO64445n/fxtt902J5xwQs4444z0er20Wq0RTAcAAAAAsOUUUsAGtdvtV5VSppdSpldVNT3J9FLKtFarNb3X681otVq7JNm91+vtXlXV7kl2S7JNkjxp5dOQR5PcmOSGJN+tquqbnU7nrq346QxLr9fLpZdemn/6p3/KPffckx133DEXXnhh1q5dm9NOOy3ve9/7ctFFF+V3f/d3c+aZZ2b16tW56KKL8vWvfz1r1qzJi1/84rzrXe/KtttumyS55pprctFFF+W2227LLrvskne96105/PDDk2T91ntD/+50OkmyyTGf7NFHH83OO+/8lDLq2WYa2g7wE5/4RP7qr/4qy5cvz1577ZX3v//9OfDAA0ftaw4AAAAATFwKKWCDSin/nOQpq5qqqsrQSqeh0ulpq542ZNskh6/7c3opJXVdj3jmkfKRj3wk3/72t3POOedk/vz5ueOOOzJz5szcf//9SZKrr746X/va19Z/DT74wQ/mzjvvzJe+9KVMnz4973znO3PhhRfmfe97X5Lksccey7vf/e7st99+ufjii/OhD30oX/3qV5Mkl1xySU477bQsWbLkKVv2bWrMIb/4xS/y+c9/Pq997Wufcv+WZEqSf/qnf8pHP/rRTJs2Le9+97tzzjnn5O///u/Xb2fFyKjr+gdJHk/yeFVV9/R6vduT/KzVan2/0+n8JImvNwAAAADjnn2dAJ7mkUceyZe//OW8973vzcKFCzN16tTMmzcvu++++/pjTj311MyePTvbbrttHnzwwfzbv/1b3vGOd2TXXXfN9ttvn1NOOSXf/OY31x9/9NFHZ968ebntttuy7bbbZsWKFVm7du0GM2zOmEly5JFH5thjj81DDz2UOXPmpNfrbfbzN5XpjW98Y3baaafMmTMnJ510Um6++eb14zOiDkvym0l+u5RyalVV76mq6m9LKT/q6+u7q67rL7fb7TP6+vqen8Q1bQAAAAAYl6yQAjZosl7QfcWKFWVwcDAHHHDABo/Zc88919++++67U0rJySef/CvHrVmzJttss00uvvjifPWrX82CBQsyffr0JNloubOpMYd85zvfycyZM3PXXXfloosuyje/+c1ceOGFI5Jpxx13XH97u+22Sykla9eunbSvi1FcGXZ4VVUzk8zq9Xq7Jdm7qqr9k7y4qqo9kvx+KeX3q6pKXdedUspHH3nkkS/feuutq0YpDwAAAACMOIUUwNM897nPTZLccccdmT9//jMe8+RtCnfYYYckyeWXX57ddtvtV4698847c8kll2Tx4sWZN29elixZkiuuuGKjGTY15tOz7LHHHnnNa16T008/Pb1eb1QyMTq63e4PNvBQVdf1vlVVHVVKOSrJsUnaVVV9bs6cOef39fV9Kskn+/v7/3OrhQUAAACAZ8mWfQBPs+uuu+bFL35xzj333Nx8880ZHBzMT37yk6xYsWKDx9d1nQsuuCD33HNPBgcHc/PNN+eaa65JkvXb4N11111ZuXJlLrvssqc8f86cOUmSpUuXZuXKlZs15pOVUrJixYp84QtfyMKFC9NqtbY4E2NC6Xa7t3Y6nc90u91Tqqras5RycpIlSXZZt7XfT9vt9nv322+/6U2HBQAAAICNUUgBPINzzz03Bx10UM4444y86EUvytlnn51Vqza8Q9p5552XVquVV7/61Vm0aFHOPvvslPLEDm/77LNPTjrppLztbW/LqaeemiOOOOIpz917771z/PHH581vfnNOOOGEzRpzyJFHHplDDjkkp5xySmbPnp3zzz9/RDIx9nQ6nTX9/f1f6na7R5RSDq2q6tIkrVLK++fMmdPfbrdf1HRGAAAAANiQ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Wq25SRRSTEiKKAAAABgdtuwDADbXA0nS6/V2aDoIAAAAAOOLQgoA2FwPJklVVQopAAAAAIZFITUO1HVdhq5nAFvCawlG30SeZ1VVPZgkpRSFFACbZSL/XIStyVyCscWchOExZxiikAIANkuv13swSVqt1nObzgKjxYkSAAAAjA6FFACwWayQAgAAAODZUkgBAJtlqJBKopACAAAAYFimNh0AACarUsp43Rbsdev+jBtVVVVNZwAAAACYzKyQAgAAAAAAYFQppAAAAAAAABhVCikAGENuvPHGtNvtrF69eljPW7NmTT7/+c/n5JNPzhFHHJEXvvCFOe644/LjH/94lJIO39Dn1m63c+ihh+a1r31tfvaznzUdCwAAAICtQCEFAOPc448/ntNPPz1XXnllzjzzzFx11VW58sor8453vCMzZ84clY95xx135Ljjjht2cZYk3/nOd/Ktb30ru+22W97znveMQjoAAAAAxpqpTQcAALbMxz72saxatSqf/exnM23atCTJtGnTcthhh43ax3z44Ydzxx13POvnb7vttjnhhBNyxhlnpNfrpdXyf2QAAAAAAABGXCmlPPzww+XMM88shx9+eHn5y19e/uZv/qbUdV1WrVpVSill9erV5eMf/3h5+ctfXl7wgheUl73sZeXTn/50GRwcLKWUsmbNmvKiF72ofOtb3yobcsMNN5S6rstXvvKVcvTRR5fzzz+/lFLKqlWrynnnnVeOOuqosmjRovLOd76zPPLII+ufd/XVV5eTTz65vOAFLyiveMUryve///31j9V1/ZQ/QzY25lCOxx57rJRSyje/+c3yO7/zO0/J+mwzDY39gx/8oJx88snlsMMOKyeeeGK56aabSimlNP29ZvwYek03nQMAAAAAAEZEKaW85S1vKf/7f//vct9995X77ruvvO51r3tKIfW+972vnHjiieUnP/lJWbNmTbn++uvLy172svKJT3yilFLKbbfdVuq6Lvfff/8mC6l3vetd5dFHH11f8LznPe8pf/AHf1Duvvvu8uCDD5Y/+ZM/KWefffb651155ZVl2bJlZdWqVeWCCy4or3zlK39lzKGcQzY25pMLqQceeKCcdtpp5bLLLtvs528s09DYb3/728t9991XHn744fKnf/qn5eSTT1ZIAQAAAAAAk9cDDzxQ6rouy5YtW1+4fP/7319f9Dz44IOl3W6XpUuXPqW0+cpXvlJe8pKXlFJK+fGPf1zqui4PPfTQJgupH//4x+vv+8UvflHa7Xb5yU9+sv6+7373u+XII498ynMHBgbKTTfdVD75yU+Wuq7LmjVrNlhIbWrMoecM/XnVq15VLr/88vWrvbYk09DYd9xxx/rjvve975V2u10GBwcVUgAAAAANcw0pAGjIPffckyTZa6+91t+37bbbrr991113pZSSefPmPeV5e+21V37xi1+k1+tl9913T1VVufXWW9Nutzf68fbcc8/1t+++++6UUnLyySf/ynFr1qzJNttsk4svvjhf/epXs2DBgkyfPj1J0uv1Njj+psYc8p3vfCczZ87MXXfdlYsuuijf/OY3c+GFF45Iph133HH97e222y6llKxdu3ZjXxYAAAAAtgKF1DgwdB2DbrdbNZ2F8c1rCUbfcObZUPl07733rr89VFIlyc4775wkuf322/Mbv/Eb6++/8847s+uuu6bVamXOnDk57LDD8rnPfW6ThVRV/VekHXbYIUly+eWXZ7fddvuVY++8885ccsklWbx4cebNm5clS5bkiiuu2Oj4mxrz6Vn22GOPvOY1r8npp5+eXq83KpkAaJb3nzAyzCUYW8xJGB5zhiGtpgMAwGQ1d+7czJs3LxdffHFWrlyZFStW5NJLL13/+E477ZRjjjkm5557bm655ZYMDg7mhz/8YT75yU/m1FNPXX/cWWedlWXLluXtb397br311gwODmblypX51re+ldtuu+0ZP/auu+6auq5zwQUX5J577sng4GBuvvnmXHPNNUmyflXRXXfdlZUrV+ayyy57yvPnzJmTJFm6dGlWrly5WWM+WSklK1asyBe+8IUsXLgwrVZrizPBSBjaUrLpHAAAADDRKKQAoEEf/vCHc//99+fYY4/NWWedleOPP/4pj3/gAx9Iu93OG97whhx++OF573vfm9NOOy0nnXTS+mP22muvfPGLX8y2226bN77xjXnhC1+YV7ziFfniF7+YqVM3vBj6vPPOS6vVyqtf/eosWrQoZ599dkp54vfw++yzT0466aS87W1vy6mnnpojjjjiKc/de++9c/zxx+fNb35zTjjhhM0ac8iRRx6ZQw45JKecckpmz56d888/f0QyAQAAADB2WSI3DljSyEjxWoLRN5x5Vp7e1DBqqifvVwgb4WcljCxzCkaG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cVOmTNFTTz2l0aNH63vf+56i0aieeuop/f73v1d1dbUuv/xyPfjgg7W9kebNm6cXX3xRBw4c0I033qjvfe97kqTq6mq98MILWrRokT755BOde+65uv766/VP//RPtUW5hG9/+9vKy8vTww8/XDvvm9/8ps4//3zdd999J82QlZWl4uJiLV68uLYgZa3VkiVL9PWvf12StGrVKj311FOqqKhQly5d9OCDD2rYsGH1nn/d4fuOH0KvsdeiPrfddpsk1R5v7ty5kqSbbrpJf/rTn/TYY4/piSeeqHfbxo7neZ7+67/+S6+99pp27typc889V7Nnz9ZFF110yu9bQ/Mbeg3ru26+/vWva/To0Zo9e7aGDx8uSTpy5IhGjhypxx9/vMHXCgAAAACA00FBCgDaqSNHjvw1IyPDk9RPRwsi7W4osRbESrLz588/YcGmTZvOfBo0FxMOhxPFqbRAIBC01qYlfq47HYvFgvp7QSvxWCRJK1eu1Ouvv17bo2v69OnaunWr5s2bp4yMDE2ePFmzZ8/WlClTtHXrVs2cOVM//vGP1b9/f3344Ye1YWbMmKH169frySefVEFBgdavX68HHnhAsVhMd9111zHBr7vuOj3yyCOqrq5WWlqaPvvsM7377rv67ne/22gG6eiwfd/97ne1f/9+5ebmqry8XLt379bIkSMlSYcOHdJDDz2kfv36ac6cOXr00Ue1YMGCJr/AjeWoT91h/NLT07V27dqjb5YxmjJliiZMmKClS5fqyiuvbPLx/uM//kN/+MMfNG3aNBUWFmrLli3KzMw85fftZO9nY69h3esmJydHI0aM0KJFi2oLUkuXLlXHjh01dOjQJr/uAAAAbUVT7/GW6PVxMtzjDQD+joIUALRT69ati7qu+6GkvqFQ6LyysrKP/c4EtHG2tLT0tIffmzhxorKzsyVJe/bs0aJFi/TLX/5S+fn5kqRbb71VkydP1pQpU5SWliZjjHbs2KFLLrlEhYWFkqS9e/dq4cKF+vnPf64LLrhAklRUVKQ777xTc+bMOaEgVVxcrEceeUQlJSW6/PLL9dZbb+niiy9W3759G80gSUOHDlV2drbeeecdfeUrX9Gbb76p4cOHKzc3V5I0YsQIHTlyRBUVFcrJydG2bdsUi8Wa9Lokk6OpevfurW9+85t67LHHNHjw4CYd78CBA/rVr36l5557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ly5tF/B05corr5TjOBo3bpwWLFighQsXtrt98eLFGjp0qCTp8OHDevHFF/Vv//Zv+tjHPiZJKikp0Re+8AWtXr26XSB1991369xzz5XU2kPr4Ycf7lW9bR+3K/Pnz9e9996rY8eOaciQIfrVr36lm266KR2YXH755Ro6dKh+//vf6/rrr9dvfvMbzZgxQ8OHt04bNmvWLDU1NamyslLDhg3TBx98oEQi0e1z1lZ3+xMKhdTZ6+a6bkJSoKvtpoZ37E7HYew6G9buJMPctdUoqUGtw0U2WGvrjTH1xpjU+fR11toGY0y97/sNjuPU+75f7zhOQzweb7DWHg6FQh9JUiwWG9+jnQAAoB9g+DEAyA4CKQBAj2zdurW+tLT0h8aYL4dCoS9IWp7rmgDgbBUOh/Xwww/r6aef1k9+8hMtXbpUpaWl2r9/v6y1WrRo0Qn3icfjCoVCJ91u26HoOjN27Nj0+erqallrNWHChHbrXHDBBfroo4/ahShFRUXp86NHj9axY8fk+3639Xb2uF2JRCI677zz9Lvf/U6RSESvv/66Hn300fTtwWBQV199tTZt2qR58+bpt7/9rZYuXZq+ffXq1XrhhRdUUlKi/Px8ST0PglK625+uXjcdD6MSap3/KN7mtMvz1toWSXFjTIsxptFa26jWMKnRWtvoOE76uraXU0swGGy01jb6vt/oeV5jQUFBYygUakz29ssI13UztSkAALKO4ccAILsIpAAAvbFa0pd83/+HiRMnPrZ79+7mXBcEAGerOXPmaPbs2Vq1apUeeOABbd68Od0LaePGjRozZkzGH7Nt75rRo0dLkvbu3atJkyalr6+qqlI4HJbjOOnrGhoa0kHX3r17VVRUJMdxelxvT4eFmz9/vjZu3Kjq6mp96lOf0siRI9vdPnfuXN11113atGmTEomErrzyynTNzz77rDZs2KAJEyaorKxML7/88gnbTw0P2NTUlN6fhoaG9O092Z/OXjdjTF40Gk2IoekAAMgphh8DgOxyul8FAIBW5eXleyX9pzEmXFBQcEu3dwAAZEV1dbUqKipkjNG4cePU0tIia63C4bBc19UTTzyhmpoaeZ6nv/zlL9q27fgPc1ND1FVUVKiuru6UaygsLNSnP/1prVixQu+88448z9POnTv1/e9/X4sXL2637po1a3T06FHt3btXa9eu1bx58ySp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" alt="" class="lazyload"><figcaption class="image-caption"></figcaption></figure></p>
+
+<h3 id="3-ioc容器细节">3.IOC容器细节</h3>
+
+<h5 id="1-refresh-方法">1.refresh()方法</h5>
+
+<pre><code class="language-java">   @Override
+	public void refresh() throws BeansException, IllegalStateException {
+		synchronized (this.startupShutdownMonitor) {
+			// Prepare this context for refreshing.
+			//调用容器准备刷新的方法，获取容器的当时时间，同时给容器设置同步标识
+			prepareRefresh();
+
+			// Tell the subclass to refresh the internal bean factory.
+			//告诉子类启动refreshBeanFactory()方法，Bean定义资源文件的载入从
+			//子类的refreshBeanFactory()方法启动
+			ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();
+
+			// Prepare the bean factory for use in this context.
+			//为BeanFactory配置容器特性，例如类加载器、事件处理器等
+			prepareBeanFactory(beanFactory);
+
+			try {
+				// Allows post-processing of the bean factory in context subclasses.
+				//为容器的某些子类指定特殊的BeanPost事件处理器
+				postProcessBeanFactory(beanFactory);
+
+				// Invoke factory processors registered as beans in the context.
+				//调用所有注册的BeanFactoryPostProcessor的Bean
+				invokeBeanFactoryPostProcessors(beanFactory);
+
+				// Register bean processors that intercept bean creation.
+				//为BeanFactory注册BeanPost事件处理器.
+				//BeanPostProcessor是Bean后置处理器，用于监听容器触发的事件
+				registerBeanPostProcessors(beanFactory);
+
+				// Initialize message source for this context.
+				//初始化信息源，和国际化相关.
+				initMessageSource();
+
+				// Initialize event multicaster for this context.
+				//初始化容器事件传播器.
+				initApplicationEventMulticaster();
+
+				// Initialize other special beans in specific context subclasses.
+				//调用子类的某些特殊Bean初始化方法
+				onRefresh();
+
+				// Check for listener beans and register them.
+				//为事件传播器注册事件监听器.
+				registerListeners();
+
+				// Instantiate all remaining (non-lazy-init) singletons.
+				//初始化所有剩余的单例Bean
+				finishBeanFactoryInitialization(beanFactory);
+
+				// Last step: publish corresponding event.
+				//初始化容器的生命周期事件处理器，并发布容器的生命周期事件
+				finishRefresh();
+			}
+
+			catch (BeansException ex) {
+				if (logger.isWarnEnabled()) {
+					logger.warn(&quot;Exception encountered during context initialization - &quot; +
+							&quot;cancelling refresh attempt: &quot; + ex);
+				}
+
+				// Destroy already created singletons to avoid dangling resources.
+				//销毁已创建的Bean
+				destroyBeans();
+
+				// Reset 'active' flag.
+				//取消refresh操作，重置容器的同步标识.
+				cancelRefresh(ex);
+
+				// Propagate exception to caller.
+				throw ex;
+			}
+
+			finally {
+				// Reset common introspection caches in Spring's core, since we
+				// might not ever need metadata for singleton beans anymore...
+				resetCommonCaches();
+			}
+		}
+	}
+</code></pre>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ConfigurableListableBeanFactorybeanFactory = obtainFreshBeanFactory();启动了 Bean 定义资源的载入、注册过程，而 finishBeanFactoryInitialization 方法是对注册后的 Bean定义中的预实例化(lazy-init=false,Spring 默认就是预实例化,即为 true)的 Bean 进行处理的地方。<br/></p>
+
+<h5 id="2-finishbeanfactoryinitialization-处理预实例化-bean">2.finishBeanFactoryInitialization 处理预实例化 Bean</h5>
+
+<p>当 Bean 定义资源被载入 IOC 容器之后，容器将 Bean 定义资源解析为容器内部的数据结构 BeanDefinition 注册到容器中，AbstractApplicationContext 类中的 finishBeanFactoryInitialization() 方法对配置了预实例化属性的 Bean 进行预初始化过程<br/></p>
+
+<pre><code class="language-java">   //对配置了lazy-init属性的Bean进行预实例化处理
+	protected void finishBeanFactoryInitialization(ConfigurableListableBeanFactory beanFactory) {
+		// Initialize conversion service for this context.
+		//这是Spring3以后新加的代码，为容器指定一个转换服务(ConversionService)
+		//在对某些Bean属性进行转换时使用
+		if (beanFactory.containsBean(CONVERSION_SERVICE_BEAN_NAME) &amp;&amp;
+				beanFactory.isTypeMatch(CONVERSION_SERVICE_BEAN_NAME, ConversionService.class)) {
+			beanFactory.setConversionService(
+					beanFactory.getBean(CONVERSION_SERVICE_BEAN_NAME, ConversionService.class));
+		}
+
+		// Register a default embedded value resolver if no bean post-processor
+		// (such as a PropertyPlaceholderConfigurer bean) registered any before:
+		// at this point, primarily for resolution in annotation attribute values.
+		if (!beanFactory.hasEmbeddedValueResolver()) {
+			beanFactory.addEmbeddedValueResolver(strVal -&gt; getEnvironment().resolvePlaceholders(strVal));
+		}
+
+		// Initialize LoadTimeWeaverAware beans early to allow for registering their transformers early.
+		String[] weaverAwareNames = beanFactory.getBeanNamesForType(LoadTimeWeaverAware.class, false, false);
+		for (String weaverAwareName : weaverAwareNames) {
+			getBean(weaverAwareName);
+		}
+
+		// Stop using the temporary ClassLoader for type matching.
+		//为了类型匹配，停止使用临时的类加载器
+		beanFactory.setTempClassLoader(null);
+
+		// Allow for caching all bean definition metadata, not expecting further changes.
+		//缓存容器中所有注册的BeanDefinition元数据，以防被修改
+		beanFactory.freezeConfiguration();
+
+		// Instantiate all remaining (non-lazy-init) singletons.
+		//对配置了lazy-init属性的单态模式Bean进行预实例化处理
+		beanFactory.preInstantiateSingletons();
+	}
+</code></pre>
+
+<h5 id="3-defaultlistablebeanfactory-对配置-lazy-init-属性单态-bean-的预实例化">3.DefaultListableBeanFactory 对配置 lazy-init 属性单态 Bean 的预实例化</h5>
+
+<pre><code class="language-java">   //对配置lazy-init属性单态Bean的预实例化
+	@Override
+	public void preInstantiateSingletons() throws BeansException {
+		if (this.logger.isDebugEnabled()) {
+			this.logger.debug(&quot;Pre-instantiating singletons in &quot; + this);
+		}
+
+		// Iterate over a copy to allow for init methods which in turn register new bean definitions.
+		// While this may not be part of the regular factory bootstrap, it does otherwise work fine.
+		List&lt;String&gt; beanNames = new ArrayList&lt;&gt;(this.beanDefinitionNames);
+
+		// Trigger initialization of all non-lazy singleton beans...
+		for (String beanName : beanNames) {
+			//获取指定名称的Bean定义
+			RootBeanDefinition bd = getMergedLocalBeanDefinition(beanName);
+			//Bean不是抽象的，是单态模式的，且lazy-init属性配置为false
+			if (!bd.isAbstract() &amp;&amp; bd.isSingleton() &amp;&amp; !bd.isLazyInit()) {
+				//如果指定名称的bean是创建容器的Bean
+				if (isFactoryBean(beanName)) {
+					//FACTORY_BEAN_PREFIX=”&amp;”，当Bean名称前面加”&amp;”符号
+					//时，获取的是产生容器对象本身，而不是容器产生的Bean.
+					//调用getBean方法，触发容器对Bean实例化和依赖注入过程
+					final FactoryBean&lt;?&gt; factory = (FactoryBean&lt;?&gt;) getBean(FACTORY_BEAN_PREFIX + beanName);
+					//标识是否需要预实例化
+					boolean isEagerInit;
+					if (System.getSecurityManager() != null &amp;&amp; factory instanceof SmartFactoryBean) {
+						//一个匿名内部类
+						isEagerInit = AccessController.doPrivileged((PrivilegedAction&lt;Boolean&gt;) () -&gt;
+								((SmartFactoryBean&lt;?&gt;) factory).isEagerInit(),
+								getAccessControlContext());
+					}
+					else {
+						isEagerInit = (factory instanceof SmartFactoryBean &amp;&amp;
+								((SmartFactoryBean&lt;?&gt;) factory).isEagerInit());
+					}
+					if (isEagerInit) {
+						//调用getBean方法，触发容器对Bean实例化和依赖注入过程
+						getBean(beanName);
+					}
+				}
+				else {
+					getBean(beanName);
+				}
+			}
+		}
+
+		// Trigger post-initialization callback for all applicable beans...
+		for (String beanName : beanNames) {
+			Object singletonInstance = getSingleton(beanName);
+			if (singletonInstance instanceof SmartInitializingSingleton) {
+				final SmartInitializingSingleton smartSingleton = (SmartInitializingSingleton) singletonInstance;
+				if (System.getSecurityManager() != null) {
+					AccessController.doPrivileged((PrivilegedAction&lt;Object&gt;) () -&gt; {
+						smartSingleton.afterSingletonsInstantiated();
+						return null;
+					}, getAccessControlContext());
+				}
+				else {
+					smartSingleton.afterSingletonsInstantiated();
+				}
+			}
+		}
+	}
+
+</code></pre>
+
+    </div>
+
+    <div class="post-copyright">
+             
+            <p class="copyright-item">
+                <span>Author:</span>
+                <span>ruichunjie </span>
+                </p>
+            
+           
+             
+            <p class="copyright-item">
+                    <span>Link:</span>
+                    <a href=http://ruichunjie.github.io/2019/spring-di20190402/>http://ruichunjie.github.io/2019/spring-di20190402/</span>
+            </p>
+            
+             
+            <p class="copyright-item lincese">
+                本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可
+            </p>
+            
+    </div>
+
+  
+    <div class="post-tags">
+        
+            <section>
+            <i class="iconfont icon-tag"></i>Tag(s): 
+            
+            <span class="tag"><a href="http://ruichunjie.github.io/tags/spring/">
+                    #Spring</a></span>
+            
+            </section>
+        
+        <section>
+                <a href="javascript:window.history.back();">back</a></span> · 
+                <span><a href="http://ruichunjie.github.io/">home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+        <a href="http://ruichunjie.github.io/2019/spring-ioc20190331/" class="prev" rel="prev" title="Spring Ioc源码初了解"><i class="iconfont icon-left"></i>&nbsp;Spring Ioc源码初了解</a>
+         
+        
+    </div>
+
+    <div class="post-comment">
+          
+                 
+          
+    </div>
+</article>
+          </div>
+		   </main>
+      <footer class="footer">
+    <div class="copyright">
+        &copy;
+        
+        <span itemprop="copyrightYear">2019 - 2019</span>
+        
+        <span class="with-love">
+    	 <i class="iconfont icon-love"></i> 
+         </span>
+         
+            <span class="author" itemprop="copyrightHolder"><a href="http://ruichunjie.github.io/">ruichunjie</a> | </span> 
+         
+
+         
+		  <span>Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow">Hugo</a> & <a href="https://github.com/liuzc/leaveit" target="_blank" rel="external nofollow">LeaveIt</a></span> 
+    </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+    
+     <link href="//lib.baomitu.com/lightgallery/1.6.11/css/lightgallery.min.css" rel="stylesheet">  
+      
+     <script src="/js/vendor_gallery.min.js" async="" ></script>
+    
+  
+
+
+
+     </div>
+  </body>
+</html>
