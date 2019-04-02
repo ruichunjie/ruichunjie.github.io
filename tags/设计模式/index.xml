@@ -6,10 +6,21 @@
     <description>Recent content in 设计模式 on 空谷芝兰</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 22 Mar 2019 17:12:13 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 02 Apr 2019 22:08:03 +0800</lastBuildDate>
     
 	<atom:link href="https://ruichunjie.github.io/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Spring细节</title>
+      <link>https://ruichunjie.github.io/2019/springxijie20190402/</link>
+      <pubDate>Tue, 02 Apr 2019 22:08:03 +0800</pubDate>
+      
+      <guid>https://ruichunjie.github.io/2019/springxijie20190402/</guid>
+      <description>FactoryBean &amp;amp; BeanFactory &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;BeanFactory:Bean工厂，是一个工厂(Factory),Spring IOC容器的最顶层接口就是这个BeanFactory。作用是管理Bean，即实例化,定位,配置应用程序中的对象及建立这些对象间的依赖。 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;FactoryBean:工厂Bean,是一个Bean,作用是产生其他bean实例,通常情况下，这种Bean仅提供一个工厂方法,该方法用来返回其他Bean实例。 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;当用户使用容器本身时，可以使用转义字符”&amp;amp;”来得到 FactoryBean 本身，以区别通过 FactoryBean 产生的实例对象和 FactoryBean 对象本身。在 BeanFactory 中通过如下代码定义了该转义字符: String FACTORY_BEAN_PREFIX = &amp;ldquo;&amp;amp;&amp;ldquo;;
+//工厂Bean，用于产生其他对象 public interface FactoryBean&amp;lt;T&amp;gt; { //获取容器管理的对象实例 @Nullable T getObject() throws Exception; //获取Bean工厂创建的对象的类型 @Nullable Class&amp;lt;?&amp;gt; getObjectType(); //Bean工厂创建的对象是否是单态模式，如果是单态模式，则整个容器中只有一个实例 //对象，每次请求都返回同一个实例对象 default boolean isSingleton() { return true; } }  &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;FactoryBean 的实现类有非常多，比如:Proxy、RMI、JNDI、ServletContextFactoryBean 等等， FactoryBean 接口为 Spring 容器提供了一个很好的封装机制，具体的 getObject()有不同的实现类根 据不同的实现策略来具体提供
+autowiring &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;Spring IOC 容器提供了两种管理 Bean 依赖关系的方式: &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;1)、显式管理:通过 BeanDefinition 的属性值和构造方法实现 Bean 依赖关系管理。 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;2)、autowiring:Spring IOC 容器的依赖自动装配功能，不需要对 Bean 属性的依赖关系做显式的声明，只需要在配置好 autowiring 属性，IOC 容器会自动使用反射查找属性的类型和名称，然后基于属性的类型或者名称来自动匹配容器中管理的 Bean，从而自动地完成依赖注入。</description>
+    </item>
     
     <item>
       <title>设计模式总结</title>

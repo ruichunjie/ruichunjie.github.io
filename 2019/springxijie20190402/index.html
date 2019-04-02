@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noodp"/>
+  <meta name="author" content="ruichunjie">
+  
+  
+  
+  <link rel="prev" href="https://ruichunjie.github.io/2019/spring-aop20190402/" />
+  
+  <link rel="canonical" href="https://ruichunjie.github.io/2019/springxijie20190402/" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <title>
+       
+       
+           Spring细节 | 空谷芝兰
+       
+  </title>
+  <meta name="title" content="Spring细节 | 空谷芝兰">
+    
+  
+  <link rel="stylesheet" href="/font/iconfont.css">
+  <link rel="stylesheet" href="/css/main.min.css">
+
+
+  
+  
+ 
+
+<script type="application/ld+json">
+ "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "mainEntityOfPage": {
+         "@type": "WebPage",
+         "@id": "https://ruichunjie.github.io"
+    },
+    "articleSection" : "posts",
+    "name" : "Spring细节",
+    "headline" : "Spring细节",
+    "description" : "FactoryBean &amp; BeanFactory &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BeanFactory:Bean工厂，是一个工厂(Factory),Spring IOC容器的最顶层接口就是这个BeanFactory。作用是管理Bean，即实例化,定位,配置应用程序中的对象及建立这些对象间的依赖。 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FactoryBean:工厂Bean,是一个Bean,作用是产生其他bean实例,通常情况下，这种Bean仅提供一个工厂方法,该方法用来返回其他Bean实例。 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;当用户使用容器本身时，可以使用转义字符”&amp;”来得到 FactoryBean 本身，以区别通过 FactoryBean 产生的实例对象和 FactoryBean 对象本身。在 BeanFactory 中通过如下代码定义了该转义字符: String FACTORY_BEAN_PREFIX = &ldquo;&amp;&ldquo;;
+//工厂Bean，用于产生其他对象 public interface FactoryBean&lt;T&gt; { //获取容器管理的对象实例 @Nullable T getObject() throws Exception; //获取Bean工厂创建的对象的类型 @Nullable Class&lt;?&gt; getObjectType(); //Bean工厂创建的对象是否是单态模式，如果是单态模式，则整个容器中只有一个实例 //对象，每次请求都返回同一个实例对象 default boolean isSingleton() { return true; } }  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FactoryBean 的实现类有非常多，比如:Proxy、RMI、JNDI、ServletContextFactoryBean 等等， FactoryBean 接口为 Spring 容器提供了一个很好的封装机制，具体的 getObject()有不同的实现类根 据不同的实现策略来具体提供
+autowiring &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Spring IOC 容器提供了两种管理 Bean 依赖关系的方式: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1)、显式管理:通过 BeanDefinition 的属性值和构造方法实现 Bean 依赖关系管理。 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2)、autowiring:Spring IOC 容器的依赖自动装配功能，不需要对 Bean 属性的依赖关系做显式的声明，只需要在配置好 autowiring 属性，IOC 容器会自动使用反射查找属性的类型和名称，然后基于属性的类型或者名称来自动匹配容器中管理的 Bean，从而自动地完成依赖注入。",
+    "inLanguage" : "en-us",
+    "author" : "ruichunjie",
+    "creator" : "ruichunjie",
+    "publisher": "ruichunjie",
+    "accountablePerson" : "ruichunjie",
+    "copyrightHolder" : "ruichunjie",
+    "copyrightYear" : "2019",
+    "datePublished": "2019-04-02 22:08:03 &#43;0800 CST",
+    "dateModified" : "2019-04-02 22:08:03 &#43;0800 CST",
+    "url" : "https://ruichunjie.github.io/2019/springxijie20190402/",
+    "wordCount" : "656",
+    "keywords" : [ "设计模式", "空谷芝兰"]
+}
+</script>
+
+</head>
+
+  
+
+
+  <body class="">
+    <div class="wrapper">
+        <nav class="navbar">
+    <div class="container">
+        <div class="navbar-header header-logo">
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://ruichunjie.github.io">空谷芝兰</a>
+        </div>
+        <div class="menu navbar-right">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+     <div class="container">
+        <div class="navbar-header">
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://ruichunjie.github.io">空谷芝兰</a></div>
+            <div class="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+     
+          <div class="menu" id="mobile-menu">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+    	 <main class="main">
+          <div class="container">
+      		
+<article class="post-warp" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">Spring细节</h1>
+        <div class="post-meta">
+                Written by <a itemprop="name" href="https://ruichunjie.github.io" rel="author">ruichunjie</a> with ♥ 
+                <span class="post-time">
+                on <time datetime=2019-04-02 itemprop="datePublished">April 2, 2019</time>
+                </span>
+                in
+                <i class="iconfont icon-folder"></i>
+                <span class="post-category">
+                        <a href="https://ruichunjie.github.io/categories/%E7%BC%96%E7%A8%8B-%E6%8A%80%E6%9C%AF/"> 编程 · 技术 </a>
+                        
+                </span>
+        </div>
+    </header>
+    <div class="post-content">
+        
+
+        
+
+        
+        
+     
+          
+          
+          
+
+          
+          
+          
+
+          
+
+<h3 id="factorybean-beanfactory">FactoryBean &amp; BeanFactory</h3>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BeanFactory:Bean工厂，是一个工厂(Factory),Spring IOC容器的最顶层接口就是这个BeanFactory。作用是管理Bean，即实例化,定位,配置应用程序中的对象及建立这些对象间的依赖。<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FactoryBean:工厂Bean,是一个Bean,作用是产生其他bean实例,通常情况下，这种Bean仅提供一个工厂方法,该方法用来返回其他Bean实例。<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;当用户使用容器本身时，可以使用转义字符”&amp;”来得到 FactoryBean 本身，以区别通过 FactoryBean 产生的实例对象和 FactoryBean 对象本身。在 BeanFactory 中通过如下代码定义了该转义字符: String FACTORY_BEAN_PREFIX = &ldquo;&amp;&ldquo;;</p>
+
+<pre><code class="language-java">   //工厂Bean，用于产生其他对象
+   public interface FactoryBean&lt;T&gt; {
+   //获取容器管理的对象实例
+	@Nullable
+	T getObject() throws Exception;
+	//获取Bean工厂创建的对象的类型
+	@Nullable
+	Class&lt;?&gt; getObjectType();
+	//Bean工厂创建的对象是否是单态模式，如果是单态模式，则整个容器中只有一个实例
+	//对象，每次请求都返回同一个实例对象
+	default boolean isSingleton() {
+		return true;
+	}
+   }
+</code></pre>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FactoryBean 的实现类有非常多，比如:Proxy、RMI、JNDI、ServletContextFactoryBean 等等， FactoryBean 接口为 Spring 容器提供了一个很好的封装机制，具体的 getObject()有不同的实现类根 据不同的实现策略来具体提供</p>
+
+<h3 id="autowiring">autowiring</h3>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Spring IOC 容器提供了两种管理 Bean 依赖关系的方式:<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1)、显式管理:通过 BeanDefinition 的属性值和构造方法实现 Bean 依赖关系管理。<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2)、autowiring:Spring IOC 容器的依赖自动装配功能，不需要对 Bean 属性的依赖关系做显式的声明，只需要在配置好 autowiring 属性，IOC 容器会自动使用反射查找属性的类型和名称，然后基于属性的类型或者名称来自动匹配容器中管理的 Bean，从而自动地完成依赖注入。<br/></p>
+
+<pre><code class="language-java">   //将Bean属性设置到生成的实例对象上
+	protected void populateBean(String beanName, RootBeanDefinition mbd, @Nullable BeanWrapper bw) {
+		if (bw == null) {
+			if (mbd.hasPropertyValues()) {
+				throw new BeanCreationException(
+						mbd.getResourceDescription(), beanName, &quot;Cannot apply property values to null instance&quot;);
+			}
+			else {
+				// Skip property population phase for null instance.
+				return;
+			}
+		}
+
+		// Give any InstantiationAwareBeanPostProcessors the opportunity to modify the
+		// state of the bean before properties are set. This can be used, for example,
+		// to support styles of field injection.
+		boolean continueWithPropertyPopulation = true;
+
+		if (!mbd.isSynthetic() &amp;&amp; hasInstantiationAwareBeanPostProcessors()) {
+			for (BeanPostProcessor bp : getBeanPostProcessors()) {
+				if (bp instanceof InstantiationAwareBeanPostProcessor) {
+					InstantiationAwareBeanPostProcessor ibp = (InstantiationAwareBeanPostProcessor) bp;
+					if (!ibp.postProcessAfterInstantiation(bw.getWrappedInstance(), beanName)) {
+						continueWithPropertyPopulation = false;
+						break;
+					}
+				}
+			}
+		}
+
+		if (!continueWithPropertyPopulation) {
+			return;
+		}
+		//获取容器在解析Bean定义资源时为BeanDefiniton中设置的属性值
+		PropertyValues pvs = (mbd.hasPropertyValues() ? mbd.getPropertyValues() : null);
+
+		//对依赖注入处理，首先处理autowiring自动装配的依赖注入
+		if (mbd.getResolvedAutowireMode() == RootBeanDefinition.AUTOWIRE_BY_NAME ||
+				mbd.getResolvedAutowireMode() == RootBeanDefinition.AUTOWIRE_BY_TYPE) {
+			MutablePropertyValues newPvs = new MutablePropertyValues(pvs);
+
+			// Add property values based on autowire by name if applicable.
+			//根据Bean名称进行autowiring自动装配处理
+			if (mbd.getResolvedAutowireMode() == RootBeanDefinition.AUTOWIRE_BY_NAME) {
+				autowireByName(beanName, mbd, bw, newPvs);
+			}
+
+			// Add property values based on autowire by type if applicable.
+			//根据Bean类型进行autowiring自动装配处理
+			if (mbd.getResolvedAutowireMode() == RootBeanDefinition.AUTOWIRE_BY_TYPE) {
+				autowireByType(beanName, mbd, bw, newPvs);
+			}
+
+			pvs = newPvs;
+		}
+
+		//对非autowiring的属性进行依赖注入处理
+
+		boolean hasInstAwareBpps = hasInstantiationAwareBeanPostProcessors();
+		boolean needsDepCheck = (mbd.getDependencyCheck() != RootBeanDefinition.DEPENDENCY_CHECK_NONE);
+
+		if (hasInstAwareBpps || needsDepCheck) {
+			if (pvs == null) {
+				pvs = mbd.getPropertyValues();
+			}
+			PropertyDescriptor[] filteredPds = filterPropertyDescriptorsForDependencyCheck(bw, mbd.allowCaching);
+			if (hasInstAwareBpps) {
+				for (BeanPostProcessor bp : getBeanPostProcessors()) {
+					if (bp instanceof InstantiationAwareBeanPostProcessor) {
+						InstantiationAwareBeanPostProcessor ibp = (InstantiationAwareBeanPostProcessor) bp;
+						pvs = ibp.postProcessPropertyValues(pvs, filteredPds, bw.getWrappedInstance(), beanName);
+						if (pvs == null) {
+							return;
+						}
+					}
+				}
+			}
+			if (needsDepCheck) {
+				checkDependencies(beanName, mbd, filteredPds, pvs);
+			}
+		}
+
+		if (pvs != null) {
+			//对属性进行注入
+			applyPropertyValues(beanName, mbd, bw, pvs);
+		}
+	}
+	
+	//根据类型对属性进行自动依赖注入
+	protected void autowireByType(
+			String beanName, AbstractBeanDefinition mbd, BeanWrapper bw, MutablePropertyValues pvs) {
+
+		//获取用户定义的类型转换器
+		TypeConverter converter = getCustomTypeConverter();
+		if (converter == null) {
+			converter = bw;
+		}
+
+		//存放解析的要注入的属性
+		Set&lt;String&gt; autowiredBeanNames = new LinkedHashSet&lt;&gt;(4);
+		//对Bean对象中非简单属性(不是简单继承的对象，如8中原始类型，字符
+		//URL等都是简单属性)进行处理
+		String[] propertyNames = unsatisfiedNonSimpleProperties(mbd, bw);
+		for (String propertyName : propertyNames) {
+			try {
+				//获取指定属性名称的属性描述器
+				PropertyDescriptor pd = bw.getPropertyDescriptor(propertyName);
+				// Don't try autowiring by type for type Object: never makes sense,
+				// even if it technically is a unsatisfied, non-simple property.
+				//不对Object类型的属性进行autowiring自动依赖注入
+				if (Object.class != pd.getPropertyType()) {
+					//获取属性的setter方法
+					MethodParameter methodParam = BeanUtils.getWriteMethodParameter(pd);
+					// Do not allow eager init for type matching in case of a prioritized post-processor.
+					//检查指定类型是否可以被转换为目标对象的类型
+					boolean eager = !PriorityOrdered.class.isInstance(bw.getWrappedInstance());
+					//创建一个要被注入的依赖描述
+					DependencyDescriptor desc = new AutowireByTypeDependencyDescriptor(methodParam, eager);
+					//根据容器的Bean定义解析依赖关系，返回所有要被注入的Bean对象
+					Object autowiredArgument = resolveDependency(desc, beanName, autowiredBeanNames, converter);
+					if (autowiredArgument != null) {
+						//为属性赋值所引用的对象
+						pvs.add(propertyName, autowiredArgument);
+					}
+					for (String autowiredBeanName : autowiredBeanNames) {
+						//指定名称属性注册依赖Bean名称，进行属性依赖注入
+						registerDependentBean(autowiredBeanName, beanName);
+						if (logger.isDebugEnabled()) {
+							logger.debug(&quot;Autowiring by type from bean name '&quot; + beanName + &quot;' via property '&quot; +
+									propertyName + &quot;' to bean named '&quot; + autowiredBeanName + &quot;'&quot;);
+						}
+					}
+					//释放已自动注入的属性
+					autowiredBeanNames.clear();
+				}
+			}
+			catch (BeansException ex) {
+				throw new UnsatisfiedDependencyException(mbd.getResourceDescription(), beanName, propertyName, ex);
+			}
+		}
+	}
+	
+	//为指定的Bean注入依赖的Bean
+	public void registerDependentBean(String beanName, String dependentBeanName) {
+		// A quick check for an existing entry upfront, avoiding synchronization...
+		//处理Bean名称，将别名转换为规范的Bean名称
+		String canonicalName = canonicalName(beanName);
+		Set&lt;String&gt; dependentBeans = this.dependentBeanMap.get(canonicalName);
+		if (dependentBeans != null &amp;&amp; dependentBeans.contains(dependentBeanName)) {
+			return;
+		}
+
+		// No entry yet -&gt; fully synchronized manipulation of the dependentBeans Set
+		//多线程同步，保证容器内数据的一致性
+		//先从容器中：bean名称--&gt;全部依赖Bean名称集合找查找给定名称Bean的依赖Bean
+		synchronized (this.dependentBeanMap) {
+			//获取给定名称Bean的所有依赖Bean名称
+			dependentBeans = this.dependentBeanMap.get(canonicalName);
+			if (dependentBeans == null) {
+				//为Bean设置依赖Bean信息
+				dependentBeans = new LinkedHashSet&lt;&gt;(8);
+				this.dependentBeanMap.put(canonicalName, dependentBeans);
+			}
+			//向容器中：bean名称--&gt;全部依赖Bean名称集合添加Bean的依赖信息
+			//即，将Bean所依赖的Bean添加到容器的集合中
+			dependentBeans.add(dependentBeanName);
+		}
+		//从容器中：bean名称--&gt;指定名称Bean的依赖Bean集合找查找给定名称Bean的依赖Bean
+		synchronized (this.dependenciesForBeanMap) {
+			Set&lt;String&gt; dependenciesForBean = this.dependenciesForBeanMap.get(dependentBeanName);
+			if (dependenciesForBean == null) {
+				dependenciesForBean = new LinkedHashSet&lt;&gt;(8);
+				this.dependenciesForBeanMap.put(dependentBeanName, dependenciesForBean);
+			}
+			//向容器中：bean名称--&gt;指定Bean的依赖Bean名称集合添加Bean的依赖信息
+			//即，将Bean所依赖的Bean添加到容器的集合中
+			dependenciesForBean.add(canonicalName);
+		}
+	}
+</code></pre>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;autowiring 的实现过程:<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a)对 Bean 的属性代调用 getBean()方法，完成依赖 Bean 的初始化和依赖注入。<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;b)将依赖 Bean 的属性引用设置到被依赖的 Bean 属性上。<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;c)将依赖 Bean 的名称和被依赖 Bean 的名称存储在 IOC 容器的集合中。<br/></p>
+
+    </div>
+
+    <div class="post-copyright">
+             
+            <p class="copyright-item">
+                <span>Author:</span>
+                <span>ruichunjie </span>
+                </p>
+            
+           
+             
+            <p class="copyright-item">
+                    <span>Link:</span>
+                    <a href=https://ruichunjie.github.io/2019/springxijie20190402/>https://ruichunjie.github.io/2019/springxijie20190402/</span>
+            </p>
+            
+             
+            <p class="copyright-item lincese">
+                本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可
+            </p>
+            
+    </div>
+
+  
+    <div class="post-tags">
+        
+            <section>
+            <i class="iconfont icon-tag"></i>Tag(s): 
+            
+            <span class="tag"><a href="https://ruichunjie.github.io/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">
+                    #设计模式</a></span>
+            
+            </section>
+        
+        <section>
+                <a href="javascript:window.history.back();">back</a></span> · 
+                <span><a href="https://ruichunjie.github.io">home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+        <a href="https://ruichunjie.github.io/2019/spring-aop20190402/" class="prev" rel="prev" title="Spring AOP源码初了解"><i class="iconfont icon-left"></i>&nbsp;Spring AOP源码初了解</a>
+         
+        
+    </div>
+
+    <div class="post-comment">
+          
+                 
+          
+    </div>
+</article>
+          </div>
+		   </main>
+      <footer class="footer">
+    <div class="copyright">
+        &copy;
+        
+        <span itemprop="copyrightYear">2019 - 2019</span>
+        
+        <span class="with-love">
+    	 <i class="iconfont icon-love"></i> 
+         </span>
+         
+            <span class="author" itemprop="copyrightHolder"><a href="https://ruichunjie.github.io">ruichunjie</a> | </span> 
+         
+
+         
+		  <span>Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow">Hugo</a> & <a href="https://github.com/liuzc/leaveit" target="_blank" rel="external nofollow">LeaveIt</a></span> 
+    </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+    <script src="/js/vendor_no_gallery.min.js" async=""></script>
+    
+  
+
+
+
+     </div>
+  </body>
+</html>
