@@ -2,21 +2,30 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>编程 · 技术 on 空谷芝兰</title>
-    <link>https:ruichunjie.github.io/categories/%E7%BC%96%E7%A8%8B-%E6%8A%80%E6%9C%AF/</link>
+    <link>http://ruichunjie.giththub.io/categories/%E7%BC%96%E7%A8%8B-%E6%8A%80%E6%9C%AF/</link>
     <description>Recent content in 编程 · 技术 on 空谷芝兰</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 02 Apr 2019 22:08:03 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 08 Apr 2019 16:06:42 +0800</lastBuildDate>
     
-	<atom:link href="https:ruichunjie.github.io/categories/%E7%BC%96%E7%A8%8B-%E6%8A%80%E6%9C%AF/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://ruichunjie.giththub.io/categories/%E7%BC%96%E7%A8%8B-%E6%8A%80%E6%9C%AF/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
+      <title>Spring MVC初体验</title>
+      <link>http://ruichunjie.giththub.io/2019/springmvc20190408/</link>
+      <pubDate>Mon, 08 Apr 2019 16:06:42 +0800</pubDate>
+      
+      <guid>http://ruichunjie.giththub.io/2019/springmvc20190408/</guid>
+      <description>Spring MVC 处理流程 1. DispatcherServlet是SpringMVC中的前端控制器(Front Controller),负责接收Request并将Request转发给对应的处理组件 2.HandlerMapping 是SpringMVC中完成url到Controller映射的组件，DispatcherServlet接收Request,然后从HandlerMapping查找处理Request的Controller 3. Controller处理Request,并返回ModelAndView,Controller是SpringMVC中处理Request的组件，ModelAndView是封装结果视图的组件 4. 视图解析器解析ModelAndView对象并返回对应的视图给客户端 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;容器初始化时会建立所有 url 和 Controller 中的 Method 的对应关系，保存到 HandlerMapping 中，用户请求是根据 Request 请求的 url 快速定位到 Controller 中的某个方法。在 Spring 中先将 url 和 Controller 的对应关 系,保存到 Map中。Web 容器启动时会通知 Spring 初始化容器(加载 Bean 的定义信息和初始化所有单例 Bean),然后 SpringMVC 会遍历容器中的 Bean，获 取每一个 Controller 中的所有方法访问的 url，然后将 url 和 Controller 保存到一个 Map 中;这样就可以根据 Request 快速定位到 Controller，因为最终处理 Request 的是 Controller 中的方法，Map 中只保留了 url 和 Controller 中的对应关系，所以要根据 Request 的 url 进一步确认 Controller 中的 Method，这一步工作的原理就是拼接 Controller 的 url(Controller 上@RequestMapping 的值)和方法的 url(Method 上 @RequestMapping 的值)，与 request 的 url 进行匹配，找到匹配的那个方法;确定处 理请求的 Method 后，接下来的任务就是参数绑定，把 Request 中参数绑定到方法的形 式参数上，这一步是整个请求处理过程中最复杂的一个步骤。</description>
+    </item>
+    
+    <item>
       <title>Spring细节</title>
-      <link>https:ruichunjie.github.io/2019/springxijie20190402/</link>
+      <link>http://ruichunjie.giththub.io/2019/springxijie20190402/</link>
       <pubDate>Tue, 02 Apr 2019 22:08:03 +0800</pubDate>
       
-      <guid>https:ruichunjie.github.io/2019/springxijie20190402/</guid>
+      <guid>http://ruichunjie.giththub.io/2019/springxijie20190402/</guid>
       <description>FactoryBean &amp;amp; BeanFactory &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;BeanFactory:Bean工厂，是一个工厂(Factory),Spring IOC容器的最顶层接口就是这个BeanFactory。作用是管理Bean，即实例化,定位,配置应用程序中的对象及建立这些对象间的依赖。 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;FactoryBean:工厂Bean,是一个Bean,作用是产生其他bean实例,通常情况下，这种Bean仅提供一个工厂方法,该方法用来返回其他Bean实例。 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;当用户使用容器本身时，可以使用转义字符”&amp;amp;”来得到 FactoryBean 本身，以区别通过 FactoryBean 产生的实例对象和 FactoryBean 对象本身。在 BeanFactory 中通过如下代码定义了该转义字符: String FACTORY_BEAN_PREFIX = &amp;ldquo;&amp;amp;&amp;ldquo;;
 //工厂Bean，用于产生其他对象 public interface FactoryBean&amp;lt;T&amp;gt; { //获取容器管理的对象实例 @Nullable T getObject() throws Exception; //获取Bean工厂创建的对象的类型 @Nullable Class&amp;lt;?&amp;gt; getObjectType(); //Bean工厂创建的对象是否是单态模式，如果是单态模式，则整个容器中只有一个实例 //对象，每次请求都返回同一个实例对象 default boolean isSingleton() { return true; } }  &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;FactoryBean 的实现类有非常多，比如:Proxy、RMI、JNDI、ServletContextFactoryBean 等等， FactoryBean 接口为 Spring 容器提供了一个很好的封装机制，具体的 getObject()有不同的实现类根 据不同的实现策略来具体提供
 autowiring &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;Spring IOC 容器提供了两种管理 Bean 依赖关系的方式: &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;1)、显式管理:通过 BeanDefinition 的属性值和构造方法实现 Bean 依赖关系管理。 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;2)、autowiring:Spring IOC 容器的依赖自动装配功能，不需要对 Bean 属性的依赖关系做显式的声明，只需要在配置好 autowiring 属性，IOC 容器会自动使用反射查找属性的类型和名称，然后基于属性的类型或者名称来自动匹配容器中管理的 Bean，从而自动地完成依赖注入。</description>
@@ -24,10 +33,10 @@ autowiring &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;Spring IO
     
     <item>
       <title>Spring AOP源码初了解</title>
-      <link>https:ruichunjie.github.io/2019/spring-aop20190402/</link>
+      <link>http://ruichunjie.giththub.io/2019/spring-aop20190402/</link>
       <pubDate>Tue, 02 Apr 2019 13:59:07 +0800</pubDate>
       
-      <guid>https:ruichunjie.github.io/2019/spring-aop20190402/</guid>
+      <guid>http://ruichunjie.giththub.io/2019/spring-aop20190402/</guid>
       <description>1.Spring AOP中的概念 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;1.切面(Aspect):官方定义为&amp;rdquo;一个关注点的模块化，这个关注点可能横切多个对象&amp;rdquo;。切面在ApplicationContext中aop:aspect来配置。 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;连接点(Joinpoint):程序执行过程中的某一行为。 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;2.通知(Advice):切面对于某个连接点所产生的动作，其中，一个“切面”可以包含多个“Advice”。 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;3.切入点(Pointcut):匹配连接点的断言，在AOP中通知和一个切入点表达式关联。切面中的所有通知所关注的连接点表达式来决定。 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;4.目标对象(Target Object): 被一个或多个切面所通知的对象。 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;5.AOP代理(AOP Proxy):Spring AOP 有两种代理方式，jdk动态代理和CGLib代理。默认情况下,实现了接口采用JDK动态代理，反之，采用CGLib代理。 强制使用CGLib代理需要将aop:config的proxy-target-class属性设为true &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;6.前置通知(Before Advice):在某连接点(JoinPoint)之前执行的通知，但这个通知不能阻止连接点前的执行。ApplicationContext在aop:aspect里面使用aop:before元素进行声明。 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;7.后置通知(After Advice):当某连接点退出的时候执行的通知(不论是正常返回还是异常退出)。ApplicationContext在aop:aspect里面用aop:after元素进行声明。 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;8.返回后通知(After Return Advice):在某连接点正常完成后执行的通知，不包括抛出异常的情况。(非void) ApplicationContext在aop:aspect里面使用进行声明。 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;9.环绕通知(Around Advice):包围一个连接点的通知。类似Web中Servlet规范中的Filter的doFilter方法。可以在方法的调用前后完成自定义的行为，也可以选择不执行。ApplicationContext中在aop:aspect里使用aop:around元素进行声明。 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;10.异常通知(After Throwing Advice):在方法抛出异常退出时执行的通知。ApplicationContext中在aop:aspect里面使用aop:after-throwing元素进行声明。 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;可以将多个通知应用到一个目标对象上，即可以将多个切面织入同一目标对象。
 2.实现方式 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;使用AOP基于两种方式，一种是比较方便和强大的注解方法，另一种是xml配置
 注解 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;1.xml中声明激活自动扫描组件功能，同时激活自动代理功能。
@@ -37,10 +46,10 @@ autowiring &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;Spring IO
     
     <item>
       <title>Spring DI源码初了解</title>
-      <link>https:ruichunjie.github.io/2019/spring-di20190402/</link>
+      <link>http://ruichunjie.giththub.io/2019/spring-di20190402/</link>
       <pubDate>Tue, 02 Apr 2019 09:37:55 +0800</pubDate>
       
-      <guid>https:ruichunjie.github.io/2019/spring-di20190402/</guid>
+      <guid>http://ruichunjie.giththub.io/2019/spring-di20190402/</guid>
       <description>1.依赖注入发生的时间 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;当Spring IOC容器完成了Bean定义资源的定位,载入和解析注册后，IOC容器中已经管理类bean定义的相关数据，但是此时IOC容器还没有对所管理的Bean进行依赖注入，依赖注入在一下两种情况发生:1)用户第一次调用getBean()方法时，IOC容器触发依赖注入。2)当用户在配置文件中将元素配置了lazy-init =false属性，即让容器在解析注册Bean定义时进行预实例化，触发依赖注入。
 2. 源码 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;1.AbstractBeanFactory#getBean()入口
 //获取IOC容器中指定名称的Bean @Override public Object getBean(String name) throws BeansException { //doGetBean才是真正向IoC容器获取被管理Bean的过程 return doGetBean(name, null, null, false); } //真正实现向IOC容器获取Bean的功能，也是触发依赖注入功能的地方 protected &amp;lt;T&amp;gt; T doGetBean(final String name, @Nullable final Class&amp;lt;T&amp;gt; requiredType, @Nullable final Object[] args, boolean typeCheckOnly) throws BeansException { //根据指定的名称获取被管理Bean的名称，剥离指定名称中对容器的相关依赖 //如果指定的是别名，将别名转换为规范的Bean名称 final String beanName = transformedBeanName(name); Object bean; // Eagerly check singleton cache for manually registered singletons. //先从缓存中取是否已经有被创建过的单态类型的Bean //对于单例模式的Bean整个IOC容器中只创建一次，不需要重复创建 Object sharedInstance = getSingleton(beanName); //IOC容器创建单例模式Bean实例对象 if (sharedInstance !</description>
@@ -48,10 +57,10 @@ autowiring &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;Spring IO
     
     <item>
       <title>Spring IOC源码初了解</title>
-      <link>https:ruichunjie.github.io/2019/spring-ioc20190331/</link>
+      <link>http://ruichunjie.giththub.io/2019/spring-ioc20190331/</link>
       <pubDate>Sun, 31 Mar 2019 14:12:15 +0800</pubDate>
       
-      <guid>https:ruichunjie.github.io/2019/spring-ioc20190331/</guid>
+      <guid>http://ruichunjie.giththub.io/2019/spring-ioc20190331/</guid>
       <description>1.IOC 与DI &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;IOC(Inversion of Control)控制反转:原来代码里要实现的对象创建,依赖的代码，反转给容器实现.
 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;DI(Dependency Injection)依赖注入:对象被动接受依赖类而不是自己主动去找。也就是说对象不是从容器中查找它依赖的类，而是在容器实例化对象的时候主动将它依赖的对象注入给它。
 2. Spring 核心容器类图 1&amp;gt; BeanFactory &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;BeanFactory定义了 IOC 容器的基本功能规范，BeanFactory 有三 个重要的子类:ListableBeanFactory、HierarchicalBeanFactory 和 AutowireCapableBeanFactory , ListableBeanFactory 接口表示这些 Bean 是可列表化的，而 HierarchicalBeanFactory 表示的是 这些 Bean 是有继承关系的，也就是每个 Bean 有可能有父 Bean。AutowireCapableBeanFactory 接 口定义 Bean 的自动装配规则。这三个接口共同定义了 Bean的集合、Bean之间的关系、以及 Bean行为。
@@ -60,48 +69,48 @@ autowiring &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;Spring IO
     
     <item>
       <title>java集合</title>
-      <link>https:ruichunjie.github.io/2019/collection20190328/</link>
+      <link>http://ruichunjie.giththub.io/2019/collection20190328/</link>
       <pubDate>Thu, 28 Mar 2019 14:39:27 +0800</pubDate>
       
-      <guid>https:ruichunjie.github.io/2019/collection20190328/</guid>
+      <guid>http://ruichunjie.giththub.io/2019/collection20190328/</guid>
       <description>概述 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;java中集合框架主要两类型，一种是集合(Collection),另一个是图(Map)。Collection是存储一组对象的集合容器，而Map是一种key-value数据结构的集合。
 Collection:</description>
     </item>
     
     <item>
       <title>Mini版Spring v1.0 </title>
-      <link>https:ruichunjie.github.io/2019/myspring20190327/</link>
+      <link>http://ruichunjie.giththub.io/2019/myspring20190327/</link>
       <pubDate>Wed, 27 Mar 2019 18:57:33 +0800</pubDate>
       
-      <guid>https:ruichunjie.github.io/2019/myspring20190327/</guid>
+      <guid>http://ruichunjie.giththub.io/2019/myspring20190327/</guid>
       <description>实现思路 1.配置application.properties文件 scanPackage=com.gupao.demo  2.配置web.xml文件 &amp;lt;?xml version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;UTF-8&amp;quot;?&amp;gt; &amp;lt;web-app xmlns:xsi=&amp;quot;http://www.w3.org/2001/XMLSchema-instance&amp;quot; xmlns=&amp;quot;http://java.sun.com/xml/ns/j2ee&amp;quot; xmlns:javaee=&amp;quot;http://java.sun.com/xml/ns/javaee&amp;quot; xmlns:web=&amp;quot;http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd&amp;quot; xsi:schemaLocation=&amp;quot;http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd&amp;quot; version=&amp;quot;2.4&amp;quot;&amp;gt; &amp;lt;display-name&amp;gt;Web Application&amp;lt;/display-name&amp;gt; &amp;lt;servlet&amp;gt; &amp;lt;servlet-name&amp;gt;mymvc&amp;lt;/servlet-name&amp;gt; &amp;lt;servlet-class&amp;gt;com.gupao.mvcframework.servlet.MyDispatcherServlet&amp;lt;/servlet-class&amp;gt; &amp;lt;init-param&amp;gt; &amp;lt;param-name&amp;gt;contextConfigLocation&amp;lt;/param-name&amp;gt; &amp;lt;param-value&amp;gt;application.properties&amp;lt;/param-value&amp;gt; &amp;lt;/init-param&amp;gt; &amp;lt;load-on-startup&amp;gt;1&amp;lt;/load-on-startup&amp;gt; &amp;lt;/servlet&amp;gt; &amp;lt;servlet-mapping&amp;gt; &amp;lt;servlet-name&amp;gt;mymvc&amp;lt;/servlet-name&amp;gt; &amp;lt;url-pattern&amp;gt;/*&amp;lt;/url-pattern&amp;gt; &amp;lt;/servlet-mapping&amp;gt; &amp;lt;/web-app&amp;gt;  &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;MyDispatcherServlet是仿照DispatcherServlet写的仿照类
 3.自定义Annotation /** * @Author:ChunJieRen * @Date:2019/3/25 10:35 * @Description: 仿照@Autowired */ @Target({ElementType.FIELD}) @Retention(RetentionPolicy.RUNTIME) @Documented public @interface MyAutowired { String value() default &amp;quot;&amp;quot;; } /** * @Author:ChunJieRen * @Date:2019/3/25 09:55 * @Description: 仿照@Controller */ @Target({ElementType.TYPE}) @Retention(RetentionPolicy.RUNTIME) @Documented public @interface MyController { String value() default &amp;quot;&amp;quot;; } /** * @Author:ChunJieRen * @Date:2019/3/25 10:05 * @Description: 仿照@RequestMapping */ @Target({ElementType.</description>
     </item>
     
     <item>
       <title>初识Spring</title>
-      <link>https:ruichunjie.github.io/2019/springbegin20190323/</link>
+      <link>http://ruichunjie.giththub.io/2019/springbegin20190323/</link>
       <pubDate>Sat, 23 Mar 2019 18:42:35 +0800</pubDate>
       
-      <guid>https:ruichunjie.github.io/2019/springbegin20190323/</guid>
+      <guid>http://ruichunjie.giththub.io/2019/springbegin20190323/</guid>
       <description>1.Spring中的设计模式   设计模式 一句话归纳 举例   工厂模式(Factory) 只对结果负责，封装创建过程 BeanFactory,Calender   单例模式(Singleton) 保证独一无二 ApplicationContext, Calender   原型模式(Prototype) 拔一根猴毛,吹出千万个 ArrayList, PrototypeBean   代理模式(Proxy) 找人办事，增强职责 ProxyFactory, JdkDynamicAopProxy, CglibAopProxy   委派模式(Delegate) 干活算你的(普通员工),功劳算我的(项目经理) DispatcherServlet,BeanDefinitionParserDelegate   策略模式(Strategy) 用户选择,结果统一 InstantiationStrategy   模板模式(Template) 流程标准化，自己实现定制 JdbcTemplate,HttpServlet   适配器模式(Adapter) 兼容转化头 AdvisorAdapter, HandlerAdapter   装饰器模式(Decorator) 包装,同宗同源 BufferedReader,InputStream,OutputStream,HttpHeadResponseDecorator   观察者模式(Observer) 任务完成时通知 ContextLoaderListener   2.Spring编程思想总结   Spring思想 应用场景(特点) 一句话归纳   OOP Object Oriented Programming(面向对象编程)用程序归纳总结生活中的一切事物 封装, 继承, 多态   BOP Bean Oriented Programming(面向Bean编程)面向Bean(普通的java类)设计程序，解放程序员 一切从Bean开始   AOP Aspect Oriented Programming(面向切面编程)找出多个类中有一定规律的代码，开发时拆开，运行时合并。面向切面编程，即面向规则编程 解耦，专人做专事   IOC Inversion of Control(控制反转)将new对象的动作交给Spring管理，并由Spring保存已创建的对象(IOC容器) 转交控制权(即控制权反转)   DI/DL Dependency Injection(依赖注入)或者Dependency Lookup(依赖查找)依赖注入/依赖查找， Spring不仅保存自己创建的对象，而且保存对象与对象之间的关系, 注入即赋值，主要三种赋值方法,构造方法,set方法,直接赋值 赋值   &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;Spring 则立志于全方面的简化 Java 开发。 对此，主要采取了 4 个关键策略:</description>
     </item>
     
     <item>
       <title>设计模式总结</title>
-      <link>https:ruichunjie.github.io/2019/alldesign20190322/</link>
+      <link>http://ruichunjie.giththub.io/2019/alldesign20190322/</link>
       <pubDate>Fri, 22 Mar 2019 17:12:13 +0800</pubDate>
       
-      <guid>https:ruichunjie.github.io/2019/alldesign20190322/</guid>
+      <guid>http://ruichunjie.giththub.io/2019/alldesign20190322/</guid>
       <description>GOF 23种设计模式   分类 设计模式   创建型 工厂方法模式(Factory Method), 抽象工厂模式(Abstract Factory), 建造者模式(Builder), 原型模式(Prototype), 单例模式(Singleton)   结构型 适配器模式(Adapter), 桥接模式(Bridge),组合模式(Composite),装饰者模式(Decorator),门面模式(Facede), 享元模式(Flyweight), 代理模式(Proxy)   行为型 解释器模式(Interpreter), 模版方法模式(Template Method), 责任链模式(Chain of Responsibility), 命令模式(Command), 迭代器模式(Iterator), 调解者模式(Mediator), 备忘录模式(Memento), 观察者模式(Observer), 状态模式(State), 策略模式(Strategy), 访问者模式(Visitor)</description>
     </item>
     
     <item>
       <title>装饰者模式和观察者模式</title>
-      <link>https:ruichunjie.github.io/2019/decorationandobserve20190321/</link>
+      <link>http://ruichunjie.giththub.io/2019/decorationandobserve20190321/</link>
       <pubDate>Thu, 21 Mar 2019 09:09:43 +0800</pubDate>
       
-      <guid>https:ruichunjie.github.io/2019/decorationandobserve20190321/</guid>
+      <guid>http://ruichunjie.giththub.io/2019/decorationandobserve20190321/</guid>
       <description>1.装饰者模式
 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;装饰者模式(Decorator Pattern)是指在不改变原有对象的基础之上，将功能附加到对象上，提供了比继承更有弹性的替代方案(扩展原有对象的功能)，属于结构型模式。装饰者在代码程序中适用于以下场景:
 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;1、用于扩展一个类的功能或给一个类添加附加职责。
@@ -111,10 +120,10 @@ public abstract class Battercake(){ protected abstract String getMsg(); protecte
     
     <item>
       <title>模板模式和适配器模式</title>
-      <link>https:ruichunjie.github.io/2019/templateandadapter20190320/</link>
+      <link>http://ruichunjie.giththub.io/2019/templateandadapter20190320/</link>
       <pubDate>Wed, 20 Mar 2019 12:39:09 +0800</pubDate>
       
-      <guid>https:ruichunjie.github.io/2019/templateandadapter20190320/</guid>
+      <guid>http://ruichunjie.giththub.io/2019/templateandadapter20190320/</guid>
       <description>1.模板模式
 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;模板模式通常又叫模板方法模式(Template Method Pattern)是指定义一个算法的骨 架，并允许子类为一个或者多个步骤提供实现。模板方法使得子类可以在不改变算法结 构的情况下，重新定义算法的某些步骤，属于行为性设计模式。模板方法适用于以下应 用场景:
 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;1)一次性实现一个算法的不变的部分，并将可变的行为留给子类来实现。
@@ -124,10 +133,10 @@ public interface RowMapper&amp;lt;T&amp;gt;{ T mapRow(ResultSet rs, int rowNum) 
     
     <item>
       <title>委派模式和策略模式</title>
-      <link>https:ruichunjie.github.io/2019/delegateandstrategy20190320/</link>
+      <link>http://ruichunjie.giththub.io/2019/delegateandstrategy20190320/</link>
       <pubDate>Wed, 20 Mar 2019 05:10:19 +0800</pubDate>
       
-      <guid>https:ruichunjie.github.io/2019/delegateandstrategy20190320/</guid>
+      <guid>http://ruichunjie.giththub.io/2019/delegateandstrategy20190320/</guid>
       <description>1.委派模式
 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;委派模式(Delegate Pattern)的基本作用就是负责任务的调度和分配任务，跟代理模式很像，可以看做是一种特殊情况下的静态代理的全权代理，但是代理模式注重过程，而委派模式注重结果。不属于GOF23种设计模式之一，行为型模式，Delegate，Dispatch 结尾的一般都是代理模式。如BeanDefinitionParserDelegate
 /** * 模拟SpringMVC 的 DispatcherServlet */ public class SystemController{ public void logout(){} } public class DispatcherServlet extends HttpServlet{ private void doDispatch(HttpServletRequest request, HttpServletResponse response ) throws Exception{ String uri = request.getRequestURI(); String mid = request.getParameter(&amp;quot;mid&amp;quot;); if(&amp;quot;logout&amp;quot;.equals(mid)){ new SystemController().logout(); }else{ response.getWriter().write(&amp;quot;404&amp;quot;); } } protected void service(HttpServletRequest request,HttpServletResponse response)throw ServletException,IOException{ try{ doDispatch(req,resp); }catch(Exception e){ e.printStackTrace(); } } }  &amp;lt;?xml version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;UTF-8&amp;quot;?&amp;gt; &amp;lt;web-app xmlns:xsi=&amp;quot;http://www.w3.org/2001/XMLSchema-instance&amp;quot; xmlns=&amp;quot;http://java.sun.com/xml/ns/j2ee&amp;quot; xmlns:javaee=&amp;quot;http://java.sun.com/xml/ns/javaee&amp;quot; xmlns:web=&amp;quot;http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd&amp;quot; xsi:schemaLocation=&amp;quot;http://java.sun.com/xml/ns/j2ee http://java.</description>
@@ -135,10 +144,10 @@ public interface RowMapper&amp;lt;T&amp;gt;{ T mapRow(ResultSet rs, int rowNum) 
     
     <item>
       <title>代理模式</title>
-      <link>https:ruichunjie.github.io/2019/proxy20190319/</link>
+      <link>http://ruichunjie.giththub.io/2019/proxy20190319/</link>
       <pubDate>Tue, 19 Mar 2019 12:55:52 +0800</pubDate>
       
-      <guid>https:ruichunjie.github.io/2019/proxy20190319/</guid>
+      <guid>http://ruichunjie.giththub.io/2019/proxy20190319/</guid>
       <description>1.代理模式
 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;代理模式(Proxy Pattern)是指为其他对象提供一种代理，以控制对这个对象的访问。代理对象在客服端和目标对象之间起到中介作用，代理模式属于结构型设计模式。使用 代理模式主要有两个目的:一保护目标对象，二增强目标对象。有静态代理和动态代理。
 2.静态代理
@@ -156,10 +165,10 @@ public class JDKproxy implements InvocationHandler{ privte Person target; public
     
     <item>
       <title>原型模式</title>
-      <link>https:ruichunjie.github.io/2019/prototype20190319/</link>
+      <link>http://ruichunjie.giththub.io/2019/prototype20190319/</link>
       <pubDate>Tue, 19 Mar 2019 12:33:42 +0800</pubDate>
       
-      <guid>https:ruichunjie.github.io/2019/prototype20190319/</guid>
+      <guid>http://ruichunjie.giththub.io/2019/prototype20190319/</guid>
       <description>1.原型模式
 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;原型模式(Prototype Pattern)是指原型实例指定创建对象的种类，并且通过拷贝这些原型创建新的对象。
 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;原型模式主要适用于以下场景:
@@ -178,10 +187,10 @@ public Object clone() { try { ArrayList&amp;lt;?&amp;gt; v = (ArrayList&amp;lt;?
     
     <item>
       <title>单例模式</title>
-      <link>https:ruichunjie.github.io/2019/singleton20190318/</link>
+      <link>http://ruichunjie.giththub.io/2019/singleton20190318/</link>
       <pubDate>Mon, 18 Mar 2019 22:32:49 +0800</pubDate>
       
-      <guid>https:ruichunjie.github.io/2019/singleton20190318/</guid>
+      <guid>http://ruichunjie.giththub.io/2019/singleton20190318/</guid>
       <description>1.什么是单例模式
 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; 单例模式(Singleton Pattern)是指确保一个类在任何情况下都绝对只有一个实例，并提供一个全局访问点。单例模式是创建型模式。 ServletContext,ServletContextConfig,ApplicationContext,数据库的连接池都是单例形式
 2.单例的实现
@@ -194,10 +203,10 @@ public class LazyDoubleCheckSingleton{ private volatile static LazyDoubleCheckSi
     
     <item>
       <title>mybatis基础</title>
-      <link>https:ruichunjie.github.io/2019/mybatis20190317/</link>
+      <link>http://ruichunjie.giththub.io/2019/mybatis20190317/</link>
       <pubDate>Sun, 17 Mar 2019 22:32:49 +0800</pubDate>
       
-      <guid>https:ruichunjie.github.io/2019/mybatis20190317/</guid>
+      <guid>http://ruichunjie.giththub.io/2019/mybatis20190317/</guid>
       <description>1.什么是mybatis
 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;MyBatis 是一款优秀的持久层框架，它支持定制化SQL、存储过程以及高级映射。MyBatis 避免了几乎所有的 JDBC 代码和手动设置参数以及获取结果集。MyBatis 可以使用简单的 XML 或注解来配置和映射原生信息，将接口和 Java 的POJOs(Plain Old Java Objects,普通的 Java对象)映射成数据库中的记录。
 2.使用mybatis
@@ -207,10 +216,10 @@ String resource = &amp;quot;org/mybatis/example/mybatis-config.xml&amp;quot;; In
     
     <item>
       <title>工厂模式</title>
-      <link>https:ruichunjie.github.io/2019/factorydesignprinciple20190316/</link>
+      <link>http://ruichunjie.giththub.io/2019/factorydesignprinciple20190316/</link>
       <pubDate>Sat, 16 Mar 2019 22:32:49 +0800</pubDate>
       
-      <guid>https:ruichunjie.github.io/2019/factorydesignprinciple20190316/</guid>
+      <guid>http://ruichunjie.giththub.io/2019/factorydesignprinciple20190316/</guid>
       <description>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;Spring中用到了很多设计模式，如工厂模式，装饰者模式，代理模式，单例模式，委派模式，策略模式，适配器模式，模板方式模式，观察者模式。设计思路，Spring IOC 工厂，单例，装饰器 。Spring AOP 代理， 观察者。 Spring MVC 委派，适配器，Spring JDBC模板方法。
 1.简单工厂模式
 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;简单工厂模式(Simple Factory Pattern)是指由一个工厂对象 决定创建出哪一种产品类的实例。属于创建型模式，但它不属于GOF，23种设计模式。
@@ -221,10 +230,10 @@ public static Calendar getInstance() { return createCalendar(TimeZone.getDefault
     
     <item>
       <title>软件架构七大原则</title>
-      <link>https:ruichunjie.github.io/2019/sevendesignprinciple20190311/</link>
+      <link>http://ruichunjie.giththub.io/2019/sevendesignprinciple20190311/</link>
       <pubDate>Mon, 11 Mar 2019 22:32:49 +0800</pubDate>
       
-      <guid>https:ruichunjie.github.io/2019/sevendesignprinciple20190311/</guid>
+      <guid>http://ruichunjie.giththub.io/2019/sevendesignprinciple20190311/</guid>
       <description>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;虽然总是说设计模式，然而感觉在开发中却很少用到。想抽点时间深入学习下设计模式。而在学习设计模式前，先来了解下软件架构七大原则。
 1.开闭原则
 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;开闭原则(Open-Closed Principle, OCP)是指一个软件实体如类、模块和函数应该对 扩展开放，对修改关闭。所谓的开闭，也正是对扩展和修改两个行为的一个原则。强调 的是用抽象构建框架，用实现扩展细节。实现开闭原则的核心思想就是面向抽象编程。如下示例:

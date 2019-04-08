@@ -63,4 +63,4 @@ Disallow: /
 User-agent: ZoominfoBot
 Disallow: /
 
-Sitemap: https:ruichunjie.github.io
+Sitemap: http://ruichunjie.giththub.io/sitemap.xml
