@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noodp"/>
+  <meta name="author" content="ruichunjie">
+  
+  
+  
+  <link rel="prev" href="https://ruichunjie.github.io/2019/firstwan20190408/" />
+  
+  <link rel="canonical" href="https://ruichunjie.github.io/2019/queue20190410/" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <title>
+       
+       
+           queue详情分析 | 空谷芝兰
+       
+  </title>
+  <meta name="title" content="queue详情分析 | 空谷芝兰">
+    
+  
+  <link rel="stylesheet" href="/font/iconfont.css">
+  <link rel="stylesheet" href="/css/main.min.css">
+
+
+  
+  
+ 
+
+<script type="application/ld+json">
+ "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "mainEntityOfPage": {
+         "@type": "WebPage",
+         "@id": "https://ruichunjie.github.io"
+    },
+    "articleSection" : "posts",
+    "name" : "queue详情分析",
+    "headline" : "queue详情分析",
+    "description" : "Queue的实现 1. 没有实现的阻塞接口: 实现了java.util.Queue接口和java.util.AbstractQueue接口 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;内置的不阻塞队列: PriorityQueue 和ConcurrentLinkedQueue
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PriorityQueue类实质上维护了一个有序列表，加入到Queue中的元素根据它们的天然排序(通过其java.util.Comparable实现)或者根据传递给构造函数的java.util.Comparator实现来定位。
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ConcurrentLinkedQueue是基于链接节点的，线程安全的队列。并发访问不需要同步，因为在队列的尾部添加元素，并从头部删除它们，所以不需要知道队列的大小,ConcurrentLinkedQueue对公共集合的共享访问可以工作的很好。收集关于队列大小的信息很慢，需要遍历队列。采用CAS机制(compareAndSwapObject原子操作)
+2. 实现的阻塞接口: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;java.util.concurrent中加入了BlockingQueue接口和五个阻塞队列类它实质上就是一种带有一点扭曲的 FIFO 数据结构。不是立即从队列中添加或者删除元素，线程执行操作阻塞，直到有空间或者元素可用。
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;* ArrayBlockingQueue: 一个由数组支持的有界队列，在构造时需要指定容量,并可以选择是否需要公平性，如果公平参数设置为true，等待时间最长的线程会优先得到处理(其实就是通过ReentrantLock设置为true来达到公平性:即等待时间最长的线程会先操作)。公平性会使性能付出代价，只有在非常需要的时候使用。基于数组，FIFO原则排序。
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;* LinkedBlockingQueue: 一个由链接节点支持的可选有界队列,容量是没有上限的(在不指定时，容量为Integer.MAX_VALUE),FIFO排序元素
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;* PriorityBlockingQueue: 一个由优先级堆支持的无界优先级队列，不再是先进先出。队列没有上限，put时不会受阻
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;* DelayQueue: 一个由优先级堆支持的,基于时间的调度队列。只有在延迟期满才能提取元素，头部是延迟期满后保存时间最长的Delayed元素。如果延迟没有期满，则队列没有头部，poll返回null。当一个元素的getDelay(TimeUnit.NANOSECONDS)方法返回一个小于或等于零的值时，出现期满。poll移除该元素，
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;* SynchronousQueue: 一个利用BlockingQueue接口的简单聚集(rendezvous)机制
+阻塞队列操作   操作 作用 状态   add 添加一个元素 队列已满，抛出IIIegaISlabEepeplian异常   remove 移除并返回队列头部的元素 队列已空，抛出NoSuchElementException异常   element 返回队列头部的元素 队列已空，抛出NoSuchElementException异常   offer 添加一个元素，并返回true 队列已满，返回false   poll 移除并访问队列头部的元素 队列为空，返回null   peek 返回队列头部的元素 队列为空，返回null   put 添加一个元素 队列已满，阻塞   take 移除并返回队列头部的元素 队列为空，阻塞   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;阻塞队列的操作根据响应方式可以分为三类add, remove和element操作在视图在为一个已满队列添加元素或从空队列中取得元素时抛出异常。",
+    "inLanguage" : "en-us",
+    "author" : "ruichunjie",
+    "creator" : "ruichunjie",
+    "publisher": "ruichunjie",
+    "accountablePerson" : "ruichunjie",
+    "copyrightHolder" : "ruichunjie",
+    "copyrightYear" : "2019",
+    "datePublished": "2019-04-10 10:25:46 &#43;0800 CST",
+    "dateModified" : "2019-04-10 10:25:46 &#43;0800 CST",
+    "url" : "https://ruichunjie.github.io/2019/queue20190410/",
+    "wordCount" : "65",
+    "keywords" : [ "java队列", "空谷芝兰"]
+}
+</script>
+
+</head>
+
+  
+
+
+  <body class="">
+    <div class="wrapper">
+        <nav class="navbar">
+    <div class="container">
+        <div class="navbar-header header-logo">
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://ruichunjie.github.io">空谷芝兰</a>
+        </div>
+        <div class="menu navbar-right">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+     <div class="container">
+        <div class="navbar-header">
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://ruichunjie.github.io">空谷芝兰</a></div>
+            <div class="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+     
+          <div class="menu" id="mobile-menu">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+    	 <main class="main">
+          <div class="container">
+      		
+<article class="post-warp" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">queue详情分析</h1>
+        <div class="post-meta">
+                Written by <a itemprop="name" href="https://ruichunjie.github.io" rel="author">ruichunjie</a> with ♥ 
+                <span class="post-time">
+                on <time datetime=2019-04-10 itemprop="datePublished">April 10, 2019</time>
+                </span>
+                in
+                <i class="iconfont icon-folder"></i>
+                <span class="post-category">
+                        <a href="https://ruichunjie.github.io/categories/%E7%BC%96%E7%A8%8B-%E6%8A%80%E6%9C%AF/"> 编程 · 技术 </a>
+                        
+                </span>
+        </div>
+    </header>
+    <div class="post-content">
+        
+
+        
+
+        
+        
+     
+          
+          
+          
+
+          
+          
+          
+
+          
+
+<h3 id="queue的实现">Queue的实现</h3>
+
+<h5 id="1-没有实现的阻塞接口-实现了java-util-queue接口和java-util-abstractqueue接口">1. 没有实现的阻塞接口:  实现了java.util.Queue接口和java.util.AbstractQueue接口</h5>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;内置的不阻塞队列: PriorityQueue 和ConcurrentLinkedQueue<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PriorityQueue类实质上维护了一个有序列表，加入到Queue中的元素根据它们的天然排序(通过其java.util.Comparable实现)或者根据传递给构造函数的java.util.Comparator实现来定位。<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ConcurrentLinkedQueue是基于链接节点的，线程安全的队列。并发访问不需要同步，因为在队列的尾部添加元素，并从头部删除它们，所以不需要知道队列的大小,ConcurrentLinkedQueue对公共集合的共享访问可以工作的很好。收集关于队列大小的信息很慢，需要遍历队列。采用CAS机制(compareAndSwapObject原子操作)</p>
+
+<h5 id="2-实现的阻塞接口">2. 实现的阻塞接口:</h5>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;java.util.concurrent中加入了BlockingQueue接口和五个阻塞队列类它实质上就是一种带有一点扭曲的 FIFO 数据结构。不是立即从队列中添加或者删除元素，线程执行操作阻塞，直到有空间或者元素可用。<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;* ArrayBlockingQueue: 一个由数组支持的有界队列，在构造时需要指定容量,并可以选择是否需要公平性，如果公平参数设置为true，等待时间最长的线程会优先得到处理(其实就是通过ReentrantLock设置为true来达到公平性:即等待时间最长的线程会先操作)。公平性会使性能付出代价，只有在非常需要的时候使用。基于数组，FIFO原则排序。<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;* LinkedBlockingQueue: 一个由链接节点支持的可选有界队列,容量是没有上限的(在不指定时，容量为Integer.MAX_VALUE),FIFO排序元素<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;* PriorityBlockingQueue: 一个由优先级堆支持的无界优先级队列，不再是先进先出。队列没有上限，put时不会受阻<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;* DelayQueue: 一个由优先级堆支持的,基于时间的调度队列。只有在延迟期满才能提取元素，头部是延迟期满后保存时间最长的Delayed元素。如果延迟没有期满，则队列没有头部，poll返回null。当一个元素的getDelay(TimeUnit.NANOSECONDS)方法返回一个小于或等于零的值时，出现期满。poll移除该元素，<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;* SynchronousQueue: 一个利用BlockingQueue接口的简单聚集(rendezvous)机制</p>
+
+<h3 id="阻塞队列操作">阻塞队列操作</h3>
+
+<p><table>
+   <tr>
+      <td>操作</td>
+      <td>作用</td>
+      <td>状态</td>
+   </tr>
+   <tr>
+      <td>add</td>
+      <td>添加一个元素</td>
+      <td>队列已满，抛出IIIegaISlabEepeplian异常</td>
+   </tr>
+   <tr>
+      <td>remove</td>
+      <td>移除并返回队列头部的元素</td>
+      <td>队列已空，抛出NoSuchElementException异常</td>
+   </tr>
+   <tr>
+      <td>element</td>
+      <td>返回队列头部的元素</td>
+      <td>队列已空，抛出NoSuchElementException异常</td>
+   </tr>
+   <tr>
+      <td>offer</td>
+      <td>添加一个元素，并返回true</td>
+      <td>队列已满，返回false</td>
+   </tr>
+   <tr>
+      <td>poll</td>
+      <td>移除并访问队列头部的元素</td>
+      <td>队列为空，返回null</td>
+   </tr>
+   <tr>
+      <td>peek</td>
+      <td>返回队列头部的元素</td>
+      <td>队列为空，返回null</td>
+   </tr>
+   <tr>
+      <td>put</td>
+      <td>添加一个元素</td>
+      <td>队列已满，阻塞</td>
+   </tr>
+   <tr>
+      <td>take</td>
+      <td>移除并返回队列头部的元素</td>
+      <td>队列为空，阻塞</td>
+   </tr>
+</table>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;阻塞队列的操作根据响应方式可以分为三类add, remove和element操作在视图在为一个已满队列添加元素或从空队列中取得元素时抛出异常。<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;⚠️  poll和peek方法出错返回null，向队列中插入null是不合法的</p>
+
+<h3 id="concurrentlinkedqueue和linkedblockingqueue对比">ConcurrentLinkedQueue和LinkedBlockingQueue对比</h3>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.LinkedBlockingQueue是使用锁机制，ConcurrentLinkedQueue是使用CAS算法，虽然LinkedBlockingQueue底层获取锁也是使用的CAS算法。<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.关于取元素，ConcurrentLinkedQueue不支持阻塞去取元素，LinkedBlockingQueue支持阻塞的take()方法。
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.ConcurrentLinkedQueue是快的，但是也看具体测试场景，在多cpu的服务器上差距较大。</p>
+
+    </div>
+
+    <div class="post-copyright">
+             
+            <p class="copyright-item">
+                <span>Author:</span>
+                <span>ruichunjie </span>
+                </p>
+            
+           
+             
+            <p class="copyright-item">
+                    <span>Link:</span>
+                    <a href=https://ruichunjie.github.io/2019/queue20190410/>https://ruichunjie.github.io/2019/queue20190410/</span>
+            </p>
+            
+             
+            <p class="copyright-item lincese">
+                本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可
+            </p>
+            
+    </div>
+
+  
+    <div class="post-tags">
+        
+            <section>
+            <i class="iconfont icon-tag"></i>Tag(s): 
+            
+            <span class="tag"><a href="https://ruichunjie.github.io/tags/java%E9%98%9F%E5%88%97/">
+                    #java队列</a></span>
+            
+            </section>
+        
+        <section>
+                <a href="javascript:window.history.back();">back</a></span> · 
+                <span><a href="https://ruichunjie.github.io">home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+        <a href="https://ruichunjie.github.io/2019/firstwan20190408/" class="prev" rel="prev" title="云丘山"><i class="iconfont icon-left"></i>&nbsp;云丘山</a>
+         
+        
+    </div>
+
+    <div class="post-comment">
+          
+                 
+          
+    </div>
+</article>
+          </div>
+		   </main>
+      <footer class="footer">
+    <div class="copyright">
+        &copy;
+        
+        <span itemprop="copyrightYear">2019 - 2019</span>
+        
+        <span class="with-love">
+    	 <i class="iconfont icon-love"></i> 
+         </span>
+         
+            <span class="author" itemprop="copyrightHolder"><a href="https://ruichunjie.github.io">ruichunjie</a> | </span> 
+         
+
+         
+		  <span>Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow">Hugo</a> & <a href="https://github.com/liuzc/leaveit" target="_blank" rel="external nofollow">LeaveIt</a></span> 
+    </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+    <script src="/js/vendor_no_gallery.min.js" async=""></script>
+    
+  
+
+
+
+     </div>
+  </body>
+</html>
