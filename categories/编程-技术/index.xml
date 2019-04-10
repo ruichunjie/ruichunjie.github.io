@@ -6,10 +6,27 @@
     <description>Recent content in 编程 · 技术 on 空谷芝兰</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 10 Apr 2019 10:25:46 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 10 Apr 2019 16:55:21 +0800</lastBuildDate>
     
 	<atom:link href="https://ruichunjie.github.io/categories/%E7%BC%96%E7%A8%8B-%E6%8A%80%E6%9C%AF/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Set详情分析</title>
+      <link>https://ruichunjie.github.io/2019/set20190410/</link>
+      <pubDate>Wed, 10 Apr 2019 16:55:21 +0800</pubDate>
+      
+      <guid>https://ruichunjie.github.io/2019/set20190410/</guid>
+      <description>Set &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;用于存储无序(存入和取出的顺序不一定相同)元素，值不能重复。
+HashSet &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;线程不安全，存取速度快。底层是以hash表实现的。哈希表存放的是哈希值。HashSet不存入重复元素的规则，使用hashcode() 和equals()
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;当试图把对象加入HashSet时，HashSet会使用对象的HashCode来判断对象加入的位置。同时也会与其他已经加入的对象的hashCode进行比较。哈希值一样会继续比较equals()方法，如果结果为true，HashSet就视为同一个元素，否则不是同一元素。
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;add()返回的是boolean类型。
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;HashSet和ArrayList集合中都有判断元素是否相同的方法(boolean. contains(Object o))。HashSet使用了hashCode()和equals()方法，ArrayList使用了equal()方法
+TreeSet &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;红-黑树的数据结构，默认对元素进行自然排序（String）。如果在比较的时候两个对象返回值为0，那么元素重复。
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;红黑树的规则: 左小右大
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;比较时有两种方式:1&amp;gt;元素自身具备比较性，实现Comparable接口；2&amp;gt;容器具有比较性，实现Comparator接口。当两种形式都存在时，以comparator的比较方式为主。比较时通过return 0来判断唯一性，所以不能直接return 0
+LinkedHashSet &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;会保存插入的顺序。</description>
+    </item>
     
     <item>
       <title>queue详情分析</title>
