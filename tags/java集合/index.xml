@@ -2,21 +2,34 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>java集合 on 空谷芝兰</title>
-    <link>https://ruichunjie.github.io/tags/java%E9%9B%86%E5%90%88/</link>
+    <link>https:ruichunjie.github.io/tags/java%E9%9B%86%E5%90%88/</link>
     <description>Recent content in java集合 on 空谷芝兰</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 10 Apr 2019 16:55:21 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 10 Apr 2019 18:26:27 +0800</lastBuildDate>
     
-	<atom:link href="https://ruichunjie.github.io/tags/java%E9%9B%86%E5%90%88/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https:ruichunjie.github.io/tags/java%E9%9B%86%E5%90%88/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
+      <title>List20190410</title>
+      <link>https:ruichunjie.github.io/2019/list20190410/</link>
+      <pubDate>Wed, 10 Apr 2019 18:26:27 +0800</pubDate>
+      
+      <guid>https:ruichunjie.github.io/2019/list20190410/</guid>
+      <description>List &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;List是一个有序的集合，和set不同的是，List允许存储项的值为空，也允许存储相等值的存储项
+ArrayList &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;ArrayList是一个数组实现的列表，特点是查询很快，插入和删除很慢。
+Vector &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;Vector就是ArrayList的线程安全版，它的方法前都加了synchronized锁。
+LinkedList &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;LinkedList继承于AbstractSequentialList,和ArrayList一个套路。内部维护了3个成员变量，一个是当前链表的头节点，一个是尾部节点，还有是链表长度。
+总结 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;List的3个特性  &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;* 1.是按顺序查找  &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;* 2.允许存储项为空  &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;* 3.允许多个存储项的值相等  &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;LinkedList和ArrayList对比 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;* ArrayList是由数组实现的，方便查找，返回数组下标对应的值即可，适用于多查找的场景  &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;* sLinkedList由链表实现，插入和删除方便，适用于多次数据替换的场景</description>
+    </item>
+    
+    <item>
       <title>Set详情分析</title>
-      <link>https://ruichunjie.github.io/2019/set20190410/</link>
+      <link>https:ruichunjie.github.io/2019/set20190410/</link>
       <pubDate>Wed, 10 Apr 2019 16:55:21 +0800</pubDate>
       
-      <guid>https://ruichunjie.github.io/2019/set20190410/</guid>
+      <guid>https:ruichunjie.github.io/2019/set20190410/</guid>
       <description>Set &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;用于存储无序(存入和取出的顺序不一定相同)元素，值不能重复。
 HashSet &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;线程不安全，存取速度快。底层是以hash表实现的。哈希表存放的是哈希值。HashSet不存入重复元素的规则，使用hashcode() 和equals()
 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;当试图把对象加入HashSet时，HashSet会使用对象的HashCode来判断对象加入的位置。同时也会与其他已经加入的对象的hashCode进行比较。哈希值一样会继续比较equals()方法，如果结果为true，HashSet就视为同一个元素，否则不是同一元素。
@@ -30,10 +43,10 @@ LinkedHashSet &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;会保
     
     <item>
       <title>queue详情分析</title>
-      <link>https://ruichunjie.github.io/2019/queue20190410/</link>
+      <link>https:ruichunjie.github.io/2019/queue20190410/</link>
       <pubDate>Wed, 10 Apr 2019 10:25:46 +0800</pubDate>
       
-      <guid>https://ruichunjie.github.io/2019/queue20190410/</guid>
+      <guid>https:ruichunjie.github.io/2019/queue20190410/</guid>
       <description>Queue的实现 1. 没有实现的阻塞接口: 实现了java.util.Queue接口和java.util.AbstractQueue接口 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;内置的不阻塞队列: PriorityQueue 和ConcurrentLinkedQueue
 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;PriorityQueue类实质上维护了一个有序列表，加入到Queue中的元素根据它们的天然排序(通过其java.util.Comparable实现)或者根据传递给构造函数的java.util.Comparator实现来定位。
 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;ConcurrentLinkedQueue是基于链接节点的，线程安全的队列。并发访问不需要同步，因为在队列的尾部添加元素，并从头部删除它们，所以不需要知道队列的大小,ConcurrentLinkedQueue对公共集合的共享访问可以工作的很好。收集关于队列大小的信息很慢，需要遍历队列。采用CAS机制(compareAndSwapObject原子操作)
