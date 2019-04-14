@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>题目 on 空谷芝兰</title>
+    <link>ruichunjie.github.io/tags/%E9%A2%98%E7%9B%AE/</link>
+    <description>Recent content in 题目 on 空谷芝兰</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 10 Apr 2019 23:21:34 +0800</lastBuildDate>
+    
+	<atom:link href="ruichunjie.github.io/tags/%E9%A2%98%E7%9B%AE/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>面试宝典</title>
+      <link>ruichunjie.github.io/2019/question20190410/</link>
+      <pubDate>Wed, 10 Apr 2019 23:21:34 +0800</pubDate>
+      
+      <guid>ruichunjie.github.io/2019/question20190410/</guid>
+      <description>简答 1.java什么时候用重载，什么时候用重写？
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;遵循开闭原则，Spring中的getBean，可以传BeanName和Class
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;父子类之间，模板和包装器模式，遵循开闭原则
+2.举例一个更倾向于使用抽象接口类，而不是使用接口的设计场景？
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;抽象类可以增加实现，接口不能增加实现。抽象类可以有用在public方法中调用private方法，防止private方法被子类实现
+3.在java中，为什么不允许从静态方法中访问非静态变量？
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;类的静态成员(变量和方法)属于类本身，在类加载的时候就会分配内存，可以通过类名直接去访问；非静态成员（变量和方法）属于类的对象，所以只有在类的对象产生（创建类的实例）时才会分配内存，然后通过类的对象（实例）去访问。在一个类的静态成员中去访问其非静态成员之所以会出错是因为在类的非静态成员不存在的时候类的静态成员就已经存在了，访问一个内存中不存在的东西当然会出错。
+4.软件架构中的上层应用指哪些层，客户端属于上层应用么？
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;架构有前端层，后端层，中间层，客户端是最顶层就是上层，如果在中间层或后端层，就可能不是
+面试 1.受检异常与不受检异常的区别
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;受检异常必须要处理，比如SQLException,IOException
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;不受检异常不是必须要捕获
+2.了解软引用，弱引用，虚引用，强引用
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;强引用被回收的情况:1&amp;gt;脱离作用域;2&amp;gt;设置为null,并不再被引用
+public class ReferenceDemo{ static Object strongRef = new Object(); public static void main(String args[]){ Object obj = strongRef; strongRef = null; System.gc(); System.out.println(&amp;quot;gc之后:&amp;quot;+obj); //gc之后java.lang.Object@4b1210ee,此时因为obj还引用了strongRef所以不会被回收 } }  &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;软引用在发生OOM异常前才会被回收
+public class ReferenceDemo{ public static void main(String args[]){ Object softRef = new Object(); SoftReference softReference = new SoftReference(softRef); System.out.println(softReference.get()); softRef = null;//未被回收 System.out.println(softReference.get()); softReference = null;//被回收 System.</description>
+    </item>
+    
+  </channel>
+</rss>

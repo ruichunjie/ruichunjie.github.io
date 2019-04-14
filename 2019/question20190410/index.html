@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noodp"/>
+  <meta name="author" content="ruichunjie">
+  
+  
+  
+  <link rel="prev" href="ruichunjie.github.io/2019/map20190410/" />
+  
+  <link rel="canonical" href="ruichunjie.github.io/2019/question20190410/" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <title>
+       
+       
+           面试宝典 | 空谷芝兰
+       
+  </title>
+  <meta name="title" content="面试宝典 | 空谷芝兰">
+    
+  
+  <link rel="stylesheet" href="/ruichunjie.github.io/font/iconfont.css">
+  <link rel="stylesheet" href="/ruichunjie.github.io/css/main.min.css">
+
+
+  
+  
+ 
+
+<script type="application/ld+json">
+ "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "mainEntityOfPage": {
+         "@type": "WebPage",
+         "@id": "ruichunjie.github.io"
+    },
+    "articleSection" : "posts",
+    "name" : "面试宝典",
+    "headline" : "面试宝典",
+    "description" : "简答 1.java什么时候用重载，什么时候用重写？
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;遵循开闭原则，Spring中的getBean，可以传BeanName和Class
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;父子类之间，模板和包装器模式，遵循开闭原则
+2.举例一个更倾向于使用抽象接口类，而不是使用接口的设计场景？
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;抽象类可以增加实现，接口不能增加实现。抽象类可以有用在public方法中调用private方法，防止private方法被子类实现
+3.在java中，为什么不允许从静态方法中访问非静态变量？
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;类的静态成员(变量和方法)属于类本身，在类加载的时候就会分配内存，可以通过类名直接去访问；非静态成员（变量和方法）属于类的对象，所以只有在类的对象产生（创建类的实例）时才会分配内存，然后通过类的对象（实例）去访问。在一个类的静态成员中去访问其非静态成员之所以会出错是因为在类的非静态成员不存在的时候类的静态成员就已经存在了，访问一个内存中不存在的东西当然会出错。
+4.软件架构中的上层应用指哪些层，客户端属于上层应用么？
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;架构有前端层，后端层，中间层，客户端是最顶层就是上层，如果在中间层或后端层，就可能不是
+面试 1.受检异常与不受检异常的区别
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;受检异常必须要处理，比如SQLException,IOException
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;不受检异常不是必须要捕获
+2.了解软引用，弱引用，虚引用，强引用
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;强引用被回收的情况:1&gt;脱离作用域;2&gt;设置为null,并不再被引用
+public class ReferenceDemo{ static Object strongRef = new Object(); public static void main(String args[]){ Object obj = strongRef; strongRef = null; System.gc(); System.out.println(&quot;gc之后:&quot;+obj); //gc之后java.lang.Object@4b1210ee,此时因为obj还引用了strongRef所以不会被回收 } }  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;软引用在发生OOM异常前才会被回收
+public class ReferenceDemo{ public static void main(String args[]){ Object softRef = new Object(); SoftReference softReference = new SoftReference(softRef); System.out.println(softReference.get()); softRef = null;//未被回收 System.out.println(softReference.get()); softReference = null;//被回收 System.",
+    "inLanguage" : "en-us",
+    "author" : "ruichunjie",
+    "creator" : "ruichunjie",
+    "publisher": "ruichunjie",
+    "accountablePerson" : "ruichunjie",
+    "copyrightHolder" : "ruichunjie",
+    "copyrightYear" : "2019",
+    "datePublished": "2019-04-10 23:21:34 &#43;0800 CST",
+    "dateModified" : "2019-04-10 23:21:34 &#43;0800 CST",
+    "url" : "ruichunjie.github.io/2019/question20190410/",
+    "wordCount" : "149",
+    "keywords" : [ "题目", "空谷芝兰"]
+}
+</script>
+
+</head>
+
+  
+
+
+  <body class="">
+    <div class="wrapper">
+        <nav class="navbar">
+    <div class="container">
+        <div class="navbar-header header-logo">
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="ruichunjie.github.io">空谷芝兰</a>
+        </div>
+        <div class="menu navbar-right">
+                
+                
+                <a class="menu-item" href="ruichunjie.github.io/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="ruichunjie.github.io/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="ruichunjie.github.io/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="ruichunjie.github.io/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+     <div class="container">
+        <div class="navbar-header">
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="ruichunjie.github.io">空谷芝兰</a></div>
+            <div class="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+     
+          <div class="menu" id="mobile-menu">
+                
+                
+                <a class="menu-item" href="ruichunjie.github.io/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="ruichunjie.github.io/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="ruichunjie.github.io/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="ruichunjie.github.io/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+    	 <main class="main">
+          <div class="container">
+      		
+<article class="post-warp" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">面试宝典</h1>
+        <div class="post-meta">
+                Written by <a itemprop="name" href="ruichunjie.github.io" rel="author">ruichunjie</a> with ♥ 
+                <span class="post-time">
+                on <time datetime=2019-04-10 itemprop="datePublished">April 10, 2019</time>
+                </span>
+                in
+                <i class="iconfont icon-folder"></i>
+                <span class="post-category">
+                        <a href="ruichunjie.github.io/categories/%E7%BC%96%E7%A8%8B-%E6%8A%80%E6%9C%AF/"> 编程 · 技术 </a>
+                        
+                </span>
+        </div>
+    </header>
+    <div class="post-content">
+        
+
+        
+
+        
+        
+     
+          
+          
+          
+
+          
+          
+          
+
+          
+
+<h3 id="简答">简答</h3>
+
+<p>1.java什么时候用重载，什么时候用重写？<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;遵循开闭原则，Spring中的getBean，可以传BeanName和Class<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;父子类之间，模板和包装器模式，遵循开闭原则<br />
+2.举例一个更倾向于使用抽象接口类，而不是使用接口的设计场景？<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;抽象类可以增加实现，接口不能增加实现。抽象类可以有用在public方法中调用private方法，防止private方法被子类实现<br />
+3.在java中，为什么不允许从静态方法中访问非静态变量？<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;类的静态成员(变量和方法)属于类本身，在类加载的时候就会分配内存，可以通过类名直接去访问；非静态成员（变量和方法）属于类的对象，所以只有在类的对象产生（创建类的实例）时才会分配内存，然后通过类的对象（实例）去访问。在一个类的静态成员中去访问其非静态成员之所以会出错是因为在类的非静态成员不存在的时候类的静态成员就已经存在了，访问一个内存中不存在的东西当然会出错。<br />
+4.软件架构中的上层应用指哪些层，客户端属于上层应用么？<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;架构有前端层，后端层，中间层，客户端是最顶层就是上层，如果在中间层或后端层，就可能不是</p>
+
+<h3 id="面试">面试</h3>
+
+<p>1.受检异常与不受检异常的区别<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;受检异常必须要处理，比如SQLException,IOException<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;不受检异常不是必须要捕获<br />
+2.了解软引用，弱引用，虚引用，强引用<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;强引用被回收的情况:1&gt;脱离作用域;2&gt;设置为null,并不再被引用</p>
+
+<pre><code class="language-java">   public class ReferenceDemo{
+       static Object strongRef = new Object();
+       public static void main(String args[]){
+           Object obj = strongRef;
+           strongRef = null;
+           System.gc();
+           System.out.println(&quot;gc之后:&quot;+obj);
+           //gc之后java.lang.Object@4b1210ee,此时因为obj还引用了strongRef所以不会被回收
+       }
+   }
+</code></pre>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;软引用在发生OOM异常前才会被回收</p>
+
+<pre><code class="language-java">   public class ReferenceDemo{
+       public static void main(String args[]){
+          Object softRef = new Object();
+          SoftReference softReference = new SoftReference(softRef);
+          System.out.println(softReference.get());
+          softRef = null;//未被回收
+          System.out.println(softReference.get());
+          softReference = null;//被回收
+          System.out.println(softReference.get());
+       }
+   }
+</code></pre>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;弱引用的对象没有被使用会被回收掉,与对象声明周期有关</p>
+
+<pre><code class="language-java">   public class ReferenceDemo{
+       public static void main(String[] args){
+           String str =&quot;aa&quot;;
+           //Object weakObject = new Object();
+           //WeakReference weakReference = new WeakReference(weakObject);
+           //weakObject = null;//被回收
+           //System.gc(); 去掉gc() 不被回收
+           //System.out.println(&quot;after:&quot;+weakReference.get());//null
+           WeakReference weakReference = new WeakReference(str);
+           str = null;
+           System.gc();
+           //gc()不回收常量池
+           System.out.println(&quot;after:&quot;+weakReference.get());//&quot;aa&quot;
+       } 
+   }
+</code></pre>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;虚引用 get()拿不到对象 只有回收前取队列中数据才能取到。</p>
+
+<pre><code class="language-java">   public class ReferenceDemo{
+       public static void main(String[] args[]){
+           ReferenceQueue queue = new ReferenceQueue();
+           Object phantomObject = new Object();
+           PhantomReference phantomReference = new PhantomReference(phantomObject,queue);
+           System.out.println(phantomReference.get());//null
+           phantomObject =null;
+           System.gc();
+           System.out.println(phantomReference.get());//null
+           Thread.sleep(200);
+           System.out.println(queue.poll());//java.lang.ref.PhantomReference@..    
+       }
+   }
+</code></pre>
+
+    </div>
+
+    <div class="post-copyright">
+             
+            <p class="copyright-item">
+                <span>Author:</span>
+                <span>ruichunjie </span>
+                </p>
+            
+           
+             
+            <p class="copyright-item">
+                    <span>Link:</span>
+                    <a href=ruichunjie.github.io/2019/question20190410/>ruichunjie.github.io/2019/question20190410/</span>
+            </p>
+            
+             
+            <p class="copyright-item lincese">
+                本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可
+            </p>
+            
+    </div>
+
+  
+    <div class="post-tags">
+        
+            <section>
+            <i class="iconfont icon-tag"></i>Tag(s): 
+            
+            <span class="tag"><a href="ruichunjie.github.io/tags/%E9%A2%98%E7%9B%AE/">
+                    #题目</a></span>
+            
+            </section>
+        
+        <section>
+                <a href="javascript:window.history.back();">back</a></span> · 
+                <span><a href="ruichunjie.github.io">home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+        <a href="ruichunjie.github.io/2019/map20190410/" class="prev" rel="prev" title="Map详情分析"><i class="iconfont icon-left"></i>&nbsp;Map详情分析</a>
+         
+        
+    </div>
+
+    <div class="post-comment">
+          
+                 
+          
+    </div>
+</article>
+          </div>
+		   </main>
+      <footer class="footer">
+    <div class="copyright">
+        &copy;
+        
+        <span itemprop="copyrightYear">2019 - 2019</span>
+        
+        <span class="with-love">
+    	 <i class="iconfont icon-love"></i> 
+         </span>
+         
+            <span class="author" itemprop="copyrightHolder"><a href="ruichunjie.github.io">ruichunjie</a> | </span> 
+         
+
+         
+		  <span>Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow">Hugo</a> & <a href="https://github.com/liuzc/leaveit" target="_blank" rel="external nofollow">LeaveIt</a></span> 
+    </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+    <script src="/ruichunjie.github.io/js/vendor_no_gallery.min.js" async=""></script>
+    
+  
+
+
+
+     </div>
+  </body>
+</html>
