@@ -2,84 +2,84 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tags on 空谷芝兰</title>
-    <link>ruichunjie.github.io/tags/</link>
+    <link>http://ruichunjie.github.io/tags/</link>
     <description>Recent content in Tags on 空谷芝兰</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Mon, 08 Apr 2019 16:06:42 +0800</lastBuildDate>
     
-	<atom:link href="ruichunjie.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://ruichunjie.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Spring</title>
-      <link>ruichunjie.github.io/tags/spring/</link>
+      <link>http://ruichunjie.github.io/tags/spring/</link>
       <pubDate>Mon, 08 Apr 2019 16:06:42 +0800</pubDate>
       
-      <guid>ruichunjie.github.io/tags/spring/</guid>
+      <guid>http://ruichunjie.github.io/tags/spring/</guid>
       <description></description>
     </item>
     
     <item>
       <title>java集合</title>
-      <link>ruichunjie.github.io/tags/java%E9%9B%86%E5%90%88/</link>
+      <link>http://ruichunjie.github.io/tags/java%E9%9B%86%E5%90%88/</link>
       <pubDate>Wed, 10 Apr 2019 19:56:03 +0800</pubDate>
       
-      <guid>ruichunjie.github.io/tags/java%E9%9B%86%E5%90%88/</guid>
+      <guid>http://ruichunjie.github.io/tags/java%E9%9B%86%E5%90%88/</guid>
       <description></description>
     </item>
     
     <item>
       <title>mybatis</title>
-      <link>ruichunjie.github.io/tags/mybatis/</link>
+      <link>http://ruichunjie.github.io/tags/mybatis/</link>
       <pubDate>Sun, 17 Mar 2019 22:32:49 +0800</pubDate>
       
-      <guid>ruichunjie.github.io/tags/mybatis/</guid>
+      <guid>http://ruichunjie.github.io/tags/mybatis/</guid>
       <description></description>
     </item>
     
     <item>
       <title>心动一瞬</title>
-      <link>ruichunjie.github.io/tags/%E5%BF%83%E5%8A%A8%E4%B8%80%E7%9E%AC/</link>
+      <link>http://ruichunjie.github.io/tags/%E5%BF%83%E5%8A%A8%E4%B8%80%E7%9E%AC/</link>
       <pubDate>Mon, 08 Apr 2019 18:21:12 +0800</pubDate>
       
-      <guid>ruichunjie.github.io/tags/%E5%BF%83%E5%8A%A8%E4%B8%80%E7%9E%AC/</guid>
+      <guid>http://ruichunjie.github.io/tags/%E5%BF%83%E5%8A%A8%E4%B8%80%E7%9E%AC/</guid>
       <description></description>
     </item>
     
     <item>
       <title>旅游</title>
-      <link>ruichunjie.github.io/tags/%E6%97%85%E6%B8%B8/</link>
+      <link>http://ruichunjie.github.io/tags/%E6%97%85%E6%B8%B8/</link>
       <pubDate>Sat, 23 Mar 2019 16:16:28 +0800</pubDate>
       
-      <guid>ruichunjie.github.io/tags/%E6%97%85%E6%B8%B8/</guid>
+      <guid>http://ruichunjie.github.io/tags/%E6%97%85%E6%B8%B8/</guid>
       <description></description>
     </item>
     
     <item>
       <title>计划通</title>
-      <link>ruichunjie.github.io/tags/%E8%AE%A1%E5%88%92%E9%80%9A/</link>
+      <link>http://ruichunjie.github.io/tags/%E8%AE%A1%E5%88%92%E9%80%9A/</link>
       <pubDate>Wed, 27 Mar 2019 17:50:06 +0800</pubDate>
       
-      <guid>ruichunjie.github.io/tags/%E8%AE%A1%E5%88%92%E9%80%9A/</guid>
+      <guid>http://ruichunjie.github.io/tags/%E8%AE%A1%E5%88%92%E9%80%9A/</guid>
       <description></description>
     </item>
     
     <item>
       <title>设计模式</title>
-      <link>ruichunjie.github.io/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/</link>
+      <link>http://ruichunjie.github.io/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/</link>
       <pubDate>Tue, 02 Apr 2019 22:08:03 +0800</pubDate>
       
-      <guid>ruichunjie.github.io/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/</guid>
+      <guid>http://ruichunjie.github.io/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/</guid>
       <description></description>
     </item>
     
     <item>
       <title>题目</title>
-      <link>ruichunjie.github.io/tags/%E9%A2%98%E7%9B%AE/</link>
+      <link>http://ruichunjie.github.io/tags/%E9%A2%98%E7%9B%AE/</link>
       <pubDate>Wed, 10 Apr 2019 23:21:34 +0800</pubDate>
       
-      <guid>ruichunjie.github.io/tags/%E9%A2%98%E7%9B%AE/</guid>
+      <guid>http://ruichunjie.github.io/tags/%E9%A2%98%E7%9B%AE/</guid>
       <description></description>
     </item>
     
