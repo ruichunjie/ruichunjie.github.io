@@ -26,13 +26,19 @@
 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;类的静态成员(变量和方法)属于类本身，在类加载的时候就会分配内存，可以通过类名直接去访问；非静态成员（变量和方法）属于类的对象，所以只有在类的对象产生（创建类的实例）时才会分配内存，然后通过类的对象（实例）去访问。在一个类的静态成员中去访问其非静态成员之所以会出错是因为在类的非静态成员不存在的时候类的静态成员就已经存在了，访问一个内存中不存在的东西当然会出错。
 4.软件架构中的上层应用指哪些层，客户端属于上层应用么？
 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;架构有前端层，后端层，中间层，客户端是最顶层就是上层，如果在中间层或后端层，就可能不是
+5.掌握设计模型中创建型，结构型，行为型之间的根本区别
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;创建型封装对象创建细节，结构型梳理对象与对象之间的关系，行为型梳理过程流程。
+6.单例模式双重检查锁为什么要做两次非空检测？
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;两个线程同时进入方法， 可能同时判断是空，进入锁，如果锁内不做判断，第一次创建实例，第二次可能又会创建，实例会创建两次，第一次判断是性能优化，锁内的非空为了防止反复创建实例。
+7.单例模式双重检查锁中synchronized为什么锁住的是class, 可以是int 或者Object么
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;Class在JVM层面,只load一次，有全局共享锁，一旦锁住，就会受到保护。
 面试 1.受检异常与不受检异常的区别
 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;受检异常必须要处理，比如SQLException,IOException
 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;不受检异常不是必须要捕获
 2.了解软引用，弱引用，虚引用，强引用
 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;强引用被回收的情况:1&amp;gt;脱离作用域;2&amp;gt;设置为null,并不再被引用
 public class ReferenceDemo{ static Object strongRef = new Object(); public static void main(String args[]){ Object obj = strongRef; strongRef = null; System.gc(); System.out.println(&amp;quot;gc之后:&amp;quot;+obj); //gc之后java.lang.Object@4b1210ee,此时因为obj还引用了strongRef所以不会被回收 } }  &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;软引用在发生OOM异常前才会被回收
-public class ReferenceDemo{ public static void main(String args[]){ Object softRef = new Object(); SoftReference softReference = new SoftReference(softRef); System.out.println(softReference.get()); softRef = null;//未被回收 System.out.println(softReference.get()); softReference = null;//被回收 System.</description>
+public class ReferenceDemo{ public static void main(String args[]){ Object softRef = new Object(); SoftReference softReference = new SoftReference(softRef); System.</description>
     </item>
     
   </channel>
