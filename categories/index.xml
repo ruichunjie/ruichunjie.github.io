@@ -2,38 +2,38 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Categories on 空谷芝兰</title>
-    <link>http://ruichunjie.github.io/categories/</link>
+    <link>https:ruichunjie.github.io/categories/</link>
     <description>Recent content in Categories on 空谷芝兰</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     
-	<atom:link href="http://ruichunjie.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https:ruichunjie.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>旅游 · 美图</title>
-      <link>http://ruichunjie.github.io/categories/%E6%97%85%E6%B8%B8-%E7%BE%8E%E5%9B%BE/</link>
+      <link>https:ruichunjie.github.io/categories/%E6%97%85%E6%B8%B8-%E7%BE%8E%E5%9B%BE/</link>
       <pubDate>Mon, 08 Apr 2019 18:21:12 +0800</pubDate>
       
-      <guid>http://ruichunjie.github.io/categories/%E6%97%85%E6%B8%B8-%E7%BE%8E%E5%9B%BE/</guid>
+      <guid>https:ruichunjie.github.io/categories/%E6%97%85%E6%B8%B8-%E7%BE%8E%E5%9B%BE/</guid>
       <description></description>
     </item>
     
     <item>
       <title>生活 · 随笔</title>
-      <link>http://ruichunjie.github.io/categories/%E7%94%9F%E6%B4%BB-%E9%9A%8F%E7%AC%94/</link>
+      <link>https:ruichunjie.github.io/categories/%E7%94%9F%E6%B4%BB-%E9%9A%8F%E7%AC%94/</link>
       <pubDate>Wed, 27 Mar 2019 17:50:06 +0800</pubDate>
       
-      <guid>http://ruichunjie.github.io/categories/%E7%94%9F%E6%B4%BB-%E9%9A%8F%E7%AC%94/</guid>
+      <guid>https:ruichunjie.github.io/categories/%E7%94%9F%E6%B4%BB-%E9%9A%8F%E7%AC%94/</guid>
       <description></description>
     </item>
     
     <item>
       <title>编程 · 技术</title>
-      <link>http://ruichunjie.github.io/categories/%E7%BC%96%E7%A8%8B-%E6%8A%80%E6%9C%AF/</link>
-      <pubDate>Wed, 10 Apr 2019 23:21:34 +0800</pubDate>
+      <link>https:ruichunjie.github.io/categories/%E7%BC%96%E7%A8%8B-%E6%8A%80%E6%9C%AF/</link>
+      <pubDate>Tue, 23 Apr 2019 14:26:57 +0800</pubDate>
       
-      <guid>http://ruichunjie.github.io/categories/%E7%BC%96%E7%A8%8B-%E6%8A%80%E6%9C%AF/</guid>
+      <guid>https:ruichunjie.github.io/categories/%E7%BC%96%E7%A8%8B-%E6%8A%80%E6%9C%AF/</guid>
       <description></description>
     </item>
     

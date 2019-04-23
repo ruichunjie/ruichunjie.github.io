@@ -9,9 +9,9 @@
   
   
   
-  <link rel="prev" href="http://ruichunjie.github.io/2019/map20190410/" />
-  
-  <link rel="canonical" href="http://ruichunjie.github.io/2019/question20190410/" />
+  <link rel="prev" href="https:ruichunjie.github.io/2019/map20190410/" />
+  <link rel="next" href="https:ruichunjie.github.io/2019/parentsmodel20190423/" />
+  <link rel="canonical" href="https:ruichunjie.github.io/2019/question20190410/" />
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
@@ -41,7 +41,7 @@
     "@type" : "BlogPosting",
     "mainEntityOfPage": {
          "@type": "WebPage",
-         "@id": "http://ruichunjie.github.io"
+         "@id": "https:ruichunjie.github.io"
     },
     "articleSection" : "posts",
     "name" : "面试宝典",
@@ -61,6 +61,16 @@
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;两个线程同时进入方法， 可能同时判断是空，进入锁，如果锁内不做判断，第一次创建实例，第二次可能又会创建，实例会创建两次，第一次判断是性能优化，锁内的非空为了防止反复创建实例。
 7.单例模式双重检查锁中synchronized为什么锁住的是class, 可以是int 或者Object么
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Class在JVM层面,只load一次，有全局共享锁，一旦锁住，就会受到保护。
+8.工厂类需要构造方法私有么？
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;工厂类是不是需要私有构造方法，取决于场景。需要为单例，需要私有化，如果不需要是单例，就不需要私有化。在大部分场景中是需要私有化的。
+9.抽象工厂中的产品结构等级和产品族的理解
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;产品等级结构是相同结构，相同特点的多种产品的纵性比较，产品族是相同品牌或者具有某种关联的一类。
+10.使用原型模式解决最大的麻烦
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;解决在开发中重复代码的利用率
+11.实现代理模式的底层逻辑是什么
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;代理模式底层逻辑，找一个代理为目标代理对象提供代理，并进行增强。静态代理需要手动生成一个类，动态代理是自动生成一个类。
+12.JDK 代理需要实现接口，Cglib不需要？
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; JDK代理不实现接口没法知道代理的方法，没法对代理的方法进行反射，Cglib代理类需要重写被代理类，所以要求被代理类不能被final修饰
 面试 1.受检异常与不受检异常的区别
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;受检异常必须要处理，比如SQLException,IOException
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;不受检异常不是必须要捕获
@@ -77,8 +87,8 @@ public class ReferenceDemo{ public static void main(String args[]){ Object softR
     "copyrightYear" : "2019",
     "datePublished": "2019-04-10 23:21:34 &#43;0800 CST",
     "dateModified" : "2019-04-10 23:21:34 &#43;0800 CST",
-    "url" : "http://ruichunjie.github.io/2019/question20190410/",
-    "wordCount" : "201",
+    "url" : "https:ruichunjie.github.io/2019/question20190410/",
+    "wordCount" : "213",
     "keywords" : [ "题目", "空谷芝兰"]
 }
 </script>
@@ -93,7 +103,7 @@ public class ReferenceDemo{ public static void main(String args[]){ Object softR
         <nav class="navbar">
     <div class="container">
         <div class="navbar-header header-logo">
-        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="http://ruichunjie.github.io">空谷芝兰</a>
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https:ruichunjie.github.io">空谷芝兰</a>
         </div>
         <div class="menu navbar-right">
                 
@@ -112,7 +122,7 @@ public class ReferenceDemo{ public static void main(String args[]){ Object softR
 <nav class="navbar-mobile" id="nav-mobile" style="display: none">
      <div class="container">
         <div class="navbar-header">
-            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="http://ruichunjie.github.io">空谷芝兰</a></div>
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https:ruichunjie.github.io">空谷芝兰</a></div>
             <div class="menu-toggle">
                 <span></span><span></span><span></span>
             </div>
@@ -139,14 +149,14 @@ public class ReferenceDemo{ public static void main(String args[]){ Object softR
     <header class="post-header">
         <h1 class="post-title" itemprop="name headline">面试宝典</h1>
         <div class="post-meta">
-                Written by <a itemprop="name" href="http://ruichunjie.github.io" rel="author">ruichunjie</a> with ♥ 
+                Written by <a itemprop="name" href="https:ruichunjie.github.io" rel="author">ruichunjie</a> with ♥ 
                 <span class="post-time">
                 on <time datetime=2019-04-10 itemprop="datePublished">April 10, 2019</time>
                 </span>
                 in
                 <i class="iconfont icon-folder"></i>
                 <span class="post-category">
-                        <a href="http://ruichunjie.github.io/categories/%E7%BC%96%E7%A8%8B-%E6%8A%80%E6%9C%AF/"> 编程 · 技术 </a>
+                        <a href="https:ruichunjie.github.io/categories/%E7%BC%96%E7%A8%8B-%E6%8A%80%E6%9C%AF/"> 编程 · 技术 </a>
                         
                 </span>
         </div>
@@ -185,7 +195,17 @@ public class ReferenceDemo{ public static void main(String args[]){ Object softR
 6.单例模式双重检查锁为什么要做两次非空检测？<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;两个线程同时进入方法， 可能同时判断是空，进入锁，如果锁内不做判断，第一次创建实例，第二次可能又会创建，实例会创建两次，第一次判断是性能优化，锁内的非空为了防止反复创建实例。<br />
 7.单例模式双重检查锁中synchronized为什么锁住的是class, 可以是int 或者Object么<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Class在JVM层面,只load一次，有全局共享锁，一旦锁住，就会受到保护。</p>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Class在JVM层面,只load一次，有全局共享锁，一旦锁住，就会受到保护。<br />
+8.工厂类需要构造方法私有么？<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;工厂类是不是需要私有构造方法，取决于场景。需要为单例，需要私有化，如果不需要是单例，就不需要私有化。在大部分场景中是需要私有化的。<br />
+9.抽象工厂中的产品结构等级和产品族的理解<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;产品等级结构是相同结构，相同特点的多种产品的纵性比较，产品族是相同品牌或者具有某种关联的一类。<br />
+10.使用原型模式解决最大的麻烦<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;解决在开发中重复代码的利用率<br />
+11.实现代理模式的底层逻辑是什么<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;代理模式底层逻辑，找一个代理为目标代理对象提供代理，并进行增强。静态代理需要手动生成一个类，动态代理是自动生成一个类。<br />
+12.JDK 代理需要实现接口，Cglib不需要？<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; JDK代理不实现接口没法知道代理的方法，没法对代理的方法进行反射，Cglib代理类需要重写被代理类，所以要求被代理类不能被final修饰</p>
 
 <h3 id="面试">面试</h3>
 
@@ -296,7 +316,7 @@ public class ReferenceDemo{ public static void main(String args[]){ Object softR
              
             <p class="copyright-item">
                     <span>Link:</span>
-                    <a href=http://ruichunjie.github.io/2019/question20190410/>http://ruichunjie.github.io/2019/question20190410/</span>
+                    <a href=https:ruichunjie.github.io/2019/question20190410/>https:ruichunjie.github.io/2019/question20190410/</span>
             </p>
             
              
@@ -312,21 +332,23 @@ public class ReferenceDemo{ public static void main(String args[]){ Object softR
             <section>
             <i class="iconfont icon-tag"></i>Tag(s): 
             
-            <span class="tag"><a href="http://ruichunjie.github.io/tags/%E9%A2%98%E7%9B%AE/">
+            <span class="tag"><a href="https:ruichunjie.github.io%E9%A2%98%E7%9B%AE/">
                     #题目</a></span>
             
             </section>
         
         <section>
                 <a href="javascript:window.history.back();">back</a></span> · 
-                <span><a href="http://ruichunjie.github.io">home</a></span>
+                <span><a href="https:ruichunjie.github.io">home</a></span>
         </section>
     </div>
 
     <div class="post-nav">
         
-        <a href="http://ruichunjie.github.io/2019/map20190410/" class="prev" rel="prev" title="Map详情分析"><i class="iconfont icon-left"></i>&nbsp;Map详情分析</a>
+        <a href="https:ruichunjie.github.io/2019/map20190410/" class="prev" rel="prev" title="Map详情分析"><i class="iconfont icon-left"></i>&nbsp;Map详情分析</a>
          
+        
+        <a href="https:ruichunjie.github.io/2019/parentsmodel20190423/" class="next" rel="next" title="浅谈双亲委派模型">浅谈双亲委派模型&nbsp;<i class="iconfont icon-right"></i></a>
         
     </div>
 
@@ -348,7 +370,7 @@ public class ReferenceDemo{ public static void main(String args[]){ Object softR
     	 <i class="iconfont icon-love"></i> 
          </span>
          
-            <span class="author" itemprop="copyrightHolder"><a href="http://ruichunjie.github.io">ruichunjie</a> | </span> 
+            <span class="author" itemprop="copyrightHolder"><a href="https:ruichunjie.github.io">ruichunjie</a> | </span> 
          
 
          

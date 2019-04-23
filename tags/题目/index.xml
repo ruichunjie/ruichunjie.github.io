@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>题目 on 空谷芝兰</title>
-    <link>http://ruichunjie.github.io/tags/%E9%A2%98%E7%9B%AE/</link>
+    <link>https:ruichunjie.github.io/tags/%E9%A2%98%E7%9B%AE/</link>
     <description>Recent content in 题目 on 空谷芝兰</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Wed, 10 Apr 2019 23:21:34 +0800</lastBuildDate>
     
-	<atom:link href="http://ruichunjie.github.io/tags/%E9%A2%98%E7%9B%AE/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https:ruichunjie.github.io/tags/%E9%A2%98%E7%9B%AE/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>面试宝典</title>
-      <link>http://ruichunjie.github.io/2019/question20190410/</link>
+      <link>https:ruichunjie.github.io/2019/question20190410/</link>
       <pubDate>Wed, 10 Apr 2019 23:21:34 +0800</pubDate>
       
-      <guid>http://ruichunjie.github.io/2019/question20190410/</guid>
+      <guid>https:ruichunjie.github.io/2019/question20190410/</guid>
       <description>简答 1.java什么时候用重载，什么时候用重写？
 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;遵循开闭原则，Spring中的getBean，可以传BeanName和Class
 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;父子类之间，模板和包装器模式，遵循开闭原则
@@ -32,6 +32,16 @@
 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;两个线程同时进入方法， 可能同时判断是空，进入锁，如果锁内不做判断，第一次创建实例，第二次可能又会创建，实例会创建两次，第一次判断是性能优化，锁内的非空为了防止反复创建实例。
 7.单例模式双重检查锁中synchronized为什么锁住的是class, 可以是int 或者Object么
 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;Class在JVM层面,只load一次，有全局共享锁，一旦锁住，就会受到保护。
+8.工厂类需要构造方法私有么？
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;工厂类是不是需要私有构造方法，取决于场景。需要为单例，需要私有化，如果不需要是单例，就不需要私有化。在大部分场景中是需要私有化的。
+9.抽象工厂中的产品结构等级和产品族的理解
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;产品等级结构是相同结构，相同特点的多种产品的纵性比较，产品族是相同品牌或者具有某种关联的一类。
+10.使用原型模式解决最大的麻烦
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;解决在开发中重复代码的利用率
+11.实现代理模式的底层逻辑是什么
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;代理模式底层逻辑，找一个代理为目标代理对象提供代理，并进行增强。静态代理需要手动生成一个类，动态代理是自动生成一个类。
+12.JDK 代理需要实现接口，Cglib不需要？
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; JDK代理不实现接口没法知道代理的方法，没法对代理的方法进行反射，Cglib代理类需要重写被代理类，所以要求被代理类不能被final修饰
 面试 1.受检异常与不受检异常的区别
 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;受检异常必须要处理，比如SQLException,IOException
 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;不受检异常不是必须要捕获

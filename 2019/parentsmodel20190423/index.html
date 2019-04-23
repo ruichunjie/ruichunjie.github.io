@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noodp"/>
+  <meta name="author" content="ruichunjie">
+  
+  
+  
+  <link rel="prev" href="https:ruichunjie.github.io/2019/question20190410/" />
+  
+  <link rel="canonical" href="https:ruichunjie.github.io/2019/parentsmodel20190423/" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <title>
+       
+       
+           浅谈双亲委派模型 | 空谷芝兰
+       
+  </title>
+  <meta name="title" content="浅谈双亲委派模型 | 空谷芝兰">
+    
+  
+  <link rel="stylesheet" href="/font/iconfont.css">
+  <link rel="stylesheet" href="/css/main.min.css">
+
+
+  
+  
+ 
+
+<script type="application/ld+json">
+ "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "mainEntityOfPage": {
+         "@type": "WebPage",
+         "@id": "https:ruichunjie.github.io"
+    },
+    "articleSection" : "posts",
+    "name" : "浅谈双亲委派模型",
+    "headline" : "浅谈双亲委派模型",
+    "description" : "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;隔了半个月没写过博客了，这段时间在补充以前的坑，总感觉心里空落落的，今天来学一下双亲委派模型吧。
+定义 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;双亲委派模型的工作流程是：
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * 如果一个类加载器收到了类加载的请求，它不会自己去尝试加载这个类，而是把这个请求委托给父类加载器去完成。
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * 每个层次的类加载器都是如此。所有的加载请求都应该传送到顶层的启动类加载器中。
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * 只有当父加载器反馈自己无法完成这个加载请求，子加载器才会尝试自己去加载。
+作用 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;对于任意一个类，都需要由加载它的类加载器和这个类本身一同确立其在虚拟机中的唯一性。类随着它的类加载器一起具备了一种带有优先级的层次关系。
+结构 启动类加载器(Bootstrap ClassLoader) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;由C++语言实现，负责将存放在/lib目录中，或者被-Xbootclasspath参数所指定的路径中的，并且是虚拟机按照文件名识别的类库记载到虚拟机内存中。
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;启动类加载器无法被Java程序直接引用，用户在编写自定义类加载器时，如果需要把加载请求委派给启动类加载器，直接用null代替。
+扩展类加载器(Extension ClassLoader) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;由Java sun.misc.Launcher$ExtClassLoader实现，负责加载&lt;JAVA_HOME＞/lib/ext目录中的，或者被java.ext.dirs系统变量所指定的路径中的所有类库。
+应用程序类加载器(Application ClassLoader) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;由sun.misc.Launcher$AppClassLoader实现。由于这个类加载器是ClassLoader.getSystemClassLoader()方法的返回值，所以一般也称它为系统类加载器。负责加载用户类路径ClassPath上所指定的类库，开发者可以直接使用这个类加载器。如果应用程序中没有自定义过自己的类加载器，一般情况下这个就是程序中默认的类加载器。
+实现原理 ClassLoader#loadClass()
+public abstract class ClassLoader { ... public Class&lt;?&gt; loadClass(String name) throws ClassNotFoundException { return loadClass(name, false); } protected Class&lt;?&gt; loadClass(String name, boolean resolve) throws ClassNotFoundException { synchronized (getClassLoadingLock(name)) { Class&lt;?&gt; c = findLoadedClass(name); if (c == null) { ... try { if (parent !",
+    "inLanguage" : "en-us",
+    "author" : "ruichunjie",
+    "creator" : "ruichunjie",
+    "publisher": "ruichunjie",
+    "accountablePerson" : "ruichunjie",
+    "copyrightHolder" : "ruichunjie",
+    "copyrightYear" : "2019",
+    "datePublished": "2019-04-23 14:26:57 &#43;0800 CST",
+    "dateModified" : "2019-04-23 14:26:57 &#43;0800 CST",
+    "url" : "https:ruichunjie.github.io/2019/parentsmodel20190423/",
+    "wordCount" : "144",
+    "keywords" : [ "设计模式", "空谷芝兰"]
+}
+</script>
+
+</head>
+
+  
+
+
+  <body class="">
+    <div class="wrapper">
+        <nav class="navbar">
+    <div class="container">
+        <div class="navbar-header header-logo">
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https:ruichunjie.github.io">空谷芝兰</a>
+        </div>
+        <div class="menu navbar-right">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+     <div class="container">
+        <div class="navbar-header">
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https:ruichunjie.github.io">空谷芝兰</a></div>
+            <div class="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+     
+          <div class="menu" id="mobile-menu">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+    	 <main class="main">
+          <div class="container">
+      		
+<article class="post-warp" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">浅谈双亲委派模型</h1>
+        <div class="post-meta">
+                Written by <a itemprop="name" href="https:ruichunjie.github.io" rel="author">ruichunjie</a> with ♥ 
+                <span class="post-time">
+                on <time datetime=2019-04-23 itemprop="datePublished">April 23, 2019</time>
+                </span>
+                in
+                <i class="iconfont icon-folder"></i>
+                <span class="post-category">
+                        <a href="https:ruichunjie.github.io/categories/%E7%BC%96%E7%A8%8B-%E6%8A%80%E6%9C%AF/"> 编程 · 技术 </a>
+                        
+                </span>
+        </div>
+    </header>
+    <div class="post-content">
+        
+
+        
+
+        
+        
+     
+          
+          
+          
+
+          
+          
+          
+
+          
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;隔了半个月没写过博客了，这段时间在补充以前的坑，总感觉心里空落落的，今天来学一下双亲委派模型吧。</p>
+
+<h3 id="定义">定义</h3>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;双亲委派模型的工作流程是：<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * 如果一个类加载器收到了类加载的请求，它不会自己去尝试加载这个类，而是把这个请求委托给父类加载器去完成。<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * 每个层次的类加载器都是如此。所有的加载请求都应该传送到顶层的启动类加载器中。<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * 只有当父加载器反馈自己无法完成这个加载请求，子加载器才会尝试自己去加载。</p>
+
+<h3 id="作用">作用</h3>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;对于任意一个类，都需要由加载它的类加载器和这个类本身一同确立其在虚拟机中的唯一性。类随着它的类加载器一起具备了一种带有优先级的层次关系。</p>
+
+<h3 id="结构">结构</h3>
+
+<h4 id="启动类加载器-bootstrap-classloader">启动类加载器(Bootstrap ClassLoader)</h4>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;由C++语言实现，负责将存放在<JAVA_HOME>/lib目录中，或者被-Xbootclasspath参数所指定的路径中的，并且是虚拟机按照文件名识别的类库记载到虚拟机内存中。<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;启动类加载器无法被Java程序直接引用，用户在编写自定义类加载器时，如果需要把加载请求委派给启动类加载器，直接用null代替。</p>
+
+<h4 id="扩展类加载器-extension-classloader">扩展类加载器(Extension ClassLoader)</h4>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;由Java  sun.misc.Launcher$ExtClassLoader实现，负责加载&lt;JAVA_HOME＞/lib/ext目录中的，或者被java.ext.dirs系统变量所指定的路径中的所有类库。</p>
+
+<h4 id="应用程序类加载器-application-classloader">应用程序类加载器(Application ClassLoader)</h4>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;由sun.misc.Launcher$AppClassLoader实现。由于这个类加载器是ClassLoader.getSystemClassLoader()方法的返回值，所以一般也称它为系统类加载器。负责加载用户类路径ClassPath上所指定的类库，开发者可以直接使用这个类加载器。如果应用程序中没有自定义过自己的类加载器，一般情况下这个就是程序中默认的类加载器。</p>
+
+<h3 id="实现原理">实现原理</h3>
+
+<p>ClassLoader#loadClass()</p>
+
+<pre><code class="language-java">   public abstract class ClassLoader {
+    ...
+    public Class&lt;?&gt; loadClass(String name) throws ClassNotFoundException {
+        return loadClass(name, false);
+    }
+    protected Class&lt;?&gt; loadClass(String name, boolean resolve)
+        throws ClassNotFoundException {
+        synchronized (getClassLoadingLock(name)) {
+            Class&lt;?&gt; c = findLoadedClass(name);
+            if (c == null) {
+                ...
+                try {
+                    if (parent != null) {
+                        c = parent.loadClass(name, false);
+                    } else {
+                        c = findBootstrapClassOrNull(name);
+                    }
+                } catch (ClassNotFoundException e) {
+                }
+
+                if (c == null) {
+                    ...
+                    c = findClass(name);
+                    // do some stats
+                    ...
+                }
+            }
+            if (resolve) {
+                resolveClass(c);
+            }
+            return c;
+        }
+    }
+    protected Class&lt;?&gt; findClass(String name) throws ClassNotFoundException {
+        throw new ClassNotFoundException(name);
+    }
+    ...
+}
+</code></pre>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * 首先，检查目标类是否已在当前类加载器的命名空间中加载(即使用二元数组&lt;类加载实例，全限定名&gt;区分不同类)<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * 如果没有找到，尝试将请求委托给弗雷加载器(如果指定父类加载器为null,则将启动类加载器作为父类加载器)，最终所有类都会委托到启动类加载器。<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * 如果父类加载器加载失败，自己加载。<br/>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * 默认resolve取false，不需要解析，直接返回。</p>
+
+<h3 id="实现">实现</h3>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;参照 <a href="https://ruichunjie.github.io/2019/proxy20190319/">代理模式</a>笔记:</p>
+
+    </div>
+
+    <div class="post-copyright">
+             
+            <p class="copyright-item">
+                <span>Author:</span>
+                <span>ruichunjie </span>
+                </p>
+            
+           
+             
+            <p class="copyright-item">
+                    <span>Link:</span>
+                    <a href=https:ruichunjie.github.io/2019/parentsmodel20190423/>https:ruichunjie.github.io/2019/parentsmodel20190423/</span>
+            </p>
+            
+             
+            <p class="copyright-item lincese">
+                本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可
+            </p>
+            
+    </div>
+
+  
+    <div class="post-tags">
+        
+            <section>
+            <i class="iconfont icon-tag"></i>Tag(s): 
+            
+            <span class="tag"><a href="https:ruichunjie.github.io%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">
+                    #设计模式</a></span>
+            
+            </section>
+        
+        <section>
+                <a href="javascript:window.history.back();">back</a></span> · 
+                <span><a href="https:ruichunjie.github.io">home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+        <a href="https:ruichunjie.github.io/2019/question20190410/" class="prev" rel="prev" title="面试宝典"><i class="iconfont icon-left"></i>&nbsp;面试宝典</a>
+         
+        
+    </div>
+
+    <div class="post-comment">
+          
+                 
+          
+    </div>
+</article>
+          </div>
+		   </main>
+      <footer class="footer">
+    <div class="copyright">
+        &copy;
+        
+        <span itemprop="copyrightYear">2019 - 2019</span>
+        
+        <span class="with-love">
+    	 <i class="iconfont icon-love"></i> 
+         </span>
+         
+            <span class="author" itemprop="copyrightHolder"><a href="https:ruichunjie.github.io">ruichunjie</a> | </span> 
+         
+
+         
+		  <span>Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow">Hugo</a> & <a href="https://github.com/liuzc/leaveit" target="_blank" rel="external nofollow">LeaveIt</a></span> 
+    </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+    <script src="/js/vendor_no_gallery.min.js" async=""></script>
+    
+  
+
+
+
+     </div>
+  </body>
+</html>
