@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>事务处理 on 空谷芝兰</title>
+    <link>http://ruichunjie.github.io/tags/%E4%BA%8B%E5%8A%A1%E5%A4%84%E7%90%86/</link>
+    <description>Recent content in 事务处理 on 空谷芝兰</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 23 Apr 2019 16:56:03 +0800</lastBuildDate>
+    
+	<atom:link href="http://ruichunjie.github.io/tags/%E4%BA%8B%E5%8A%A1%E5%A4%84%E7%90%86/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Spring事务处理</title>
+      <link>http://ruichunjie.github.io/2019/springtrancation20190423/</link>
+      <pubDate>Tue, 23 Apr 2019 16:56:03 +0800</pubDate>
+      
+      <guid>http://ruichunjie.github.io/2019/springtrancation20190423/</guid>
+      <description>Spring事务配置 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;Spring事务基于AOP来实现，主要是统一封装肺功能性需求。
+&amp;lt;aop:aspectj-autoproxy proxy-target-class=&amp;quot;true&amp;quot;/&amp;gt; &amp;lt;bean id=&amp;quot;transactionManager&amp;quot; class=&amp;quot;org.springframework.jdbc.datasource.DataSourceTransactionManager&amp;quot;&amp;gt; &amp;lt;property name=&amp;quot;dataSource&amp;quot; ref=&amp;quot;dataSource&amp;quot;/&amp;gt; &amp;lt;/bean&amp;gt; &amp;lt;tx:annotation-driven transaction-manager=&amp;quot;transactionManager&amp;quot;/&amp;gt; &amp;lt;!-- 配置事务传播特性 --&amp;gt; &amp;lt;tx:advice id=&amp;quot;transactionAdvice&amp;quot; transaction-manager=&amp;quot;transactionManager&amp;quot;&amp;gt; &amp;lt;tx:attributes&amp;gt; &amp;lt;tx:method name=&amp;quot;add*&amp;quot; propagation=&amp;quot;REQUIRED&amp;quot; rollback-for=&amp;quot;Exception,RuntimeException,SQLException&amp;quot;/&amp;gt; &amp;lt;tx:method name=&amp;quot;remove*&amp;quot; propagation=&amp;quot;REQUIRED&amp;quot; rollback-for=&amp;quot;Exception,RuntimeException,SQLException&amp;quot;/&amp;gt; &amp;lt;tx:method name=&amp;quot;modify*&amp;quot; propagation=&amp;quot;REQUIRED&amp;quot; rollback-for=&amp;quot;Exception,RuntimeException,SQLException&amp;quot;/&amp;gt; &amp;lt;tx:method name=&amp;quot;login&amp;quot; propagation=&amp;quot;NOT_SUPPORTED&amp;quot;/&amp;gt; &amp;lt;tx:method name=&amp;quot;query*&amp;quot; read-only=&amp;quot;true&amp;quot;/&amp;gt; &amp;lt;/tx:attributes&amp;gt; &amp;lt;/tx:advice&amp;gt; &amp;lt;aop:config&amp;gt; &amp;lt;aop:pointcut expression=&amp;quot;execution(public * com.gupaoedu.vip..*.service..*Service.*(..))&amp;quot; id=&amp;quot;transactionPointcut&amp;quot;/&amp;gt; &amp;lt;aop:advisor pointcut-ref=&amp;quot;transactionPointcut&amp;quot; advice-ref=&amp;quot;transactionAdvice&amp;quot;/&amp;gt; &amp;lt;/aop:config&amp;gt;  数据库事务原理详解 1.事务基本概念 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;事务(Transaction)是访问并可能更新数据库中各种数据项的一个程序执行单元(unit)。
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;特点:事务时恢复和并发控制的基本单位。事务应该具有4个属性:原子性，一致性，隔离性，持久性。即ACID特性。
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;原子性(Automicity): 一个事务是一个不可分割的工作单位，事务中包括的诸多操作，要么不做，要么都做。
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;一致性(Consistency):事务必须是使数据库从一个一致性状态变到另一个一致性状态。一致性和原子性密切关联。
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;隔离性(Isolation):一个事务的执行不能被其他事务干扰，即一个事务内部的操作及使用的数据对并发的其他数据是隔离的，并发执行的各个事务之间不能相互干扰。
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;持久性(Durability): 持久性也称永久性(Permanence),指一个事务一旦提交，它对数据库数据的变化就应该是永久性的。接下来的操作或其他故障不应该对其有任何影响。
+2.事务的基本原理 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;Spring事务的本质是数据库对事务的支持。配置文件开启注解驱动，在相关的类和方法上通过注解@Transactional标识，Spring在启动的时候会去解析生成相关的bean,这时候会查看拥有相关注解的类和方法，并为这些类和方法生成代理，并根据@Transactional的相关参数进行相关配置注入。这样就在代理中为我们把相关的事务处理掉了(开启正常提交事务，异常回滚事务)。真正的数据库层的事务提交和回滚是通过binlog或者redolog实现的。
+3.Spring事务的传播属性 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;传播属性，就是定义存在多个事务同时存在的时候，Spring应该如何处理这些事务的行为。这些属性在TransactionDefinition中定义。
+  常量名称 常量解释   PROPAGATION_REQUIRED 支持当前事务，如果当前没有事务，就新建一个事务。Spring默认的事务传播   PROPAGATION_REQUIRES_NEW 新建事务，如果当前存在事务，把当前事务挂起。新建的事务将和被挂起的事务没有任何关系，是独立的事务，外层事务失败回滚，不能回滚内层事务执行的结果，内层事务失败抛出异常，外层事务捕获，也可以不处理回滚操作   PROPAGATION_SUPPORTS 支持当前事务，如果当前没有事务，就以非事务方法执行   PROPAGATION_MANDATORY 支持当前事务，如果当前没有事务，就抛出异常   PROPAGATION_NOT_SUPPORTED 以非事务方式执行操作，如果当前存在事务，就把当前事务挂起   PROPAGATION_NEVER 以非事务方式执行，如果当前存在事务，则抛出异常   PROPAGATION_NESTED 如果一个活动的事务存在，则运行在一个嵌套的事务中。如果没有活动事务，则按 REQUIRED 属性执行。它使用了一个单独的 事务，这个事务拥有多个可以回滚的保存 点。内部事务的回滚不会对外部事务造成影响。它只对 DataSourceTransactionManager 事务管理器起效。</description>
+    </item>
+    
+  </channel>
+</rss>

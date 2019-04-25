@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noodp"/>
+  <meta name="author" content="ruichunjie">
+  
+  
+  
+  <link rel="prev" href="http://ruichunjie.github.io/2019/parentsmodel20190423/" />
+  
+  <link rel="canonical" href="http://ruichunjie.github.io/2019/springtrancation20190423/" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <title>
+       
+       
+           Spring事务处理 | 空谷芝兰
+       
+  </title>
+  <meta name="title" content="Spring事务处理 | 空谷芝兰">
+    
+  
+  <link rel="stylesheet" href="/font/iconfont.css">
+  <link rel="stylesheet" href="/css/main.min.css">
+
+
+  
+  
+ 
+
+<script type="application/ld+json">
+ "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "mainEntityOfPage": {
+         "@type": "WebPage",
+         "@id": "http://ruichunjie.github.io"
+    },
+    "articleSection" : "posts",
+    "name" : "Spring事务处理",
+    "headline" : "Spring事务处理",
+    "description" : "Spring事务配置 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Spring事务基于AOP来实现，主要是统一封装肺功能性需求。
+&lt;aop:aspectj-autoproxy proxy-target-class=&quot;true&quot;/&gt; &lt;bean id=&quot;transactionManager&quot; class=&quot;org.springframework.jdbc.datasource.DataSourceTransactionManager&quot;&gt; &lt;property name=&quot;dataSource&quot; ref=&quot;dataSource&quot;/&gt; &lt;/bean&gt; &lt;tx:annotation-driven transaction-manager=&quot;transactionManager&quot;/&gt; &lt;!-- 配置事务传播特性 --&gt; &lt;tx:advice id=&quot;transactionAdvice&quot; transaction-manager=&quot;transactionManager&quot;&gt; &lt;tx:attributes&gt; &lt;tx:method name=&quot;add*&quot; propagation=&quot;REQUIRED&quot; rollback-for=&quot;Exception,RuntimeException,SQLException&quot;/&gt; &lt;tx:method name=&quot;remove*&quot; propagation=&quot;REQUIRED&quot; rollback-for=&quot;Exception,RuntimeException,SQLException&quot;/&gt; &lt;tx:method name=&quot;modify*&quot; propagation=&quot;REQUIRED&quot; rollback-for=&quot;Exception,RuntimeException,SQLException&quot;/&gt; &lt;tx:method name=&quot;login&quot; propagation=&quot;NOT_SUPPORTED&quot;/&gt; &lt;tx:method name=&quot;query*&quot; read-only=&quot;true&quot;/&gt; &lt;/tx:attributes&gt; &lt;/tx:advice&gt; &lt;aop:config&gt; &lt;aop:pointcut expression=&quot;execution(public * com.gupaoedu.vip..*.service..*Service.*(..))&quot; id=&quot;transactionPointcut&quot;/&gt; &lt;aop:advisor pointcut-ref=&quot;transactionPointcut&quot; advice-ref=&quot;transactionAdvice&quot;/&gt; &lt;/aop:config&gt;  数据库事务原理详解 1.事务基本概念 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;事务(Transaction)是访问并可能更新数据库中各种数据项的一个程序执行单元(unit)。
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;特点:事务时恢复和并发控制的基本单位。事务应该具有4个属性:原子性，一致性，隔离性，持久性。即ACID特性。
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;原子性(Automicity): 一个事务是一个不可分割的工作单位，事务中包括的诸多操作，要么不做，要么都做。
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;一致性(Consistency):事务必须是使数据库从一个一致性状态变到另一个一致性状态。一致性和原子性密切关联。
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;隔离性(Isolation):一个事务的执行不能被其他事务干扰，即一个事务内部的操作及使用的数据对并发的其他数据是隔离的，并发执行的各个事务之间不能相互干扰。
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;持久性(Durability): 持久性也称永久性(Permanence),指一个事务一旦提交，它对数据库数据的变化就应该是永久性的。接下来的操作或其他故障不应该对其有任何影响。
+2.事务的基本原理 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Spring事务的本质是数据库对事务的支持。配置文件开启注解驱动，在相关的类和方法上通过注解@Transactional标识，Spring在启动的时候会去解析生成相关的bean,这时候会查看拥有相关注解的类和方法，并为这些类和方法生成代理，并根据@Transactional的相关参数进行相关配置注入。这样就在代理中为我们把相关的事务处理掉了(开启正常提交事务，异常回滚事务)。真正的数据库层的事务提交和回滚是通过binlog或者redolog实现的。
+3.Spring事务的传播属性 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;传播属性，就是定义存在多个事务同时存在的时候，Spring应该如何处理这些事务的行为。这些属性在TransactionDefinition中定义。
+  常量名称 常量解释   PROPAGATION_REQUIRED 支持当前事务，如果当前没有事务，就新建一个事务。Spring默认的事务传播   PROPAGATION_REQUIRES_NEW 新建事务，如果当前存在事务，把当前事务挂起。新建的事务将和被挂起的事务没有任何关系，是独立的事务，外层事务失败回滚，不能回滚内层事务执行的结果，内层事务失败抛出异常，外层事务捕获，也可以不处理回滚操作   PROPAGATION_SUPPORTS 支持当前事务，如果当前没有事务，就以非事务方法执行   PROPAGATION_MANDATORY 支持当前事务，如果当前没有事务，就抛出异常   PROPAGATION_NOT_SUPPORTED 以非事务方式执行操作，如果当前存在事务，就把当前事务挂起   PROPAGATION_NEVER 以非事务方式执行，如果当前存在事务，则抛出异常   PROPAGATION_NESTED 如果一个活动的事务存在，则运行在一个嵌套的事务中。如果没有活动事务，则按 REQUIRED 属性执行。它使用了一个单独的 事务，这个事务拥有多个可以回滚的保存 点。内部事务的回滚不会对外部事务造成影响。它只对 DataSourceTransactionManager 事务管理器起效。",
+    "inLanguage" : "en-us",
+    "author" : "ruichunjie",
+    "creator" : "ruichunjie",
+    "publisher": "ruichunjie",
+    "accountablePerson" : "ruichunjie",
+    "copyrightHolder" : "ruichunjie",
+    "copyrightYear" : "2019",
+    "datePublished": "2019-04-23 16:56:03 &#43;0800 CST",
+    "dateModified" : "2019-04-23 16:56:03 &#43;0800 CST",
+    "url" : "http://ruichunjie.github.io/2019/springtrancation20190423/",
+    "wordCount" : "395",
+    "keywords" : [ "事务处理","Spring", "空谷芝兰"]
+}
+</script>
+
+</head>
+
+  
+
+
+  <body class="">
+    <div class="wrapper">
+        <nav class="navbar">
+    <div class="container">
+        <div class="navbar-header header-logo">
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="http://ruichunjie.github.io">空谷芝兰</a>
+        </div>
+        <div class="menu navbar-right">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+     <div class="container">
+        <div class="navbar-header">
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="http://ruichunjie.github.io">空谷芝兰</a></div>
+            <div class="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+     
+          <div class="menu" id="mobile-menu">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+    	 <main class="main">
+          <div class="container">
+      		
+<article class="post-warp" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">Spring事务处理</h1>
+        <div class="post-meta">
+                Written by <a itemprop="name" href="http://ruichunjie.github.io" rel="author">ruichunjie</a> with ♥ 
+                <span class="post-time">
+                on <time datetime=2019-04-23 itemprop="datePublished">April 23, 2019</time>
+                </span>
+                in
+                <i class="iconfont icon-folder"></i>
+                <span class="post-category">
+                        <a href="http://ruichunjie.github.io/categories/%E7%BC%96%E7%A8%8B-%E6%8A%80%E6%9C%AF/"> 编程 · 技术 </a>
+                        
+                </span>
+        </div>
+    </header>
+    <div class="post-content">
+        
+
+        
+
+        
+        
+     
+          
+          
+          
+
+          
+          
+          
+
+          
+
+<h3 id="spring事务配置">Spring事务配置</h3>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Spring事务基于AOP来实现，主要是统一封装肺功能性需求。</p>
+
+<pre><code class="language-xml">   &lt;aop:aspectj-autoproxy proxy-target-class=&quot;true&quot;/&gt;
+&lt;bean id=&quot;transactionManager&quot; class=&quot;org.springframework.jdbc.datasource.DataSourceTransactionManager&quot;&gt;
+&lt;property name=&quot;dataSource&quot; ref=&quot;dataSource&quot;/&gt; &lt;/bean&gt;
+&lt;tx:annotation-driven transaction-manager=&quot;transactionManager&quot;/&gt;
+&lt;!-- 配置事务传播特性 --&gt;
+&lt;tx:advice id=&quot;transactionAdvice&quot; transaction-manager=&quot;transactionManager&quot;&gt;
+&lt;tx:attributes&gt;
+&lt;tx:method name=&quot;add*&quot; propagation=&quot;REQUIRED&quot;
+rollback-for=&quot;Exception,RuntimeException,SQLException&quot;/&gt; &lt;tx:method name=&quot;remove*&quot; propagation=&quot;REQUIRED&quot;
+rollback-for=&quot;Exception,RuntimeException,SQLException&quot;/&gt; &lt;tx:method name=&quot;modify*&quot; propagation=&quot;REQUIRED&quot;
+rollback-for=&quot;Exception,RuntimeException,SQLException&quot;/&gt; &lt;tx:method name=&quot;login&quot; propagation=&quot;NOT_SUPPORTED&quot;/&gt; &lt;tx:method name=&quot;query*&quot; read-only=&quot;true&quot;/&gt;
+    &lt;/tx:attributes&gt;
+&lt;/tx:advice&gt;
+&lt;aop:config&gt;
+&lt;aop:pointcut expression=&quot;execution(public * com.gupaoedu.vip..*.service..*Service.*(..))&quot;
+id=&quot;transactionPointcut&quot;/&gt;
+&lt;aop:advisor pointcut-ref=&quot;transactionPointcut&quot; advice-ref=&quot;transactionAdvice&quot;/&gt;
+   &lt;/aop:config&gt;
+</code></pre>
+
+<h3 id="数据库事务原理详解">数据库事务原理详解</h3>
+
+<h5 id="1-事务基本概念">1.事务基本概念</h5>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;事务(Transaction)是访问并可能更新数据库中各种数据项的一个程序执行单元(unit)。<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;特点:事务时恢复和并发控制的基本单位。事务应该具有4个属性:原子性，一致性，隔离性，持久性。即ACID特性。<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;原子性(Automicity): 一个事务是一个不可分割的工作单位，事务中包括的诸多操作，要么不做，要么都做。<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;一致性(Consistency):事务必须是使数据库从一个一致性状态变到另一个一致性状态。一致性和原子性密切关联。<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;隔离性(Isolation):一个事务的执行不能被其他事务干扰，即一个事务内部的操作及使用的数据对并发的其他数据是隔离的，并发执行的各个事务之间不能相互干扰。<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;持久性(Durability): 持久性也称永久性(Permanence),指一个事务一旦提交，它对数据库数据的变化就应该是永久性的。接下来的操作或其他故障不应该对其有任何影响。</p>
+
+<h5 id="2-事务的基本原理">2.事务的基本原理</h5>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Spring事务的本质是数据库对事务的支持。配置文件开启注解驱动，在相关的类和方法上通过注解@Transactional标识，Spring在启动的时候会去解析生成相关的bean,这时候会查看拥有相关注解的类和方法，并为这些类和方法生成代理，并根据@Transactional的相关参数进行相关配置注入。这样就在代理中为我们把相关的事务处理掉了(开启正常提交事务，异常回滚事务)。真正的数据库层的事务提交和回滚是通过binlog或者redolog实现的。</p>
+
+<h5 id="3-spring事务的传播属性">3.Spring事务的传播属性</h5>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;传播属性，就是定义存在多个事务同时存在的时候，Spring应该如何处理这些事务的行为。这些属性在TransactionDefinition中定义。<br />
+<table>
+   <tr>
+      <td>常量名称</td>
+      <td>常量解释</td>
+   </tr>
+   <tr>
+      <td>PROPAGATION_REQUIRED</td>
+      <td>支持当前事务，如果当前没有事务，就新建一个事务。Spring默认的事务传播</td>
+   </tr>
+   <tr>
+      <td>PROPAGATION_REQUIRES_NEW</td>
+      <td>新建事务，如果当前存在事务，把当前事务挂起。新建的事务将和被挂起的事务没有任何关系，是独立的事务，外层事务失败回滚，不能回滚内层事务执行的结果，内层事务失败抛出异常，外层事务捕获，也可以不处理回滚操作</td>
+   </tr>
+   <tr>
+      <td>PROPAGATION_SUPPORTS</td>
+      <td>支持当前事务，如果当前没有事务，就以非事务方法执行</td>
+   </tr>
+   <tr>
+      <td>PROPAGATION_MANDATORY</td>
+      <td>支持当前事务，如果当前没有事务，就抛出异常</td>
+   </tr>
+   <tr>
+      <td>PROPAGATION_NOT_SUPPORTED</td>
+      <td>以非事务方式执行操作，如果当前存在事务，就把当前事务挂起</td>
+   </tr>
+   <tr>
+      <td>PROPAGATION_NEVER</td>
+      <td>以非事务方式执行，如果当前存在事务，则抛出异常</td>
+   </tr>
+   <tr>
+      <td>PROPAGATION_NESTED</td>
+      <td>如果一个活动的事务存在，则运行在一个嵌套的事务中。如果没有活动事务，则按 REQUIRED 属性执行。它使用了一个单独的 事务，这个事务拥有多个可以回滚的保存 点。内部事务的回滚不会对外部事务造成影响。它只对 DataSourceTransactionManager 事务管理器起效。</td>
+   </tr>
+</table></p>
+
+<h5 id="4-数据库隔离级别">4.数据库隔离级别</h5>
+
+<p><table>
+   <tr>
+      <td>隔离级别</td>
+      <td>隔离级别值</td>
+      <td>导致的问题</td>
+   </tr>
+   <tr>
+      <td>Read-Uncommited</td>
+      <td>0</td>
+      <td>导致脏读</td>
+   </tr>
+   <tr>
+      <td>Read-Committed</td>
+      <td>1</td>
+      <td>避免脏读，允许不可重复读和幻读</td>
+   </tr>
+   <tr>
+      <td>Repeatable-Read</td>
+      <td>2</td>
+      <td>避免脏读，不可重复读，允许幻读</td>
+   </tr>
+   <tr>
+      <td>Serializable</td>
+      <td>3</td>
+      <td>串行化读，事务只能一个一个执行，避免了脏读，不可重复读，幻读，执行效率慢，使用慎用</td>
+   </tr>
+</table>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;脏读:一事务对数据进行增删改，但未提交，另一事务可以读取到未提交的数据。如果第一个事务这时候回滚了，那么第二个事务就读到了脏数据。<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;不可重复读: 一个事务中发生了两次读操作，第一次读操作和第二次操作之间，另一个事务对数据进行了修改，这时候读取的数据是不一致的。<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;幻读: 第一个事务对一定范围的数据进行批量修改，第二个事务在这个范围增加一条数据，这时候第一个事务就会丢失对新增数据的修改。<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;隔离级别越高，越能保证数据的完整性和一致性，但是对并发性能的影响也越大，多数数据库的默认级别为Read Commited。比如 SqlServer，Oracle。少数数据库的默认隔离级别为Repeatable Read 比如 MySQL InnoDB</p>
+
+<h5 id="5-spring中的隔离级别">5.Spring中的隔离级别</h5>
+
+<p><table>
+   <tr>
+      <td>常量</td>
+      <td>解释</td>
+   </tr>
+   <tr>
+      <td>ISOLATION_DEFAULT</td>
+      <td>这是个PlatfromTransactionManager默认的隔离级别，使用数据库默认的事务隔离级别。另外四个与JDBC的隔离级别相对应</td>
+   </tr>
+   <tr>
+      <td>ISOLATION_READ_UNCOMMITTED</td>
+      <td>事务最低的隔离级别，允许另一个事务看到这个事务未提交的数据，会造成脏读，不可重复读和幻读</td>
+   </tr>
+   <tr>
+      <td>ISOLATION_READ_COMMITTED</td>
+      <td>保证一个事务修改的数据提交后才能被另外一个事务读取。另外一个事务不能读取该事务未提交的数据</td>
+   </tr>
+   <tr>
+      <td>ISOLATION_REPEATABLE_READ</td>
+      <td>这个事务隔离级别可以防止脏读，不可重复读，但可能出现幻读</td>
+   </tr>
+   <tr>
+      <td>ISOLATION_SERIALIZABLE</td>
+      <td>这是花费最高代价但是最可靠的事务隔离级别。事务被处理成顺序执行</td>
+   </tr>
+</table></p>
+
+<h5 id="6-spring事务">6.Spring事务</h5>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Spring至少提供了三种不同的工作模式:JdbcTemplate,一个在Spring2.5中新提供的SpringJdbc类能够更好的处理数据库元数据;还有一种RDBMS Object风格的面向对象封装方式，类似于JDO的查询设计。所有的模式都要求JDBC2.0以上的数据库驱动支持。<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;JdbcTemplate - 最常用的Spring对于JDBC访问的方案，最低级别的封装，其他的工作模式事实上在底层使用了JdbcTemplate作为底层的实现基础。<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NamedParameterJdbcTemplate - 对JDBCTemplate做了封装，提供了更加便捷的基于命名参数的使用方式而不是传统的JDBC所使用的’？‘作为参数的展位符。<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SimpleJdbcTemplate - 这个类结合了JdbcTemplate和NamedParameterJdbcTemplate常用功能。同时利用一些Java5的特性所带来的优势。SimpleJdbcInsert 和 SimpleJdbcCall - 这两个类可以充分利用数据库元数据的特性 来简化配置。通过使用这两个类进行编程，你可以仅仅提供数据库表名或者存储过程的 名称以及一个 Map 作为参数。其中 Map 的 key 需要与数据库表中的字段保持一致。这 两个类通常和 SimpleJdbcTemplate 配合使用。这两个类需要工作在 JDK 5 以上，同时 数据库需要提供足够的元数据信息。<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RDBMS对象包括MappingSqlQuery, SqlUpdate  和StoredProcedure - 这种方式允许你在初始化你的数据访问层时创建可重用并且线程安全的对象。该对象在你定义了 你的查询语句，声明查询参数并编译相应的 Query 之后被模型化。一旦模型化完成，任 何执行函数就可以传入不同的参数对之进行多次调用。</p>
+
+<h6 id="6-1异常处理模块">6.1异常处理模块</h6>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;如果需要在SQLException和org.springframework.dao.DataAccessException 之间作转换，那么必须实现SQLExceptionTranslator接口。转换器类的实现可以采用一般通用的做法(比如使用JDBC的SQLState code)，如果为了使转换更准确，可以进行定制(比如Oracle的error code)。<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SQLErrorCodeSQLExceptionTranslator是SQLExceptionTranslator的默认实现。该实现使用指定数据库厂商的error code，比使用SQLState更精确。转换过程基于一个JavaBean(类型为 SQLErrorCode)中的error code。这个JavaBean由SQLErrorCodesFactory工厂类创建。其中的内容来自于&rdquo;sql-error-codes.xml&rdquo;配置文件。该文件中的数据库厂商代码基于Database MetaData信息中的DatabaseProductName,从而配合当前数据库的使用。<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SQLErrorCodeSQLExceptionTranslator的匹配规则:<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;首先检查是否存在完成定制转换的子类实现。通常SQLErrorCodeSQLExceptionTranslator这个类可以作为具体类使用。这一规则不再适用。<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;接着将SQLException的error code 与错误代码集中的error code 进行匹配。默认情况错误代码集将从SQLErrorCodesFactory中取得。错误代码集来自classpath下的sql-error-codes.xml文件，它们将与metadata信息中的database name进行映射。<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;使用fallback翻译器。SQLStateSQLExceptionTranslate类是缺省的fallback翻译器。</p>
+
+<h6 id="6-2-config模块">6.2 config模块</h6>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NamespaceHandler接口，DefaultBeanDefinitionDocumentReader使用该接口来处理在Spring xml配置文件中自定义的命名空间。在jdbc模块，我们使用JdbcNamespaceHandler来处理jdbc配置的命名空间。</p>
+
+<pre><code class="language-java">   public class JdbcNamespaceHandler extends NamespaceHandlerSupport {
+    @Override
+    public void init() {
+    registerBeanDefinitionParser(&quot;embedded-database&quot;, new EmbeddedDatabaseBeanDefinitionParser()); registerBeanDefinitionParser(&quot;initialize-database&quot;, new InitializeDatabaseBeanDefinitionParser());
+    } }
+</code></pre>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;其 中， EmbeddedDatabaseBeanDefinitionParser 继 承 了 AbstractBeanDefinitionParser ， 解 析 <embedded-database> 元 素 ， 并 使 用 EmbeddedDatabaseFactoryBean 创建一个 BeanDefinition。<br/></p>
+
+<h6 id="6-3-core模块">6.3 core模块</h6>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1. JdbcTemplate对象，继承了JdbcAccessor，实现了JdbcOperations接口。<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.RowMapper    <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.元数据metaData模块 <br/></p>
+
+<h6 id="6-4-使用sqlparametersource提供参数值">6.4 使用SqlParameterSource提供参数值</h6>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;使用 Map 来指定参数值有时候工作得非常好，但是这并不是最简单的使用方式。Spring 提供了一些其他的 SqlParameterSource 实现类来指定参数值。
+SqlParameter 封 装 了 定 义 sql 参 数 的 对 象 。 CallableStateMentCallback ， PrePareStateMentCallback，StateMentCallback，ConnectionCallback 回调类分别 对应 JdbcTemplate 中的不同处理方法。<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Spring 通过 DataSource 获取数据库的连接。Datasource 是 jdbc 规范的一部分， 它通过 ConnectionFactory 获取。一个容器和框架可以在应用代码层中隐藏连接池和事 务管理。当使用 spring 的 jdbc 层，你可以通过 JNDI 来获取 DataSource，也可以通过你自 己配置的第三方连接池实现来获取。<br/></p>
+
+<h6 id="6-5-jdbctemplate">6.5 JdbcTemplate</h6>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;JdbcTemplate 将完成 JDBC 核心处理流程，比如 SQL 语句的创建、执行，而 把 SQL 语句的生成以及查询结果的提取工作留给我们的应用代码。 它可以完成 SQL 查 询、更新以及调用存储过程，可以对 ResultSet 进行遍历并加以提取。它还可以捕获 JDBC 异常并将其转换成 org.springframework.dao 包中定义的，通用的，信息更丰富的异常。 使用 JdbcTemplate 进行编码只需要根据明确定义的一组契约来实现回调接口。 PreparedStatementCreator 回调接口通过给定的 Connection 创建一个 PreparedStatement，包含 SQL 和任何相关的参数。 CallableStatementCreateor 实现同样的处理，只不过它创建的是 CallableStatement。 RowCallbackHandler 接口则 从数据集的每一行中提取值。我们可以在 DAO 实现类中通过传递一个 DataSource 引用来完成 JdbcTemplate 的实例 化，也可以在 Spring 的 IOC 容器中配置一个 JdbcTemplate 的 bean 并赋予 DAO 实现 类作为一个实例。 需要注意的是 DataSource 在 Spring 的 IOC 容器中总是配制成一个 bean，第一种情况下，DataSource bean 将传递给 service，第二种情况下 DataSource bean 传递给 JdbcTemplate bean。</p>
+
+<h6 id="6-6-namedparameterjdbctemplate">6.6 NamedParameterJdbcTemplate</h6>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NamedParameterJdbcTemplate 类为 JDBC 操作增加了命名参数的特性支持，而不是 传统的使用(&lsquo;?&rsquo;)作为参数的占位符。NamedParameterJdbcTemplate 类对 JdbcTemplate 类进行了封装， 在底层，JdbcTemplate 完成了多数的工作。</p>
+
+<h3 id="浅谈分布式事务">浅谈分布式事务</h3>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;理论依据就是响当当的 CAP 原理。往往为了可用性和分区容错性，忍痛放弃强一致支 持，转而追求最终一致性。</p>
+
+<h5 id="分布式系统的特性">分布式系统的特性</h5>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;在分布式系统中，同时满足 CAP 定律中的一致性 Consistency、可用性 Availability 和 分区容错性 Partition Tolerance 三者是不可能的。在绝大多数的场景，都需要牺牲强一致性来换取系统的高可用性，系统往往只需要保证最终一致性。 <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;分布式事务服务(Distributed Transaction Service，DTS)是一个分布式事务框架，用 来保障在大规模分布式环境下事务的最终一致性。 <br/></p>
+
+<h5 id="数据一致性">数据一致性</h5>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;强一致性:当更新操作完成之后，任何多个后续进程或者线程的访问都会返回最新的更新过的值。这种是对用户最友好的，就是用户上一次写什么，下一次就保证能读到什么。 根据 CAP 理论，这种实现需要牺牲可用性。<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;弱一致性:系统并不保证后续进程或者线程的访问都会返回最新的更新过的值。系统在 数据写入成功之后，不承诺立即可以读到最新写入的值，也不会具体的承诺多久之后可 以读到。<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;最终一致性:弱一致性的特定形式。系统保证在没有后续更新的前提下，系统最终返回上一次更新操作的值。在没有故障发生的前提下，不一致窗口的时间主要受通信延迟， 系统负载和复制副本的个数影响。DNS 是一个典型的最终一致性系统。</p>
+
+    </div>
+
+    <div class="post-copyright">
+             
+            <p class="copyright-item">
+                <span>Author:</span>
+                <span>ruichunjie </span>
+                </p>
+            
+           
+             
+            <p class="copyright-item">
+                    <span>Link:</span>
+                    <a href=http://ruichunjie.github.io/2019/springtrancation20190423/>http://ruichunjie.github.io/2019/springtrancation20190423/</span>
+            </p>
+            
+             
+            <p class="copyright-item lincese">
+                本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可
+            </p>
+            
+    </div>
+
+  
+    <div class="post-tags">
+        
+            <section>
+            <i class="iconfont icon-tag"></i>Tag(s): 
+            
+            <span class="tag"><a href="http://ruichunjie.github.io/tags/%E4%BA%8B%E5%8A%A1%E5%A4%84%E7%90%86/">
+                    #事务处理</a></span>
+            
+            <span class="tag"><a href="http://ruichunjie.github.io/tags/spring/">
+                    #Spring</a></span>
+            
+            </section>
+        
+        <section>
+                <a href="javascript:window.history.back();">back</a></span> · 
+                <span><a href="http://ruichunjie.github.io">home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+        <a href="http://ruichunjie.github.io/2019/parentsmodel20190423/" class="prev" rel="prev" title="浅谈双亲委派模型"><i class="iconfont icon-left"></i>&nbsp;浅谈双亲委派模型</a>
+         
+        
+    </div>
+
+    <div class="post-comment">
+          
+                 
+          
+    </div>
+</article>
+          </div>
+		   </main>
+      <footer class="footer">
+    <div class="copyright">
+        &copy;
+        
+        <span itemprop="copyrightYear">2019 - 2019</span>
+        
+        <span class="with-love">
+    	 <i class="iconfont icon-love"></i> 
+         </span>
+         
+            <span class="author" itemprop="copyrightHolder"><a href="http://ruichunjie.github.io">ruichunjie</a> | </span> 
+         
+
+         
+		  <span>Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow">Hugo</a> & <a href="https://github.com/liuzc/leaveit" target="_blank" rel="external nofollow">LeaveIt</a></span> 
+    </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+    <script src="/js/vendor_no_gallery.min.js" async=""></script>
+    
+  
+
+
+
+     </div>
+  </body>
+</html>
