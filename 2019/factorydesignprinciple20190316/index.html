@@ -9,9 +9,9 @@
   
   
   
-  <link rel="prev" href="http://ruichunjie.github.io/2019/sevendesignprinciple20190311/" />
-  <link rel="next" href="http://ruichunjie.github.io/2019/mybatis20190317/" />
-  <link rel="canonical" href="http://ruichunjie.github.io/2019/factorydesignprinciple20190316/" />
+  <link rel="prev" href="https://ruichunjie.github.io/2019/sevendesignprinciple20190311/" />
+  <link rel="next" href="https://ruichunjie.github.io/2019/mybatis20190317/" />
+  <link rel="canonical" href="https://ruichunjie.github.io/2019/factorydesignprinciple20190316/" />
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
@@ -41,17 +41,17 @@
     "@type" : "BlogPosting",
     "mainEntityOfPage": {
          "@type": "WebPage",
-         "@id": "http://ruichunjie.github.io"
+         "@id": "https://ruichunjie.github.io"
     },
     "articleSection" : "posts",
     "name" : "工厂模式",
     "headline" : "工厂模式",
-    "description" : "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Spring中用到了很多设计模式，如工厂模式，装饰者模式，代理模式，单例模式，委派模式，策略模式，适配器模式，模板方式模式，观察者模式。设计思路，Spring IOC 工厂，单例，装饰器 。Spring AOP 代理， 观察者。 Spring MVC 委派，适配器，Spring JDBC模板方法。
+    "description" : "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Spring中用到了很多设计模式，如工厂模式，装饰者模式，代理模式，单例模式，委派模式，策略模式，适配器模式，模板方式模式，观察者模式。设计思路，Spring IOC 工厂，单例，装饰器。Spring AOP 代理， 观察者。 Spring MVC 委派，适配器，Spring JDBC模板方法。
 1.简单工厂模式
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;简单工厂模式(Simple Factory Pattern)是指由一个工厂对象 决定创建出哪一种产品类的实例。属于创建型模式，但它不属于GOF，23种设计模式。
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;工厂类负责创建的对象较少。客户端只需要传入工厂类的参数，对于如何创建对象的逻辑不需要关心。但是工厂类的职责相对过重，增加新的产品时需要修改工厂类的判断逻辑，违背开闭原则。不易于扩展过于复杂的产品结构。
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;代码过于简单，不演示了，在JDK中存在Calendar.getInstance()方法
-public static Calendar getInstance() { return createCalendar(TimeZone.getDefault(),	Locale.getDefault(Locale.Category.FORMAT)); } private static Calendar createCalendar(TimeZone zone, Locale aLocale) { CalendarProvider provider = LocaleProviderAdapter.getAdapter(CalendarProvider.class, aLocale) .getCalendarProvider(); if (provider != null) { try { return provider.getInstance(zone, aLocale); } catch (IllegalArgumentException iae) { // fall back to the default instantiation } } Calendar cal = null; if (aLocale.",
+public static Calendar getInstance() { return createCalendar(TimeZone.getDefault(),	Locale.getDefault(Locale.Category.FORMAT)); } private static Calendar createCalendar(TimeZone zone, Locale aLocale) { CalendarProvider provider = LocaleProviderAdapter.getAdapter(CalendarProvider.class, aLocale) .getCalendarProvider(); if (provider != null) { try { return provider.getInstance(zone, aLocale); } catch (IllegalArgumentException iae) { // fall back to the default instantiation } } Calendar cal = null; if (aLocale.hasExtensions()) { String caltype = aLocale.",
     "inLanguage" : "en-us",
     "author" : "ruichunjie",
     "creator" : "ruichunjie",
@@ -61,8 +61,8 @@ public static Calendar getInstance() { return createCalendar(TimeZone.getDefault
     "copyrightYear" : "2019",
     "datePublished": "2019-03-16 22:32:49 &#43;0800 CST",
     "dateModified" : "2019-03-16 22:32:49 &#43;0800 CST",
-    "url" : "http://ruichunjie.github.io/2019/factorydesignprinciple20190316/",
-    "wordCount" : "286",
+    "url" : "https://ruichunjie.github.io/2019/factorydesignprinciple20190316/",
+    "wordCount" : "285",
     "keywords" : [ "设计模式", "空谷芝兰"]
 }
 </script>
@@ -77,7 +77,7 @@ public static Calendar getInstance() { return createCalendar(TimeZone.getDefault
         <nav class="navbar">
     <div class="container">
         <div class="navbar-header header-logo">
-        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="http://ruichunjie.github.io">空谷芝兰</a>
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://ruichunjie.github.io">空谷芝兰</a>
         </div>
         <div class="menu navbar-right">
                 
@@ -96,7 +96,7 @@ public static Calendar getInstance() { return createCalendar(TimeZone.getDefault
 <nav class="navbar-mobile" id="nav-mobile" style="display: none">
      <div class="container">
         <div class="navbar-header">
-            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="http://ruichunjie.github.io">空谷芝兰</a></div>
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://ruichunjie.github.io">空谷芝兰</a></div>
             <div class="menu-toggle">
                 <span></span><span></span><span></span>
             </div>
@@ -123,14 +123,14 @@ public static Calendar getInstance() { return createCalendar(TimeZone.getDefault
     <header class="post-header">
         <h1 class="post-title" itemprop="name headline">工厂模式</h1>
         <div class="post-meta">
-                Written by <a itemprop="name" href="http://ruichunjie.github.io" rel="author">ruichunjie</a> with ♥ 
+                Written by <a itemprop="name" href="https://ruichunjie.github.io" rel="author">ruichunjie</a> with ♥ 
                 <span class="post-time">
                 on <time datetime=2019-03-16 itemprop="datePublished">March 16, 2019</time>
                 </span>
                 in
                 <i class="iconfont icon-folder"></i>
                 <span class="post-category">
-                        <a href="http://ruichunjie.github.io/categories/%E7%BC%96%E7%A8%8B-%E6%8A%80%E6%9C%AF/"> 编程 · 技术 </a>
+                        <a href="https://ruichunjie.github.io/categories/%E7%BC%96%E7%A8%8B-%E6%8A%80%E6%9C%AF/"> 编程 · 技术 </a>
                         
                 </span>
         </div>
@@ -151,7 +151,7 @@ public static Calendar getInstance() { return createCalendar(TimeZone.getDefault
           
           
 
-          <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Spring中用到了很多设计模式，如工厂模式，装饰者模式，代理模式，单例模式，委派模式，策略模式，适配器模式，模板方式模式，观察者模式。设计思路，Spring IOC 工厂，单例，装饰器 。Spring AOP 代理， 观察者。 Spring MVC 委派，适配器，Spring JDBC模板方法。<br />
+          <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Spring中用到了很多设计模式，如工厂模式，装饰者模式，代理模式，单例模式，委派模式，策略模式，适配器模式，模板方式模式，观察者模式。设计思路，Spring IOC 工厂，单例，装饰器。Spring AOP 代理， 观察者。 Spring MVC 委派，适配器，Spring JDBC模板方法。<br />
 1.简单工厂模式<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;简单工厂模式(Simple Factory Pattern)是指由一个工厂对象 决定创建出哪一种产品类的实例。属于创建型模式，但它不属于GOF，23种设计模式。<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;工厂类负责创建的对象较少。客户端只需要传入工厂类的参数，对于如何创建对象的逻辑不需要关心。但是工厂类的职责相对过重，增加新的产品时需要修改工厂类的判断逻辑，违背开闭原则。不易于扩展过于复杂的产品结构。<br />
@@ -270,7 +270,7 @@ public static Calendar getInstance() { return createCalendar(TimeZone.getDefault
              
             <p class="copyright-item">
                     <span>Link:</span>
-                    <a href=http://ruichunjie.github.io/2019/factorydesignprinciple20190316/>http://ruichunjie.github.io/2019/factorydesignprinciple20190316/</span>
+                    <a href=https://ruichunjie.github.io/2019/factorydesignprinciple20190316/>https://ruichunjie.github.io/2019/factorydesignprinciple20190316/</span>
             </p>
             
              
@@ -286,23 +286,23 @@ public static Calendar getInstance() { return createCalendar(TimeZone.getDefault
             <section>
             <i class="iconfont icon-tag"></i>Tag(s): 
             
-            <span class="tag"><a href="http://ruichunjie.github.io/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">
+            <span class="tag"><a href="https://ruichunjie.github.io/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">
                     #设计模式</a></span>
             
             </section>
         
         <section>
                 <a href="javascript:window.history.back();">back</a></span> · 
-                <span><a href="http://ruichunjie.github.io">home</a></span>
+                <span><a href="https://ruichunjie.github.io">home</a></span>
         </section>
     </div>
 
     <div class="post-nav">
         
-        <a href="http://ruichunjie.github.io/2019/sevendesignprinciple20190311/" class="prev" rel="prev" title="软件架构七大原则"><i class="iconfont icon-left"></i>&nbsp;软件架构七大原则</a>
+        <a href="https://ruichunjie.github.io/2019/sevendesignprinciple20190311/" class="prev" rel="prev" title="软件架构七大原则"><i class="iconfont icon-left"></i>&nbsp;软件架构七大原则</a>
          
         
-        <a href="http://ruichunjie.github.io/2019/mybatis20190317/" class="next" rel="next" title="mybatis基础">mybatis基础&nbsp;<i class="iconfont icon-right"></i></a>
+        <a href="https://ruichunjie.github.io/2019/mybatis20190317/" class="next" rel="next" title="mybatis基础">mybatis基础&nbsp;<i class="iconfont icon-right"></i></a>
         
     </div>
 
@@ -324,7 +324,7 @@ public static Calendar getInstance() { return createCalendar(TimeZone.getDefault
     	 <i class="iconfont icon-love"></i> 
          </span>
          
-            <span class="author" itemprop="copyrightHolder"><a href="http://ruichunjie.github.io">ruichunjie</a> | </span> 
+            <span class="author" itemprop="copyrightHolder"><a href="https://ruichunjie.github.io">ruichunjie</a> | </span> 
          
 
          

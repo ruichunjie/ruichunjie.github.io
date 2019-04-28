@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>事务处理 on 空谷芝兰</title>
-    <link>http://ruichunjie.github.io/tags/%E4%BA%8B%E5%8A%A1%E5%A4%84%E7%90%86/</link>
+    <link>https://ruichunjie.github.io/tags/%E4%BA%8B%E5%8A%A1%E5%A4%84%E7%90%86/</link>
     <description>Recent content in 事务处理 on 空谷芝兰</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Tue, 23 Apr 2019 16:56:03 +0800</lastBuildDate>
     
-	<atom:link href="http://ruichunjie.github.io/tags/%E4%BA%8B%E5%8A%A1%E5%A4%84%E7%90%86/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://ruichunjie.github.io/tags/%E4%BA%8B%E5%8A%A1%E5%A4%84%E7%90%86/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Spring事务处理</title>
-      <link>http://ruichunjie.github.io/2019/springtrancation20190423/</link>
+      <link>https://ruichunjie.github.io/2019/springtrancation20190423/</link>
       <pubDate>Tue, 23 Apr 2019 16:56:03 +0800</pubDate>
       
-      <guid>http://ruichunjie.github.io/2019/springtrancation20190423/</guid>
+      <guid>https://ruichunjie.github.io/2019/springtrancation20190423/</guid>
       <description>Spring事务配置 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;Spring事务基于AOP来实现，主要是统一封装肺功能性需求。
 &amp;lt;aop:aspectj-autoproxy proxy-target-class=&amp;quot;true&amp;quot;/&amp;gt; &amp;lt;bean id=&amp;quot;transactionManager&amp;quot; class=&amp;quot;org.springframework.jdbc.datasource.DataSourceTransactionManager&amp;quot;&amp;gt; &amp;lt;property name=&amp;quot;dataSource&amp;quot; ref=&amp;quot;dataSource&amp;quot;/&amp;gt; &amp;lt;/bean&amp;gt; &amp;lt;tx:annotation-driven transaction-manager=&amp;quot;transactionManager&amp;quot;/&amp;gt; &amp;lt;!-- 配置事务传播特性 --&amp;gt; &amp;lt;tx:advice id=&amp;quot;transactionAdvice&amp;quot; transaction-manager=&amp;quot;transactionManager&amp;quot;&amp;gt; &amp;lt;tx:attributes&amp;gt; &amp;lt;tx:method name=&amp;quot;add*&amp;quot; propagation=&amp;quot;REQUIRED&amp;quot; rollback-for=&amp;quot;Exception,RuntimeException,SQLException&amp;quot;/&amp;gt; &amp;lt;tx:method name=&amp;quot;remove*&amp;quot; propagation=&amp;quot;REQUIRED&amp;quot; rollback-for=&amp;quot;Exception,RuntimeException,SQLException&amp;quot;/&amp;gt; &amp;lt;tx:method name=&amp;quot;modify*&amp;quot; propagation=&amp;quot;REQUIRED&amp;quot; rollback-for=&amp;quot;Exception,RuntimeException,SQLException&amp;quot;/&amp;gt; &amp;lt;tx:method name=&amp;quot;login&amp;quot; propagation=&amp;quot;NOT_SUPPORTED&amp;quot;/&amp;gt; &amp;lt;tx:method name=&amp;quot;query*&amp;quot; read-only=&amp;quot;true&amp;quot;/&amp;gt; &amp;lt;/tx:attributes&amp;gt; &amp;lt;/tx:advice&amp;gt; &amp;lt;aop:config&amp;gt; &amp;lt;aop:pointcut expression=&amp;quot;execution(public * com.gupaoedu.vip..*.service..*Service.*(..))&amp;quot; id=&amp;quot;transactionPointcut&amp;quot;/&amp;gt; &amp;lt;aop:advisor pointcut-ref=&amp;quot;transactionPointcut&amp;quot; advice-ref=&amp;quot;transactionAdvice&amp;quot;/&amp;gt; &amp;lt;/aop:config&amp;gt;  数据库事务原理详解 1.事务基本概念 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;事务(Transaction)是访问并可能更新数据库中各种数据项的一个程序执行单元(unit)。
 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;特点:事务时恢复和并发控制的基本单位。事务应该具有4个属性:原子性，一致性，隔离性，持久性。即ACID特性。

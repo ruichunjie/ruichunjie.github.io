@@ -9,9 +9,9 @@
   
   
   
-  <link rel="prev" href="http://ruichunjie.github.io/2019/delegateandstrategy20190320/" />
-  <link rel="next" href="http://ruichunjie.github.io/2019/decorationandobserve20190321/" />
-  <link rel="canonical" href="http://ruichunjie.github.io/2019/templateandadapter20190320/" />
+  <link rel="prev" href="https://ruichunjie.github.io/2019/delegateandstrategy20190320/" />
+  <link rel="next" href="https://ruichunjie.github.io/2019/decorationandobserve20190321/" />
+  <link rel="canonical" href="https://ruichunjie.github.io/2019/templateandadapter20190320/" />
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
@@ -41,16 +41,16 @@
     "@type" : "BlogPosting",
     "mainEntityOfPage": {
          "@type": "WebPage",
-         "@id": "http://ruichunjie.github.io"
+         "@id": "https://ruichunjie.github.io"
     },
     "articleSection" : "posts",
     "name" : "模板模式和适配器模式",
     "headline" : "模板模式和适配器模式",
     "description" : "1.模板模式
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;模板模式通常又叫模板方法模式(Template Method Pattern)是指定义一个算法的骨 架，并允许子类为一个或者多个步骤提供实现。模板方法使得子类可以在不改变算法结 构的情况下，重新定义算法的某些步骤，属于行为性设计模式。模板方法适用于以下应 用场景:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;模板模式通常又叫模板方法模式(Template Method Pattern)是指定义一个算法的骨架，并允许子类为一个或者多个步骤提供实现。模板方法使得子类可以在不改变算法结构的情况下，重新定义算法的某些步骤，属于行为性设计模式。模板方法适用于以下应用场景:
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1)一次性实现一个算法的不变的部分，并将可变的行为留给子类来实现。
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2)各子类中公共的行为被提取出来并集中到一个公共的父类中，从而避免代码重复。
-public interface RowMapper&lt;T&gt;{ T mapRow(ResultSet rs, int rowNum) throws Exception; } public abstract class JdbcTemplate{ private DataSource dataSource; public JdbcTemplate(DataSource dataSource){ this.dataSource = dataSource; } public List&lt;?&gt; executeQuery(String sql, RowMapper&lt;?&gt; rowMapper, Object[] values){ try{ //1.获得连接 Connection conn = this.getConnection(); //2.创建语句集 PreparedStatement pstm = this.createPrepareStatement(conn,sql); //3.执行语句集 ResultSet rs = this.executeQuery(pstm,values); //4.处理结果集 List&lt;?&gt; result=this.paresResultSet(rs,rowMapper); //5.关闭结果集 this.closeResultSet(rs); //6.关闭语句集 this.closeStatement(pstm); //7.关闭连接 this.closeConnection(conn); return result; }catch(Exception e){ e.",
+public interface RowMapper&lt;T&gt;{ T mapRow(ResultSet rs, int rowNum) throws Exception; } public abstract class JdbcTemplate{ private DataSource dataSource; public JdbcTemplate(DataSource dataSource){ this.dataSource = dataSource; } public List&lt;?&gt; executeQuery(String sql, RowMapper&lt;?&gt; rowMapper, Object[] values){ try{ //1.获得连接 Connection conn = this.getConnection(); //2.创建语句集 PreparedStatement pstm = this.createPrepareStatement(conn,sql); //3.执行语句集 ResultSet rs = this.executeQuery(pstm,values); //4.处理结果集 List&lt;?&gt; result=this.paresResultSet(rs,rowMapper); //5.关闭结果集 this.closeResultSet(rs); //6.关闭语句集 this.closeStatement(pstm); //7.关闭连接 this.closeConnection(conn); return result; }catch(Exception e){ e.printStackTrace(); } return null; } protected void closeConnection(Connection conn)throws Exception{ conn.",
     "inLanguage" : "en-us",
     "author" : "ruichunjie",
     "creator" : "ruichunjie",
@@ -60,8 +60,8 @@ public interface RowMapper&lt;T&gt;{ T mapRow(ResultSet rs, int rowNum) throws E
     "copyrightYear" : "2019",
     "datePublished": "2019-03-20 12:39:09 &#43;0800 CST",
     "dateModified" : "2019-03-20 12:39:09 &#43;0800 CST",
-    "url" : "http://ruichunjie.github.io/2019/templateandadapter20190320/",
-    "wordCount" : "648",
+    "url" : "https://ruichunjie.github.io/2019/templateandadapter20190320/",
+    "wordCount" : "645",
     "keywords" : [ "设计模式", "空谷芝兰"]
 }
 </script>
@@ -76,7 +76,7 @@ public interface RowMapper&lt;T&gt;{ T mapRow(ResultSet rs, int rowNum) throws E
         <nav class="navbar">
     <div class="container">
         <div class="navbar-header header-logo">
-        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="http://ruichunjie.github.io">空谷芝兰</a>
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://ruichunjie.github.io">空谷芝兰</a>
         </div>
         <div class="menu navbar-right">
                 
@@ -95,7 +95,7 @@ public interface RowMapper&lt;T&gt;{ T mapRow(ResultSet rs, int rowNum) throws E
 <nav class="navbar-mobile" id="nav-mobile" style="display: none">
      <div class="container">
         <div class="navbar-header">
-            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="http://ruichunjie.github.io">空谷芝兰</a></div>
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://ruichunjie.github.io">空谷芝兰</a></div>
             <div class="menu-toggle">
                 <span></span><span></span><span></span>
             </div>
@@ -122,14 +122,14 @@ public interface RowMapper&lt;T&gt;{ T mapRow(ResultSet rs, int rowNum) throws E
     <header class="post-header">
         <h1 class="post-title" itemprop="name headline">模板模式和适配器模式</h1>
         <div class="post-meta">
-                Written by <a itemprop="name" href="http://ruichunjie.github.io" rel="author">ruichunjie</a> with ♥ 
+                Written by <a itemprop="name" href="https://ruichunjie.github.io" rel="author">ruichunjie</a> with ♥ 
                 <span class="post-time">
                 on <time datetime=2019-03-20 itemprop="datePublished">March 20, 2019</time>
                 </span>
                 in
                 <i class="iconfont icon-folder"></i>
                 <span class="post-category">
-                        <a href="http://ruichunjie.github.io/categories/%E7%BC%96%E7%A8%8B-%E6%8A%80%E6%9C%AF/"> 编程 · 技术 </a>
+                        <a href="https://ruichunjie.github.io/categories/%E7%BC%96%E7%A8%8B-%E6%8A%80%E6%9C%AF/"> 编程 · 技术 </a>
                         
                 </span>
         </div>
@@ -151,7 +151,7 @@ public interface RowMapper&lt;T&gt;{ T mapRow(ResultSet rs, int rowNum) throws E
           
 
           <p>1.模板模式<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;模板模式通常又叫模板方法模式(Template Method Pattern)是指定义一个算法的骨 架，并允许子类为一个或者多个步骤提供实现。模板方法使得子类可以在不改变算法结 构的情况下，重新定义算法的某些步骤，属于行为性设计模式。模板方法适用于以下应 用场景:<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;模板模式通常又叫模板方法模式(Template Method Pattern)是指定义一个算法的骨架，并允许子类为一个或者多个步骤提供实现。模板方法使得子类可以在不改变算法结构的情况下，重新定义算法的某些步骤，属于行为性设计模式。模板方法适用于以下应用场景:<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1)一次性实现一个算法的不变的部分，并将可变的行为留给子类来实现。<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2)各子类中公共的行为被提取出来并集中到一个公共的父类中，从而避免代码重复。</p>
 
@@ -427,7 +427,7 @@ this.logger.trace(&quot;Testing handler adapter [&quot; + ha + &quot;]&quot;); }
              
             <p class="copyright-item">
                     <span>Link:</span>
-                    <a href=http://ruichunjie.github.io/2019/templateandadapter20190320/>http://ruichunjie.github.io/2019/templateandadapter20190320/</span>
+                    <a href=https://ruichunjie.github.io/2019/templateandadapter20190320/>https://ruichunjie.github.io/2019/templateandadapter20190320/</span>
             </p>
             
              
@@ -443,23 +443,23 @@ this.logger.trace(&quot;Testing handler adapter [&quot; + ha + &quot;]&quot;); }
             <section>
             <i class="iconfont icon-tag"></i>Tag(s): 
             
-            <span class="tag"><a href="http://ruichunjie.github.io/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">
+            <span class="tag"><a href="https://ruichunjie.github.io/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">
                     #设计模式</a></span>
             
             </section>
         
         <section>
                 <a href="javascript:window.history.back();">back</a></span> · 
-                <span><a href="http://ruichunjie.github.io">home</a></span>
+                <span><a href="https://ruichunjie.github.io">home</a></span>
         </section>
     </div>
 
     <div class="post-nav">
         
-        <a href="http://ruichunjie.github.io/2019/delegateandstrategy20190320/" class="prev" rel="prev" title="委派模式和策略模式"><i class="iconfont icon-left"></i>&nbsp;委派模式和策略模式</a>
+        <a href="https://ruichunjie.github.io/2019/delegateandstrategy20190320/" class="prev" rel="prev" title="委派模式和策略模式"><i class="iconfont icon-left"></i>&nbsp;委派模式和策略模式</a>
          
         
-        <a href="http://ruichunjie.github.io/2019/decorationandobserve20190321/" class="next" rel="next" title="装饰者模式和观察者模式">装饰者模式和观察者模式&nbsp;<i class="iconfont icon-right"></i></a>
+        <a href="https://ruichunjie.github.io/2019/decorationandobserve20190321/" class="next" rel="next" title="装饰者模式和观察者模式">装饰者模式和观察者模式&nbsp;<i class="iconfont icon-right"></i></a>
         
     </div>
 
@@ -481,7 +481,7 @@ this.logger.trace(&quot;Testing handler adapter [&quot; + ha + &quot;]&quot;); }
     	 <i class="iconfont icon-love"></i> 
          </span>
          
-            <span class="author" itemprop="copyrightHolder"><a href="http://ruichunjie.github.io">ruichunjie</a> | </span> 
+            <span class="author" itemprop="copyrightHolder"><a href="https://ruichunjie.github.io">ruichunjie</a> | </span> 
          
 
          

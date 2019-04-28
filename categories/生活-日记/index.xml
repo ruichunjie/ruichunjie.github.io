@@ -1,23 +1,26 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>生活  ·  日记 on 空谷芝兰</title>
+    <title>生活 · 日记 on 空谷芝兰</title>
     <link>https://ruichunjie.github.io/categories/%E7%94%9F%E6%B4%BB-%E6%97%A5%E8%AE%B0/</link>
-    <description>Recent content in 生活  ·  日记 on 空谷芝兰</description>
+    <description>Recent content in 生活 · 日记 on 空谷芝兰</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 24 Mar 2019 15:35:15 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 28 Apr 2019 10:31:12 +0800</lastBuildDate>
     
 	<atom:link href="https://ruichunjie.github.io/categories/%E7%94%9F%E6%B4%BB-%E6%97%A5%E8%AE%B0/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>未来</title>
-      <link>https://ruichunjie.github.io/2019/thoughts20190324/</link>
-      <pubDate>Sun, 24 Mar 2019 15:35:15 +0800</pubDate>
+      <title>日记开端</title>
+      <link>https://ruichunjie.github.io/2019/riji20190428/</link>
+      <pubDate>Sun, 28 Apr 2019 10:31:12 +0800</pubDate>
       
-      <guid>https://ruichunjie.github.io/2019/thoughts20190324/</guid>
-      <description></description>
+      <guid>https://ruichunjie.github.io/2019/riji20190428/</guid>
+      <description>每日一记 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;技术上每天都必须学到新的东西，并且将旧的东西回顾
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;每天必须抽取五个小时学习
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;每天10点进行总结
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;今年十月份之前对学习过的东西做到全部知其所以然。</description>
     </item>
     
   </channel>
