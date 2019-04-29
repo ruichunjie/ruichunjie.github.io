@@ -2,32 +2,32 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>题目 on 空谷芝兰</title>
-    <link>https://ruichunjie.github.io/tags/%E9%A2%98%E7%9B%AE/</link>
+    <link>https:ruichunjie.github.io/tags/%E9%A2%98%E7%9B%AE/</link>
     <description>Recent content in 题目 on 空谷芝兰</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Wed, 10 Apr 2019 23:21:34 +0800</lastBuildDate>
     
-	<atom:link href="https://ruichunjie.github.io/tags/%E9%A2%98%E7%9B%AE/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https:ruichunjie.github.io/tags/%E9%A2%98%E7%9B%AE/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>面试宝典</title>
-      <link>https://ruichunjie.github.io/2019/question20190410/</link>
+      <link>https:ruichunjie.github.io/2019/question20190410/</link>
       <pubDate>Wed, 10 Apr 2019 23:21:34 +0800</pubDate>
       
-      <guid>https://ruichunjie.github.io/2019/question20190410/</guid>
+      <guid>https:ruichunjie.github.io/2019/question20190410/</guid>
       <description>简答 1.java什么时候用重载，什么时候用重写？
-&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;遵循开闭原则，Spring中的getBean，可以传BeanName和Class
-&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;父子类之间，模板和包装器模式，遵循开闭原则
-2.举例一个更倾向于使用抽象接口类，而不是使用接口的设计场景？
-&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;抽象类可以增加实现，接口不能增加实现。抽象类可以有用在public方法中调用private方法，防止private方法被子类实现
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;重载遵循开闭原则，Spring中的getBean，可以传BeanName和Class
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;重写发生在父子类之间，模板和包装器模式，遵循开闭原则
+2.举例一个更倾向于使用抽象类，而不是使用接口的设计场景？
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;抽象类可以增加实现，接口不能增加实现。抽象类可以有用在public方法中调用private方法，防止private方法被子类实现。接口是一个标准，策略模式的顶层规范，抽象类可以作为策略的顶层规范，也能作为模版的默认实现
 3.在java中，为什么不允许从静态方法中访问非静态变量？
 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;类的静态成员(变量和方法)属于类本身，在类加载的时候就会分配内存，可以通过类名直接去访问；非静态成员（变量和方法）属于类的对象，所以只有在类的对象产生（创建类的实例）时才会分配内存，然后通过类的对象（实例）去访问。在一个类的静态成员中去访问其非静态成员之所以会出错是因为在类的非静态成员不存在的时候类的静态成员就已经存在了，访问一个内存中不存在的东西当然会出错。
 4.软件架构中的上层应用指哪些层，客户端属于上层应用么？
-&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;架构有前端层，后端层，中间层，客户端是最顶层就是上层，如果在中间层或后端层，就可能不是
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;架构有前端层，后端层，中间层，三层都有客户端。客户端是最顶层就是上层，如果在中间层或后端层，就可能不是
 5.掌握设计模型中创建型，结构型，行为型之间的根本区别
-&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;创建型封装对象创建细节，结构型梳理对象与对象之间的关系，行为型梳理过程流程。
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;创建型封装对象创建细节，结构型梳理对象与对象之间的关系，行为型梳理程序执行过程流程。
 6.单例模式双重检查锁为什么要做两次非空检测？
 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;两个线程同时进入方法， 可能同时判断是空，进入锁，如果锁内不做判断，第一次创建实例，第二次可能又会创建，实例会创建两次，第一次判断是性能优化，锁内的非空为了防止反复创建实例。
 7.单例模式双重检查锁中synchronized为什么锁住的是class, 可以是int 或者Object么
@@ -35,20 +35,27 @@
 8.工厂类需要构造方法私有么？
 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;工厂类是不是需要私有构造方法，取决于场景。需要为单例，需要私有化，如果不需要是单例，就不需要私有化。在大部分场景中是需要私有化的。
 9.抽象工厂中的产品结构等级和产品族的理解
-&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;产品等级结构是相同结构，相同特点的多种产品的纵性比较，产品族是相同品牌或者具有某种关联的一类。
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;产品等级结构是相同结构，相同特点的多种产品的纵性比较，继承关系，产品族是相同品牌或者具有某种关联的一类。
 10.使用原型模式解决最大的麻烦
-&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;解决在开发中重复代码的利用率
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;提高开发效率和重复代码的利用率
 11.实现代理模式的底层逻辑是什么
 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;代理模式底层逻辑，找一个代理为目标代理对象提供代理，并进行增强。静态代理需要手动生成一个类，动态代理是自动生成一个类。
 12.JDK 代理需要实现接口，Cglib不需要？
 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; JDK代理不实现接口没法知道代理的方法，没法对代理的方法进行反射，Cglib代理类需要重写被代理类，所以要求被代理类不能被final修饰
+13.通过绑定方法实现观察者模式有什么隐患？
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; 注意回调不能递归，防止死循环，同一事件绑定的方法不要太多。底层是线程去执行每一个方法，线程数量是有限的。
+14.什么场景下采用委派模式？
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;功能复杂，维护麻烦，利用委派模式建个调度器，分派任务。
+15.为什么双亲委派一般用继承实现？
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;类加载器如果被父级加载，就不会被加载。利用继承子类可以直接得到父类的属性
+16.描述类适配器和接口适配器的应用场景
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;类适配器采用继承实现，类如果已经继承，就采用接口适配器。
 面试 1.受检异常与不受检异常的区别
 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;受检异常必须要处理，比如SQLException,IOException
 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;不受检异常不是必须要捕获
 2.了解软引用，弱引用，虚引用，强引用
 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;强引用被回收的情况:1&amp;gt;脱离作用域;2&amp;gt;设置为null,并不再被引用
-public class ReferenceDemo{ static Object strongRef = new Object(); public static void main(String args[]){ Object obj = strongRef; strongRef = null; System.gc(); System.out.println(&amp;quot;gc之后:&amp;quot;+obj); //gc之后java.lang.Object@4b1210ee,此时因为obj还引用了strongRef所以不会被回收 } }  &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;软引用在发生OOM异常前才会被回收
-public class ReferenceDemo{ public static void main(String args[]){ Object softRef = new Object(); SoftReference softReference = new SoftReference(softRef); System.</description>
+public class ReferenceDemo{ static Object strongRef = new Object(); public static void main(String args[]){ Object obj = strongRef; strongRef = null; System.gc(); System.out.println(&amp;quot;gc之后:&amp;quot;+obj); //gc之后java.</description>
     </item>
     
   </channel>
