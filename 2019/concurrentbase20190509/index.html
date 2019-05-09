@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noodp"/>
+  <meta name="author" content="ruichunjie">
+  
+  
+  
+  <link rel="prev" href="https:ruichunjie.github.io/2019/riji20190428/" />
+  
+  <link rel="canonical" href="https:ruichunjie.github.io/2019/concurrentbase20190509/" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <title>
+       
+       
+           并发基础 | 空谷芝兰
+       
+  </title>
+  <meta name="title" content="并发基础 | 空谷芝兰">
+    
+  
+  <link rel="stylesheet" href="/font/iconfont.css">
+  <link rel="stylesheet" href="/css/main.min.css">
+
+
+  
+  
+ 
+
+<script type="application/ld+json">
+ "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "mainEntityOfPage": {
+         "@type": "WebPage",
+         "@id": "https:ruichunjie.github.io"
+    },
+    "articleSection" : "posts",
+    "name" : "并发基础",
+    "headline" : "并发基础",
+    "description" : "1.并发的发展历史 真空管和穿孔打卡 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;操作员在机房里面来回调度资源，以及计算机同一时刻只能运行一个程序，在程序输入的过程中，计算机处于空闲状态，为了避免资源浪费，采用了批处理系统。
+晶体管和批处理系统 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;批处理操作系统虽然能够解决计算机的空闲问题，但当某一个作业因等待磁盘或者其他IO操作而暂停时，那么CPU也只能阻塞到该IO操作完成，造成CPU资源浪费。
+集成电路和多道程序设计 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;进程的本质是一个正在执行的程序，程序运行时系统会创建一个进程，并且给每个进程分配独立的内存地址空间保证每个进程地址不会相互干扰。同时，在 CPU 对进程做时间片的切换时，保证进程切换过程中仍然要从进程切换之前运行的位置出开始执行。所以进程通常还会包括程序计数器、堆栈指针。 有了进程以后，可以让操作系统从宏观层面实现多应用并 发。而并发的实现是通过 CPU 时间片不端切换执行的。对于单核 CPU 来说，在任意一个时刻只会有一个进程在被 CPU 调度
+Q: 有了进程后为什么还会有线程呢？ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A: 1.在多核 CPU 中，利用多线程可以实现真正意义上的并行 执行。
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.在一个应用进程中，会存在多个同时执行的任务，如果其中一个任务被阻塞，将会引起不依赖该任务的任务也被阻塞。通过对不同任务创建不同的线程去处理，可以提升程序处理的实时性
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.线程可以认为是轻量级的进程，所以线程的创建、销毁比进程更快
+2.线程的应用 继承Thread类创建线程 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Thread类本质是实现了Runnable接口的一个实例，启动的方法是通过Thread的start()方法。
+public class MyThread extends Thread{ public void run(){ System.out.println(&quot;MyThread run&quot;); } } MyThread myThread1 = new MyThread(); MyThread myThread2 = new MyThread(); myThread1.start(); myThread2.start();  实现Runnable接口创建线程 public class MyThread implements Runnable{ public void run(){ System.out.println(&quot;MyThread run&quot;); } }  实现Callable接口通过FutureTask包装器来创建Thread线程 public class CallableDemo implements Callable&lt;String&gt;{ public static void main(String[] args)throws ExecutionException, InterruptedException{ ExecutorService executorService = Executors.",
+    "inLanguage" : "en-us",
+    "author" : "ruichunjie",
+    "creator" : "ruichunjie",
+    "publisher": "ruichunjie",
+    "accountablePerson" : "ruichunjie",
+    "copyrightHolder" : "ruichunjie",
+    "copyrightYear" : "2019",
+    "datePublished": "2019-05-09 15:02:20 &#43;0800 CST",
+    "dateModified" : "2019-05-09 15:02:20 &#43;0800 CST",
+    "url" : "https:ruichunjie.github.io/2019/concurrentbase20190509/",
+    "wordCount" : "415",
+    "keywords" : [ "设计模式", "空谷芝兰"]
+}
+</script>
+
+</head>
+
+  
+
+
+  <body class="">
+    <div class="wrapper">
+        <nav class="navbar">
+    <div class="container">
+        <div class="navbar-header header-logo">
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https:ruichunjie.github.io">空谷芝兰</a>
+        </div>
+        <div class="menu navbar-right">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+     <div class="container">
+        <div class="navbar-header">
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https:ruichunjie.github.io">空谷芝兰</a></div>
+            <div class="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+     
+          <div class="menu" id="mobile-menu">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+    	 <main class="main">
+          <div class="container">
+      		
+<article class="post-warp" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">并发基础</h1>
+        <div class="post-meta">
+                Written by <a itemprop="name" href="https:ruichunjie.github.io" rel="author">ruichunjie</a> with ♥ 
+                <span class="post-time">
+                on <time datetime=2019-05-09 itemprop="datePublished">May 9, 2019</time>
+                </span>
+                in
+                <i class="iconfont icon-folder"></i>
+                <span class="post-category">
+                        <a href="https:ruichunjie.github.io/categories/%E7%BC%96%E7%A8%8B-%E6%8A%80%E6%9C%AF/"> 编程 · 技术 </a>
+                        
+                </span>
+        </div>
+    </header>
+    <div class="post-content">
+        
+
+        
+
+        
+        
+     
+          
+          
+          
+
+          
+          
+          
+
+          
+
+<h3 id="1-并发的发展历史">1.并发的发展历史</h3>
+
+<h5 id="真空管和穿孔打卡">真空管和穿孔打卡</h5>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;操作员在机房里面来回调度资源，以及计算机同一时刻只能运行一个程序，在程序输入的过程中，计算机处于空闲状态，为了避免资源浪费，采用了批处理系统。</p>
+
+<h5 id="晶体管和批处理系统">晶体管和批处理系统</h5>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;批处理操作系统虽然能够解决计算机的空闲问题，但当某一个作业因等待磁盘或者其他IO操作而暂停时，那么CPU也只能阻塞到该IO操作完成，造成CPU资源浪费。</p>
+
+<h5 id="集成电路和多道程序设计">集成电路和多道程序设计</h5>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;进程的本质是一个正在执行的程序，程序运行时系统会创建一个进程，并且给每个进程分配独立的内存地址空间保证每个进程地址不会相互干扰。同时，在 CPU 对进程做时间片的切换时，保证进程切换过程中仍然要从进程切换之前运行的位置出开始执行。所以进程通常还会包括程序计数器、堆栈指针。 有了进程以后，可以让操作系统从宏观层面实现多应用并 发。而并发的实现是通过 CPU 时间片不端切换执行的。对于单核 CPU 来说，在任意一个时刻只会有一个进程在被 CPU 调度</p>
+
+<h5 id="q-有了进程后为什么还会有线程呢">Q: 有了进程后为什么还会有线程呢？</h5>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A: 1.在多核 CPU 中，利用多线程可以实现真正意义上的并行 执行。<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.在一个应用进程中，会存在多个同时执行的任务，如果其中一个任务被阻塞，将会引起不依赖该任务的任务也被阻塞。通过对不同任务创建不同的线程去处理，可以提升程序处理的实时性<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.线程可以认为是轻量级的进程，所以线程的创建、销毁比进程更快</p>
+
+<h3 id="2-线程的应用">2.线程的应用</h3>
+
+<h5 id="继承thread类创建线程">继承Thread类创建线程</h5>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Thread类本质是实现了Runnable接口的一个实例，启动的方法是通过Thread的start()方法。</p>
+
+<pre><code class="language-java">   public class MyThread extends Thread{
+       public void run(){
+           System.out.println(&quot;MyThread run&quot;);
+       }
+   }
+   MyThread myThread1 = new MyThread();
+   MyThread myThread2 = new MyThread();
+   myThread1.start();
+   myThread2.start();
+</code></pre>
+
+<h5 id="实现runnable接口创建线程">实现Runnable接口创建线程</h5>
+
+<pre><code class="language-java">   public class MyThread implements Runnable{
+       public void run(){
+           System.out.println(&quot;MyThread run&quot;);
+       }
+   }
+</code></pre>
+
+<h5 id="实现callable接口通过futuretask包装器来创建thread线程">实现Callable接口通过FutureTask包装器来创建Thread线程</h5>
+
+<pre><code class="language-java">   public class CallableDemo implements Callable&lt;String&gt;{
+      public static void main(String[] args)throws
+ExecutionException, InterruptedException{
+          ExecutorService executorService = Executors.newFixedThreadPool(1);
+          CallableDemo callableDemo = new CallableDemo();
+          Future&lt;String&gt; future = executorService.submit(callableDemo);   
+          System.out.println(future.get());
+          executorService.shutdown();
+      }
+      
+      @Override
+      public String call() throws Exception{
+          int a = 1;
+          int b = 2;
+          System.out.println(a+b);
+          return &quot;执行结果&quot;+(a+b);
+      }
+   }
+</code></pre>
+
+<h3 id="3-多线程的实际应用场景-异步责任链模式">3.多线程的实际应用场景&ndash; 异步责任链模式</h3>
+
+<pre><code class="language-java">  /**
+   * 请求
+   */
+   public class Request{
+       private String name;
+       public String getName(){
+          return name;
+       }
+       public void setName(String name){
+           this.name = name;
+       }
+       @Override
+       public String toString(){
+           return &quot;Request{&quot;+
+                  &quot;name=&quot;+name+&quot;\&quot;+&quot;}&quot;;
+       }
+   }
+  /**
+   * 请求处理器
+   */
+   public interface RequestProcessor{
+       void processRequest(Request request);
+   }
+  /**
+   * 打印处理器
+   */
+   public class PrintProcessor extends Thread implements RequestProcessor{
+       LinkedBlockingQueue&lt;Request&gt; requests = new LinkedBlockingQueue&lt;&gt;();
+       private final RequestProcessor nextProcessor;
+       public PrintProcessor(RequestProcessor nextProcessor){
+           this.nextProcessor = nextProcessor;
+       }
+       
+       @Override
+       public void run(){
+           while(true){
+               try{
+                   Request request = requests.take();
+                   System.out.println(&quot;printdata:&quot;+request.getName());
+                   nextProcessor.processRequest(request);
+               }catch (InterruptedException e) {
+                   e.printStackTrace();
+               }
+           }
+       }
+       
+       public void processRequest(Request request){
+           requests.add(request);
+       }
+   }
+  /**
+   * 保存处理器
+   */
+   public class SaveProcessor extends Thread implements RequestProcessor{
+       LinkedBlockingQueue&lt;Request&gt; requests = new LinkedBlockingQueue&lt;&gt;();
+       private final RequestProcessor nextProcessor;
+       public PrintProcessor(RequestProcessor nextProcessor){
+           this.nextProcessor = nextProcessor;
+       }
+       
+       @Override
+       public void run(){
+           while(true){
+               try{
+                   Request request = requests.take();
+                   System.out.println(&quot;begin save request info:&quot;+request.getName());
+               }catch (InterruptedException e) {
+                   e.printStackTrace();
+               }
+           }
+       }
+       
+       public void processRequest(Request request){
+           requests.add(request);
+       }
+   }
+   
+   public class Main{
+       PrintProcessor printProcessor;
+       protected Main(){
+           SaveProcessor saveProcessor = new SaveProcessor();
+           saveProcessor.start();
+           printProcessor=new PrintProcessor(saveProcessor);
+           printProcessor.start();
+       }
+       private void doTest(Request request){
+           printProcessor.processRequest(request);
+       }
+       public static void main(String[] args) {
+           Request request=new Request();
+           request.setName(&quot;Mic&quot;);
+           new Main().doTest(request);
+       }
+   }
+</code></pre>
+
+<h3 id="4-java-并发编程基础">4. java 并发编程基础</h3>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;线程一共有6种状态(NEW,RUNNABLE,BLOCKED,WAITING,TIME_WAITING,TERMINATED)<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;线程的启动start()<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;线程的终止 thread.interrupt();</p>
+
+<h5 id="线程复位">线程复位</h5>
+
+<p>1.interrupted()复位</p>
+
+<pre><code class="language-java">   public class InterruptDemo{
+       private static int i;
+       public static void main(String[] args)throws InterruptedException{
+           Thread thread = new Thread(()-&gt;{
+               while(true){
+                   if(Thread.currentThread().isInterr
+upted()){
+   System.out.println(&quot;before:&quot;+Thread.currentThread().isInterrupted());
+   Thread.interrupted();
+   System.out.println(&quot;after:&quot;+Thread.currentThread().isInterrupted());
+}
+               }
+           },&quot;interruptDemo&quot;);
+           thread.start();
+TimeUnit.SECONDS.sleep(1);
+thread.interrupt();
+       }
+   }
+</code></pre>
+
+<p>2.抛出InterruptedException异常被动复位, 在 InterruptedException 抛出之前，JVM 会先把线程的中断标识位清除，然后才会抛出 InterruptedException，这个时候如果调用 isInterrupted 方法，将会返回 false</p>
+
+<pre><code class="language-java">   public class InterruptDemo{
+       private static int i;
+       public static void main(String[] args)throws InterruptedException{
+           Thread thread = new Thread(()-&gt;{
+               while(!Thread.currentThread().isInterrupted()){
+                   try{
+                       TimeUnit.SECONDS.sleep(1);
+                   }catch(InterruptedException e){
+                       e.printStackTrace();
+                   }
+               }
+               System.out.println(&quot;NUM&quot;+i);
+           },&quot;interruptDemo&quot;);
+           thread.start();
+           TimeUnit.SECONDS.sleep(1);
+           thread.interrupt();
+           System.out.println(thread.isInterrupted());
+       }
+   }
+</code></pre>
+
+<p>Thread.interrupted()是属于当前线程的，是当前线程对外界中断信号的一个响应，表示自己已经得到了中断信号， 但不会立刻中断自己，具体什么时候中断由自己决定，让外界知道在自身中断前，他的中断状态仍然是false，这就 是复位的原因。<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;为什么 Object.wait、 Thread.sleep 和 Thread.join 都会抛出 InterruptedException?<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;都是属于阻塞的方法,而阻塞方法的释放会取决于一些外部的事件，但是阻塞方法可能因为等不到外部的触发事件而导致无法终止，所以 它允许一个线程请求自己来停止它正在做的事情。当一个方法抛出 InterruptedException时，它是在告诉调用者如果执行该方法的线程被中断，它会尝试停止正在做的事情 并且通过抛出 InterruptedException 表示提前返回。这个异常的意思是表示一个阻塞被其他线程中断了。 然后，由于线程调用了 interrupt()中断方法，那么Object.wait、Thread.sleep 等被阻塞的线程被唤醒以后会 通过 is_interrupted 方法判断中断标识的状态变化，如果发现中断标识为 true，则先清除中断标识，然后抛出 InterruptedException</p>
+
+    </div>
+
+    <div class="post-copyright">
+             
+            <p class="copyright-item">
+                <span>Author:</span>
+                <span>ruichunjie </span>
+                </p>
+            
+           
+             
+            <p class="copyright-item">
+                    <span>Link:</span>
+                    <a href=https:ruichunjie.github.io/2019/concurrentbase20190509/>https:ruichunjie.github.io/2019/concurrentbase20190509/</span>
+            </p>
+            
+             
+            <p class="copyright-item lincese">
+                本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可
+            </p>
+            
+    </div>
+
+  
+    <div class="post-tags">
+        
+            <section>
+            <i class="iconfont icon-tag"></i>Tag(s): 
+            
+            <span class="tag"><a href="https:ruichunjie.github.io%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">
+                    #设计模式</a></span>
+            
+            </section>
+        
+        <section>
+                <a href="javascript:window.history.back();">back</a></span> · 
+                <span><a href="https:ruichunjie.github.io">home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+        <a href="https:ruichunjie.github.io/2019/riji20190428/" class="prev" rel="prev" title="日记开端"><i class="iconfont icon-left"></i>&nbsp;日记开端</a>
+         
+        
+    </div>
+
+    <div class="post-comment">
+          
+                 
+          
+    </div>
+</article>
+          </div>
+		   </main>
+      <footer class="footer">
+    <div class="copyright">
+        &copy;
+        
+        <span itemprop="copyrightYear">2019 - 2019</span>
+        
+        <span class="with-love">
+    	 <i class="iconfont icon-love"></i> 
+         </span>
+         
+            <span class="author" itemprop="copyrightHolder"><a href="https:ruichunjie.github.io">ruichunjie</a> | </span> 
+         
+
+         
+		  <span>Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow">Hugo</a> & <a href="https://github.com/liuzc/leaveit" target="_blank" rel="external nofollow">LeaveIt</a></span> 
+    </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+    <script src="/js/vendor_no_gallery.min.js" async=""></script>
+    
+  
+
+
+
+     </div>
+  </body>
+</html>

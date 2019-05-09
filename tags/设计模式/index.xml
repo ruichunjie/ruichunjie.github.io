@@ -6,10 +6,26 @@
     <description>Recent content in 设计模式 on 空谷芝兰</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 23 Apr 2019 14:26:57 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 09 May 2019 15:02:20 +0800</lastBuildDate>
     
 	<atom:link href="https:ruichunjie.github.io/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>并发基础</title>
+      <link>https:ruichunjie.github.io/2019/concurrentbase20190509/</link>
+      <pubDate>Thu, 09 May 2019 15:02:20 +0800</pubDate>
+      
+      <guid>https:ruichunjie.github.io/2019/concurrentbase20190509/</guid>
+      <description>1.并发的发展历史 真空管和穿孔打卡 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;操作员在机房里面来回调度资源，以及计算机同一时刻只能运行一个程序，在程序输入的过程中，计算机处于空闲状态，为了避免资源浪费，采用了批处理系统。
+晶体管和批处理系统 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;批处理操作系统虽然能够解决计算机的空闲问题，但当某一个作业因等待磁盘或者其他IO操作而暂停时，那么CPU也只能阻塞到该IO操作完成，造成CPU资源浪费。
+集成电路和多道程序设计 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;进程的本质是一个正在执行的程序，程序运行时系统会创建一个进程，并且给每个进程分配独立的内存地址空间保证每个进程地址不会相互干扰。同时，在 CPU 对进程做时间片的切换时，保证进程切换过程中仍然要从进程切换之前运行的位置出开始执行。所以进程通常还会包括程序计数器、堆栈指针。 有了进程以后，可以让操作系统从宏观层面实现多应用并 发。而并发的实现是通过 CPU 时间片不端切换执行的。对于单核 CPU 来说，在任意一个时刻只会有一个进程在被 CPU 调度
+Q: 有了进程后为什么还会有线程呢？ &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;A: 1.在多核 CPU 中，利用多线程可以实现真正意义上的并行 执行。
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;2.在一个应用进程中，会存在多个同时执行的任务，如果其中一个任务被阻塞，将会引起不依赖该任务的任务也被阻塞。通过对不同任务创建不同的线程去处理，可以提升程序处理的实时性
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;3.线程可以认为是轻量级的进程，所以线程的创建、销毁比进程更快
+2.线程的应用 继承Thread类创建线程 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;Thread类本质是实现了Runnable接口的一个实例，启动的方法是通过Thread的start()方法。
+public class MyThread extends Thread{ public void run(){ System.out.println(&amp;quot;MyThread run&amp;quot;); } } MyThread myThread1 = new MyThread(); MyThread myThread2 = new MyThread(); myThread1.start(); myThread2.start();  实现Runnable接口创建线程 public class MyThread implements Runnable{ public void run(){ System.out.println(&amp;quot;MyThread run&amp;quot;); } }  实现Callable接口通过FutureTask包装器来创建Thread线程 public class CallableDemo implements Callable&amp;lt;String&amp;gt;{ public static void main(String[] args)throws ExecutionException, InterruptedException{ ExecutorService executorService = Executors.</description>
+    </item>
     
     <item>
       <title>浅谈双亲委派模型</title>
