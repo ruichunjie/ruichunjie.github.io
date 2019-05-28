@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noodp"/>
+  <meta name="author" content="ruichunjie">
+  
+  
+  
+  <link rel="prev" href="http://ruichunjie.github.io/2019/concurrentbase20190509/" />
+  
+  <link rel="canonical" href="http://ruichunjie.github.io/2019/bingfasemaphore20190528/" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <title>
+       
+       
+           并发日记一Semaphore | 空谷芝兰
+       
+  </title>
+  <meta name="title" content="并发日记一Semaphore | 空谷芝兰">
+    
+  
+  <link rel="stylesheet" href="/font/iconfont.css">
+  <link rel="stylesheet" href="/css/main.min.css">
+
+
+  
+  
+ 
+
+<script type="application/ld+json">
+ "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "mainEntityOfPage": {
+         "@type": "WebPage",
+         "@id": "http://ruichunjie.github.io"
+    },
+    "articleSection" : "posts",
+    "name" : "并发日记一Semaphore",
+    "headline" : "并发日记一Semaphore",
+    "description" : "Semaphore 是什么？ semaphore是计数信号量，语义是互斥锁，作用是控制线程的并发数量。
+怎么用？ acquire()/acquire(int permits)/release()/release(int permits) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;acquire(int permits)中permits表示动态添加许可数量，表示每次线程进入将占用permits个通路，相应的release(int permits)则表示归还2个通路。
+acauire的不可中断实现 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;semaphore.acquire() 和 semaphore.acquire(int permits) 是会抛出异常 InterruptedException 的，如果在 acquire 和 release 之间的代码是一个比较慢和复制的运算，如内存占用过多，或者栈深度很深等，jvm会中断这块代码。
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;使用 acquireUninterruptibly() 替换acquire()、使用 acquireUninterruptibly(int permits) 替换 acquire(int permits) 。acquireUninterruptibly 不会抛出 InterruptedException ，一个代码块一时执行不完，还会继续等待执行。不要随便使用acquireUninterruptibly ，因为 jvm 中断执行，是自身的一种自我保护机制，保证 java 进程的正常，除了特殊情况必须用acquireUninterruptibly 外，都应该使用acquire
+常见方法 availablePermits() 返回可用通路数
+drainPermits() 可获取并返回立即可用的所有许可（通路）个数，并将可用许可置为0。
+getQueueLength() 获取等待许可的线程个数。
+hasQueuedThreads() 有没有线程在等待这个许可
+tryAcquire()/tryAcquire(int permits)/ tryAcquire(int permits , long timeout , TimeUint unit) 尝试得获取通路
+实现原理 public void acquire() throws InterruptedException { sync.acquireSharedInterruptibly(1); } public final void acquireSharedInterruptibly(int arg) throws InterruptedException { if (Thread.",
+    "inLanguage" : "en-us",
+    "author" : "ruichunjie",
+    "creator" : "ruichunjie",
+    "publisher": "ruichunjie",
+    "accountablePerson" : "ruichunjie",
+    "copyrightHolder" : "ruichunjie",
+    "copyrightYear" : "2019",
+    "datePublished": "2019-05-28 14:00:58 &#43;0800 CST",
+    "dateModified" : "2019-05-28 14:00:58 &#43;0800 CST",
+    "url" : "http://ruichunjie.github.io/2019/bingfasemaphore20190528/",
+    "wordCount" : "344",
+    "keywords" : [ "并发","学习笔记", "空谷芝兰"]
+}
+</script>
+
+</head>
+
+  
+
+
+  <body class="">
+    <div class="wrapper">
+        <nav class="navbar">
+    <div class="container">
+        <div class="navbar-header header-logo">
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="http://ruichunjie.github.io">空谷芝兰</a>
+        </div>
+        <div class="menu navbar-right">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+     <div class="container">
+        <div class="navbar-header">
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="http://ruichunjie.github.io">空谷芝兰</a></div>
+            <div class="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+     
+          <div class="menu" id="mobile-menu">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+    	 <main class="main">
+          <div class="container">
+      		
+<article class="post-warp" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">并发日记一Semaphore</h1>
+        <div class="post-meta">
+                Written by <a itemprop="name" href="http://ruichunjie.github.io" rel="author">ruichunjie</a> with ♥ 
+                <span class="post-time">
+                on <time datetime=2019-05-28 itemprop="datePublished">May 28, 2019</time>
+                </span>
+                in
+                <i class="iconfont icon-folder"></i>
+                <span class="post-category">
+                        <a href="http://ruichunjie.github.io/categories/%E7%BC%96%E7%A8%8B-%E6%8A%80%E6%9C%AF/"> 编程 · 技术 </a>
+                        
+                </span>
+        </div>
+    </header>
+    <div class="post-content">
+        
+
+        
+
+        
+        
+     
+          
+          
+          
+
+          
+          
+          
+
+          
+
+<h1 id="semaphore">Semaphore</h1>
+
+<h3 id="是什么">是什么？</h3>
+
+<p>semaphore是计数信号量，语义是互斥锁，作用是控制线程的并发数量。</p>
+
+<h3 id="怎么用">怎么用？</h3>
+
+<h4 id="acquire-acquire-int-permits-release-release-int-permits">acquire()/acquire(int permits)/release()/release(int permits)</h4>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;acquire(int permits)中permits表示动态添加许可数量，表示每次线程进入将占用permits个通路，相应的release(int permits)则表示归还2个通路。</p>
+
+<h4 id="acauire的不可中断实现">acauire的不可中断实现</h4>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;semaphore.acquire() 和 semaphore.acquire(int permits) 是会抛出异常 InterruptedException 的，如果在 acquire 和 release 之间的代码是一个比较慢和复制的运算，如内存占用过多，或者栈深度很深等，jvm会中断这块代码。<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;使用 acquireUninterruptibly() 替换acquire()、使用 acquireUninterruptibly(int permits) 替换 acquire(int permits) 。acquireUninterruptibly 不会抛出 InterruptedException ，一个代码块一时执行不完，还会继续等待执行。不要随便使用acquireUninterruptibly ，因为 jvm 中断执行，是自身的一种自我保护机制，保证 java 进程的正常，除了特殊情况必须用acquireUninterruptibly 外，都应该使用acquire</p>
+
+<h4 id="常见方法">常见方法</h4>
+
+<p>availablePermits() 返回可用通路数<br />
+drainPermits() 可获取并返回立即可用的所有许可（通路）个数，并将可用许可置为0。<br />
+getQueueLength() 获取等待许可的线程个数。<br />
+hasQueuedThreads() 有没有线程在等待这个许可<br />
+tryAcquire()/tryAcquire(int permits)/ tryAcquire(int permits , long timeout , TimeUint unit)
+尝试得获取通路</p>
+
+<h3 id="实现原理">实现原理</h3>
+
+<pre><code class="language-java">   public void acquire() throws InterruptedException {
+        sync.acquireSharedInterruptibly(1);
+    }
+    public final void acquireSharedInterruptibly(int arg)
+            throws InterruptedException {
+        if (Thread.interrupted())
+            throw new InterruptedException();
+        if (tryAcquireShared(arg) &lt; 0)
+            doAcquireSharedInterruptibly(arg);
+    }
+</code></pre>
+
+<p>tryAcquireShared(arg)留给子类实现，Semaphore默认是调用了NonfairSync的tryAcquireShared方法。</p>
+
+<pre><code class="language-java">   static final class NonfairSync extends Sync {
+        private static final long serialVersionUID = -2694183684443567898L;
+
+        NonfairSync(int permits) {
+            super(permits);
+        }
+
+        protected int tryAcquireShared(int acquires) {
+            return nonfairTryAcquireShared(acquires);
+        }
+    }
+    final int nonfairTryAcquireShared(int acquires) {
+            for (;;) {
+                int available = getState();
+                int remaining = available - acquires;
+                if (remaining &lt; 0 ||
+                    compareAndSetState(available, remaining))
+                    return remaining;
+            }
+        }
+</code></pre>
+
+<p>经典的自旋和CAS操作，state此时是permits的含义，方法的返回值是剩余的数量，如果小于0，执行AbstractQueuedSynchronizer的doAcquireSharedInterruptibly(arg)方法。</p>
+
+<pre><code class="language-java">    private void doAcquireSharedInterruptibly(int arg)
+        throws InterruptedException {
+        final Node node = addWaiter(Node.SHARED);
+        boolean failed = true;
+        try {
+            for (;;) {
+                final Node p = node.predecessor();
+                if (p == head) {
+                    int r = tryAcquireShared(arg);
+                    if (r &gt;= 0) {
+                        setHeadAndPropagate(node, r);
+                        p.next = null; // help GC
+                        failed = false;
+                        return;
+                    }
+                }
+                if (shouldParkAfterFailedAcquire(p, node) &amp;&amp;
+                    parkAndCheckInterrupt())
+                    throw new InterruptedException();
+            }
+        } finally {
+            if (failed)
+                cancelAcquire(node);
+        }
+    }
+</code></pre>
+
+<p>doAcquireSharedInterruptibly()方法具体重新写篇逻辑进行分析，大概是所有的通道都被占用的时候，后来的线程会被封装成节点，添加到Contion等待队列中。
+release的核心是releaseShared()</p>
+
+<pre><code class="language-java">   public final boolean releaseShared(int arg) {
+        if (tryReleaseShared(arg)) {
+            doReleaseShared();
+            return true;
+        }
+        return false;
+    }
+  protected final boolean tryReleaseShared(int releases) {
+            for (;;) {
+                int current = getState();
+                int next = current + releases;
+                if (next &lt; current) // overflow
+                    throw new Error(&quot;Maximum permit count exceeded&quot;);
+                if (compareAndSetState(current, next))
+                    return true;
+            }
+        }
+</code></pre>
+
+<p>自旋➕CAS逻辑，返回doReleaseShared()方法</p>
+
+<pre><code class="language-java">   private void doReleaseShared() {
+        for (;;) {
+            Node h = head;
+            if (h != null &amp;&amp; h != tail) {
+                int ws = h.waitStatus;
+                if (ws == Node.SIGNAL) {
+                    if (!compareAndSetWaitStatus(h, Node.SIGNAL, 0))
+                        continue;            // loop to recheck cases
+                    unparkSuccessor(h);
+                }
+                else if (ws == 0 &amp;&amp;
+                         !compareAndSetWaitStatus(h, 0, Node.PROPAGATE))
+                    continue;                // loop on failed CAS
+            }
+            if (h == head)                   // loop if head changed
+                break;
+        }
+    }
+</code></pre>
+
+    </div>
+
+    <div class="post-copyright">
+             
+            <p class="copyright-item">
+                <span>Author:</span>
+                <span>ruichunjie </span>
+                </p>
+            
+           
+             
+            <p class="copyright-item">
+                    <span>Link:</span>
+                    <a href=http://ruichunjie.github.io/2019/bingfasemaphore20190528/>http://ruichunjie.github.io/2019/bingfasemaphore20190528/</span>
+            </p>
+            
+             
+            <p class="copyright-item lincese">
+                本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可
+            </p>
+            
+    </div>
+
+  
+    <div class="post-tags">
+        
+            <section>
+            <i class="iconfont icon-tag"></i>Tag(s): 
+            
+            <span class="tag"><a href="http://ruichunjie.github.io/tags/%E5%B9%B6%E5%8F%91/">
+                    #并发</a></span>
+            
+            <span class="tag"><a href="http://ruichunjie.github.io/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">
+                    #学习笔记</a></span>
+            
+            </section>
+        
+        <section>
+                <a href="javascript:window.history.back();">back</a></span> · 
+                <span><a href="http://ruichunjie.github.io">home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+        <a href="http://ruichunjie.github.io/2019/concurrentbase20190509/" class="prev" rel="prev" title="并发基础"><i class="iconfont icon-left"></i>&nbsp;并发基础</a>
+         
+        
+    </div>
+
+    <div class="post-comment">
+          
+                 
+          
+    </div>
+</article>
+          </div>
+		   </main>
+      <footer class="footer">
+    <div class="copyright">
+        &copy;
+        
+        <span itemprop="copyrightYear">2019 - 2019</span>
+        
+        <span class="with-love">
+    	 <i class="iconfont icon-love"></i> 
+         </span>
+         
+            <span class="author" itemprop="copyrightHolder"><a href="http://ruichunjie.github.io">ruichunjie</a> | </span> 
+         
+
+         
+		  <span>Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow">Hugo</a> & <a href="https://github.com/liuzc/leaveit" target="_blank" rel="external nofollow">LeaveIt</a></span> 
+    </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+    <script src="/js/vendor_no_gallery.min.js" async=""></script>
+    
+  
+
+
+
+     </div>
+  </body>
+</html>

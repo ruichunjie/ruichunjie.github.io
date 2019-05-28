@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>学习笔记 on 空谷芝兰</title>
+    <link>http://ruichunjie.github.io/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</link>
+    <description>Recent content in 学习笔记 on 空谷芝兰</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 28 May 2019 14:00:58 +0800</lastBuildDate>
+    
+	<atom:link href="http://ruichunjie.github.io/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>并发日记一Semaphore</title>
+      <link>http://ruichunjie.github.io/2019/bingfasemaphore20190528/</link>
+      <pubDate>Tue, 28 May 2019 14:00:58 +0800</pubDate>
+      
+      <guid>http://ruichunjie.github.io/2019/bingfasemaphore20190528/</guid>
+      <description>Semaphore 是什么？ semaphore是计数信号量，语义是互斥锁，作用是控制线程的并发数量。
+怎么用？ acquire()/acquire(int permits)/release()/release(int permits) &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;acquire(int permits)中permits表示动态添加许可数量，表示每次线程进入将占用permits个通路，相应的release(int permits)则表示归还2个通路。
+acauire的不可中断实现 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;semaphore.acquire() 和 semaphore.acquire(int permits) 是会抛出异常 InterruptedException 的，如果在 acquire 和 release 之间的代码是一个比较慢和复制的运算，如内存占用过多，或者栈深度很深等，jvm会中断这块代码。
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;使用 acquireUninterruptibly() 替换acquire()、使用 acquireUninterruptibly(int permits) 替换 acquire(int permits) 。acquireUninterruptibly 不会抛出 InterruptedException ，一个代码块一时执行不完，还会继续等待执行。不要随便使用acquireUninterruptibly ，因为 jvm 中断执行，是自身的一种自我保护机制，保证 java 进程的正常，除了特殊情况必须用acquireUninterruptibly 外，都应该使用acquire
+常见方法 availablePermits() 返回可用通路数
+drainPermits() 可获取并返回立即可用的所有许可（通路）个数，并将可用许可置为0。
+getQueueLength() 获取等待许可的线程个数。
+hasQueuedThreads() 有没有线程在等待这个许可
+tryAcquire()/tryAcquire(int permits)/ tryAcquire(int permits , long timeout , TimeUint unit) 尝试得获取通路
+实现原理 public void acquire() throws InterruptedException { sync.acquireSharedInterruptibly(1); } public final void acquireSharedInterruptibly(int arg) throws InterruptedException { if (Thread.</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>题目 on 空谷芝兰</title>
-    <link>https:ruichunjie.github.io/tags/%E9%A2%98%E7%9B%AE/</link>
+    <link>http://ruichunjie.github.io/tags/%E9%A2%98%E7%9B%AE/</link>
     <description>Recent content in 题目 on 空谷芝兰</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Wed, 10 Apr 2019 23:21:34 +0800</lastBuildDate>
     
-	<atom:link href="https:ruichunjie.github.io/tags/%E9%A2%98%E7%9B%AE/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://ruichunjie.github.io/tags/%E9%A2%98%E7%9B%AE/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>面试宝典</title>
-      <link>https:ruichunjie.github.io/2019/question20190410/</link>
+      <link>http://ruichunjie.github.io/2019/question20190410/</link>
       <pubDate>Wed, 10 Apr 2019 23:21:34 +0800</pubDate>
       
-      <guid>https:ruichunjie.github.io/2019/question20190410/</guid>
+      <guid>http://ruichunjie.github.io/2019/question20190410/</guid>
       <description>简答 1.java什么时候用重载，什么时候用重写？
 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;重载遵循开闭原则，Spring中的getBean，可以传BeanName和Class
 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;重写发生在父子类之间，模板和包装器模式，遵循开闭原则
